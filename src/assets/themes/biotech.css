@@ -1,0 +1,258 @@
+/* Biotech Theme Variables and Styles */
+
+.theme-biotech {
+    --gradient-hero: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-header: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-footer: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%);
+    --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    --gradient-secondary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    --section-bg: var(--color-primary-50);
+    --section-text-color: #1e40af;
+
+    /* Biotech Primary Color Shades */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    --color-primary-1000: #172554;
+    --color-primary-1100: #0f172a;
+    --color-primary-1200: #0f1419;
+    --color-primary-1250: #0a0f14;
+
+    /* Biotech Secondary Color Shades */
+    --color-secondary-0: #f0fdf4;
+    --color-secondary-50: #dcfce7;
+    --color-secondary-100: #bbf7d0;
+    --color-secondary-200: #86efac;
+    --color-secondary-300: #4ade80;
+    --color-secondary-400: #22c55e;
+    --color-secondary-500: #16a34a;
+    --color-secondary-600: #15803d;
+    --color-secondary-700: #166534;
+    --color-secondary-800: #14532d;
+    --color-secondary-900: #052e16;
+    --color-secondary-1000: #041f0f;
+    --color-secondary-1100: #030f08;
+    --color-secondary-1200: #020804;
+    --color-secondary-1250: #010402;
+
+    /* Biotech Button Colors */
+    --btn-primary-bg: #1e40af;
+    --btn-primary-hover: #3b82f6;
+    --btn-primary-border: #1e40af;
+    --btn-primary-border-hover: #3b82f6;
+    --btn-primary-text: #ffffff;
+    --btn-info-bg: #7c3aed;
+    --btn-info-hover: #a855f7;
+    --btn-info-border: #7c3aed;
+    --btn-info-border-hover: #a855f7;
+    --btn-info-text: #ffffff;
+    --btn-success-bg: #10b981;
+    --btn-success-hover: #059669;
+    --btn-success-border: #059669;
+    --btn-success-border-hover: #047857;
+    --btn-success-text: #ffffff;
+    --btn-destructive-bg: #ef4444;
+    --btn-destructive-hover: #dc2626;
+    --btn-destructive-border: #dc2626;
+    --btn-destructive-border-hover: #b91c1c;
+    --btn-destructive-text: #ffffff;
+    --btn-secondary-bg: rgba(30, 64, 175, 0.1);
+    --btn-secondary-hover: rgba(30, 64, 175, 0.2);
+    --btn-secondary-border: rgba(30, 64, 175, 0.3);
+    --btn-secondary-border-hover: rgba(30, 64, 175, 0.4);
+    --btn-secondary-text: #1e40af;
+    --btn-ghost-bg: transparent;
+    --btn-ghost-hover: rgba(30, 64, 175, 0.1);
+    --btn-ghost-text: #1e40af;
+    --btn-outline-bg: transparent;
+    --btn-outline-hover: rgba(30, 64, 175, 0.1);
+    --btn-outline-border: #1e40af;
+    --btn-outline-border-hover: #1d4ed8;
+    --btn-outline-text: #1e40af;
+    --btn-link-text: #1e40af;
+    --btn-link-hover: #1d4ed8;
+    --btn-icon-bg: rgba(30, 64, 175, 0.1);
+    --btn-icon-hover: rgba(30, 64, 175, 0.2);
+    --btn-icon-text: #1e40af;
+    --btn-toggle-bg: rgba(30, 64, 175, 0.1);
+    --btn-toggle-hover: rgba(30, 64, 175, 0.2);
+    --btn-toggle-text: #1e40af;
+    --btn-toggle-active-bg: #1e40af;
+    --btn-toggle-active-text: #ffffff;
+    --btn-soft-bg: rgba(30, 64, 175, 0.1);
+    --btn-soft-text: #1d4ed8;
+    --btn-soft-hover: rgba(30, 64, 175, 0.2);
+    --btn-soft-border: rgba(30, 64, 175, 0.3);
+    --btn-soft-border-hover: rgba(30, 64, 175, 0.4);
+    --btn-soft-info-bg: rgba(124, 58, 237, 0.1);
+    --btn-soft-info-text: #7c3aed;
+    --btn-soft-info-hover: rgba(124, 58, 237, 0.2);
+    --btn-soft-info-border: rgba(124, 58, 237, 0.3);
+    --btn-soft-info-border-hover: rgba(124, 58, 237, 0.4);
+    --btn-soft-success-bg: rgba(16, 185, 129, 0.1);
+    --btn-soft-success-text: #059669;
+    --btn-soft-success-hover: rgba(16, 185, 129, 0.2);
+    --btn-soft-success-border: rgba(16, 185, 129, 0.3);
+    --btn-soft-success-border-hover: rgba(16, 185, 129, 0.4);
+    --btn-soft-destructive-bg: rgba(239, 68, 68, 0.1);
+    --btn-soft-destructive-text: #dc2626;
+    --btn-soft-destructive-hover: rgba(239, 68, 68, 0.2);
+    --btn-soft-destructive-border: rgba(239, 68, 68, 0.3);
+    --btn-soft-destructive-border-hover: rgba(239, 68, 68, 0.4);
+    --btn-ghost-outline-bg: transparent;
+    --btn-ghost-outline-hover: rgba(30, 64, 175, 0.1);
+    --btn-ghost-outline-border: transparent;
+    --btn-ghost-outline-border-hover: rgba(30, 64, 175, 0.3);
+    --btn-ghost-outline-text: #1e40af;
+    --btn-ghost-outline-primary-text: #1e40af;
+    --btn-ghost-outline-primary-hover: rgba(30, 64, 175, 0.1);
+    --btn-ghost-outline-primary-border-hover: rgba(30, 64, 175, 0.3);
+
+    /* Biotech Card Colors */
+    --card-bg: rgba(30, 64, 175, 0.05);
+    --card-border: rgba(30, 64, 175, 0.2);
+    --card-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.1), 0 2px 4px -2px rgba(30, 64, 175, 0.1);
+    --card-backdrop: rgba(30, 64, 175, 0.1);
+    --card-backdrop-border: rgba(30, 64, 175, 0.3);
+
+    /* Biotech Card Colors for Dark Mode */
+    .dark.theme-biotech {
+        --card-bg: rgba(30, 64, 175, 0.1);
+        --card-border: rgba(30, 64, 175, 0.3);
+        --card-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2), 0 2px 4px -2px rgba(30, 64, 175, 0.2);
+    }
+
+    /* Biotech Input Colors */
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(30, 64, 175, 0.3);
+    --input-text: #1f2937;
+    --input-placeholder: rgba(30, 64, 175, 0.6);
+    --input-focus-ring: #1e40af;
+    --input-focus-border: #1e40af;
+    --input-disabled-bg: rgba(30, 64, 175, 0.1);
+    --input-disabled-text: rgba(30, 64, 175, 0.5);
+    --input-invalid-border: #ef4444;
+    --input-invalid-text: #dc2626;
+    --input-invalid-placeholder: #fca5a5;
+    --input-invalid-focus-ring: #ef4444;
+    --input-dirty-border: #f59e0b;
+    --input-label: #1e40af;
+    --checkbox-border: rgba(30, 64, 175, 0.3);
+    --checkbox-bg: transparent;
+    --checkbox-checked-bg: #1e40af;
+    --checkbox-checked-border: #1e40af;
+    --checkbox-disabled-border: rgba(30, 64, 175, 0.2);
+    --checkbox-disabled-bg: rgba(30, 64, 175, 0.1);
+    --checkbox-error-border: #ef4444;
+    --checkbox-success-border: #10b981;
+    --checkbox-success-bg: #10b981;
+}
+
+/* Biotech theme specific styles */
+.theme-biotech .biotech-accent {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.theme-biotech .biotech-card {
+    background: rgba(30, 64, 175, 0.05);
+    border: 1px solid rgba(30, 64, 175, 0.1);
+}
+
+/* Biotech Header theme overrides */
+.theme-biotech .header-bg {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    border-bottom: 1px solid rgba(30, 64, 175, 0.2);
+}
+
+.theme-biotech .header-text {
+    color: white;
+}
+
+.theme-biotech .header-logo-text {
+    color: white;
+}
+
+.theme-biotech .header-tagline {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Biotech Footer theme overrides */
+.theme-biotech .footer-bg {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.98) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+}
+
+.theme-biotech .footer-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-biotech .footer-heading {
+    color: white;
+    font-weight: 700;
+}
+
+.theme-biotech .footer-link {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.theme-biotech .footer-link:hover {
+    color: white;
+    transform: translateX(2px);
+}
+
+.theme-biotech .footer-social-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.theme-biotech .footer-social-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* Biotech Dropdown theme overrides */
+.theme-biotech .menu-dropdown-panel {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    border-color: rgba(30, 64, 175, 0.3);
+}
+
+.theme-biotech .menu-dropdown-item {
+    color: var(--color-gray-100);
+    background: transparent;
+}
+
+.theme-biotech .menu-dropdown-item:hover {
+    background: rgba(30, 64, 175, 0.2);
+    color: white;
+}
+
+.theme-biotech .menu-dropdown-item.active {
+    color: var(--color-secondary-1200);
+}
+
+/* Dark mode overrides for biotech dropdowns */
+.dark .theme-biotech .menu-dropdown-panel {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.98) 0%, rgba(59, 130, 246, 0.98) 50%, rgba(139, 92, 246, 0.99) 100%);
+    border-color: rgba(30, 64, 175, 0.5);
+}
+
+.dark .theme-biotech .menu-dropdown-item {
+    color: var(--color-gray-200);
+}
+
+.dark .theme-biotech .menu-dropdown-item:hover {
+    background: rgba(30, 64, 175, 0.3);
+}

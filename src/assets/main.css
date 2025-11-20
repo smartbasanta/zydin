@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "./themes.css";
+@import "./input.css";
+@import "./card.css";
+@import "./button.css";
+
+@utility border-muted { @apply border-gray-200; }
+@utility border-secondary { @apply border-gray-200; }
+
+@utility text-muted { @apply text-gray-600; }
+@utility text-secondary { @apply text-gray-900; }
+
+@utility divide-muted { @apply divide-gray-200; }
+@utility divide-secondary { @apply divide-gray-200; }
+
+@utility bg-card { background: var(--card-bg); }
+@utility border-card-border { border-color: var(--card-border); }
+@utility shadow-card { box-shadow: var(--card-shadow); }
+
+.body {
+    @apply bg-white dark:bg-gray-1100 text-gray-800 dark:text-gray-200;
+    font-family: 'Poppins', sans-serif;
+}
+
+.text-primary { @apply text-[#ea4900] dark:text-[#fd7701]}
+
+.header-menu-trigger {
+    @apply relative flex items-center justify-center p-2.5 rounded-full cursor-pointer;
+    @apply bg-transparent hover:bg-secondary-1200/50 dark:hover:bg-pink-400/50;
+    @apply text-primary-1200/80 dark:text-primary-1200;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400;
+    @apply hover:scale-105 active:scale-95;
+}
+
+.header-menu-trigger.active {
+    @apply bg-secondary-1200/60 dark:bg-pink-500/60;
+    @apply scale-105;
+}
+
+.menu-dropdown-panel {
+    @apply absolute right-0 mt-2 w-56 origin-top-right rounded-xl border z-50;
+    @apply bg-gradient-to-tl from-secondary-800/95 to-secondary-100/95 backdrop-blur-lg;
+    @apply dark:from-pink-300 dark:to-pink-200;
+    @apply border-secondary-500/80 dark:border-pink-400/90;
+    @apply shadow-xl shadow-black/10 dark:shadow-black/20;
+    @apply overflow-hidden;
+}
+.nav-menu-panel {
+    @apply absolute left-1/2 -translate-x-1/2 mt-2 min-w-64 max-w-96 origin-top rounded-xl border z-50;
+}
+
+.menu-dropdown-panel::before {
+    content: '';
+    @apply absolute -top-1/2 -right-1/2 w-48 h-48;
+    @apply dark:from-pink-500/20;
+    @apply blur-3xl rounded-full;
+    @apply pointer-events-none;
+    @apply animate-pulse;
+    animation-duration: 5s;
+    background-image: radial-gradient(circle, rgba(60, 127, 251, 0.3), transparent);
+}
+
+.dark .menu-dropdown-panel::before {
+    background-image: radial-gradient(circle, rgba(249, 115, 22, 0.2), transparent);
+}
+
+.menu-dropdown-item {
+    @apply flex w-full items-center gap-3 px-4 py-2.5;
+    @apply text-left text-sm font-medium text-gray-1000 dark:text-pink-950;
+    @apply cursor-pointer transition-all duration-150;
+    @apply hover:bg-gradient-to-br hover:from-secondary-1250/50 dark:hover:from-pink-400 hover:to-transparent hover:text-primary-1200 dark:hover:text-pink-950;
+    @apply focus:outline-none focus:bg-gradient-to-r focus:from-blue-500/10 focus:to-transparent focus:text-blue-600 dark:focus:text-blue-400;
+    @apply hover:scale-105 active:scale-95;
+}
+
+.menu-dropdown-item.active {
+    @apply text-secondary-1200 dark:text-pink-950 font-extrabold;
+    @apply bg-gradient-to-br from-secondary-1250/30 dark:from-pink-400/30 to-transparent;
+}
+
+/* Table */
+.data-table {
+    @apply relative rounded-lg overflow-hidden bg-gray-0 dark:bg-gray-800 border border-gray-100 dark:border-gray-1000;
+    table { @apply bg-gray-0 dark:bg-gray-1200/5 text-sm text-left w-full border-collapse; }
+    table thead { @apply text-gray-700 dark:text-gray-500 bg-gray-100 dark:bg-gray-1100 text-sm capitalize leading-4; }
+    table thead tr th { @apply p-4; }
+    table tbody tr { @apply border-b border-gray-100 dark:border-gray-1000 hover:bg-white dark:hover:bg-gray-1250 transition duration-200; }
+    table tbody tr td { @apply p-4; }
+}

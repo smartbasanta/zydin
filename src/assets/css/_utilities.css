@@ -1,0 +1,57 @@
+/* src/assets/css/_utilities.css */
+
+/* Clipping Paths */
+.clip-path-hero { clip-path: polygon(0 0, 100% 0, 100% 90%, 0 98%); }
+.clip-path-section { clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%); }
+
+/* Theme-Aware Section Styles */
+.section-bg { background-color: var(--section-bg); }
+.section-text { color: var(--section-text-color); }
+.section-title { color: var(--section-title-color); }
+.section-description { color: var(--section-description-color); }
+
+/* Theme-Aware Gradients */
+.bg-gradient-hero { background: var(--gradient-hero); }
+.bg-gradient-primary { background: var(--gradient-primary); }
+.bg-gradient-secondary { background: var(--gradient-secondary); }
+.bg-gradient-accent { background: var(--gradient-accent); }
+
+/* Header Classes */
+.header-bg { background: var(--header-bg); }
+.header-text { color: var(--header-text); }
+.header-logo-text { color: var(--header-text); }
+.header-tagline { color: var(--header-text); opacity: 0.8; }
+
+/* Footer Classes */
+.footer-bg { background: var(--footer-bg); }
+.footer-text { color: var(--footer-text); }
+.footer-heading { color: var(--footer-heading); @apply text-xl font-semibold uppercase tracking-wider; }
+.footer-link { color: var(--footer-link); @apply inline-block transition-all duration-200 hover:translate-x-1; }
+.footer-link:hover { color: var(--footer-link-hover); }
+.footer-social-link { @apply grid place-content-center size-10 rounded-full transition-all duration-300; background-color: var(--footer-social-bg); border: 1px solid var(--footer-social-border); color: var(--header-text); }
+.footer-social-link:hover { background-color: color-mix(in srgb, var(--footer-social-bg) 50%, #fff); transform: scale(1.1); }
+
+/* Misc Text Utilities */
+.text-muted { color: var(--text-muted); }
+
+/* Misc Border & Divide Utilities */
+.border-muted { border-color: var(--border-muted); }
+.divide-muted { border-color: var(--divide-muted); }
+
+/* Animations for Storytelling Theme */
+.storytelling-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+.storytelling-slide-in-left { animation: slideInLeft 0.8s ease-out forwards; }
+.storytelling-slide-in-right { animation: slideInRight 0.8s ease-out forwards; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}

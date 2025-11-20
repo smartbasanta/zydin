@@ -1,0 +1,246 @@
+/* src/assets/css/main.css */
+
+/* Import Tailwind's base, components, and utilities */
+@import "tailwindcss";
+
+/* Import your custom stylesheets */
+@import "./_themes.css";
+@import "./_components.css";
+@import "./_utilities.css";
+
+/* Global base styles */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    @apply bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-200 transition-colors duration-300;
+    font-family: 'Poppins', sans-serif;
+    /* A nice, modern font */
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+    @apply w-2;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply rounded-full border-transparent transition-all;
+    background-color: rgba(156, 163, 175, 0.5);
+    /* gray-400 with opacity */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.5);
+    /* gray-500 with opacity */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: rgba(71, 85, 105, 0.5);
+    /* slate-600 with opacity */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(51, 65, 85, 0.5);
+    /* slate-700 with opacity */
+}
+
+/* Helper for frameworks like Alpine.js to prevent "flicker" on page load */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Header Classes */
+.header-bg {
+    background: var(--header-bg);
+}
+
+.header-text {
+    color: var(--header-text);
+}
+
+.header-logo-text {
+    color: var(--header-text);
+}
+
+.header-tagline {
+    color: var(--header-text);
+    opacity: 0.8;
+}
+
+/* Footer Classes */
+.footer-bg {
+    background: var(--footer-bg);
+}
+
+.footer-text {
+    color: var(--footer-text);
+}
+
+.footer-heading {
+    color: var(--footer-heading);
+    @apply text-base font-semibold uppercase tracking-wider;
+}
+
+.footer-link {
+    color: var(--footer-link);
+    @apply inline-block transition-all duration-200 hover:translate-x-1;
+}
+
+.footer-link:hover {
+    color: var(--footer-link-hover);
+}
+
+.footer-social-link {
+    @apply grid place-content-center size-10 rounded-full transition-all duration-300;
+    color: var(--header-text);
+    background-color: var(--footer-social-bg);
+    border: 1px solid var(--footer-social-border);
+}
+
+.footer-social-link:hover {
+    background-color: color-mix(in srgb, var(--footer-social-bg) 50%, #fff);
+    transform: scale(1.1);
+}
+
+/* Menu Classes */
+.header-menu-trigger {
+    @apply relative flex items-center justify-center p-2.5 rounded-full cursor-pointer;
+    @apply transition-all duration-200;
+    @apply hover:scale-105 active:scale-95;
+    background-color: transparent;
+    color: var(--header-text);
+}
+
+.header-menu-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-menu-trigger.active {
+    @apply scale-105;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-dropdown-panel {
+    @apply absolute right-0 mt-2 w-56 origin-top-right rounded-xl border z-50;
+    @apply backdrop-blur-lg shadow-xl shadow-black/10 dark:shadow-black/20;
+    @apply overflow-hidden;
+    background: var(--menu-dropdown-bg);
+    border-color: var(--menu-dropdown-border);
+}
+
+.nav-menu-panel {
+    @apply absolute left-1/2 -translate-x-1/2 mt-2 min-w-64 max-w-96 origin-top rounded-xl border z-50;
+    background: var(--menu-dropdown-bg);
+    border-color: var(--menu-dropdown-border);
+}
+
+.menu-dropdown-panel::before {
+    content: '';
+    @apply absolute -top-1/2 -right-1/2 w-48 h-48;
+    @apply blur-3xl rounded-full;
+    @apply pointer-events-none;
+    @apply animate-pulse;
+    animation-duration: 5s;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.menu-dropdown-item {
+    @apply flex w-full items-center gap-3 px-4 py-2.5;
+    @apply text-left text-sm font-medium;
+    @apply cursor-pointer transition-all duration-150;
+    @apply hover:scale-105 active:scale-95;
+    color: var(--menu-dropdown-item-text);
+}
+
+.menu-dropdown-item:hover {
+    background: var(--menu-dropdown-item-hover-bg);
+}
+
+.menu-dropdown-item.active {
+    @apply font-extrabold;
+    background: var(--menu-dropdown-item-active-bg);
+    color: var(--menu-dropdown-item-active-text);
+}
+
+/* Mobile Nav Classes */
+.mobile-nav-panel {
+    @apply relative w-full max-w-lg mx-auto border;
+    @apply shadow-xl shadow-black/5 dark:shadow-black/20;
+    @apply overflow-hidden;
+    background: var(--mobile-nav-bg);
+    border-color: var(--mobile-nav-border);
+}
+
+.mobile-nav-panel::before,
+.mobile-nav-panel::after {
+    content: '';
+    @apply absolute w-64 h-64 rounded-full blur-3xl opacity-30;
+    @apply dark:opacity-20;
+    @apply pointer-events-none;
+    z-index: 0;
+}
+
+.mobile-nav-panel::before {
+    @apply -top-20 -left-20;
+    background: var(--menu-dropdown-bg);
+    opacity: 0.1;
+}
+
+.mobile-nav-panel::after {
+    @apply -bottom-20 -right-20;
+    background: var(--menu-dropdown-bg);
+    opacity: 0.1;
+}
+
+.mobile-nav-link {
+    @apply block text-lg font-semibold p-3 rounded-lg transition-colors duration-200;
+    color: var(--mobile-nav-link-text);
+}
+
+.mobile-nav-link:hover {
+    background-color: var(--mobile-nav-link-hover-bg);
+}
+
+.mobile-nav-link-active {
+    color: var(--mobile-nav-link-active-text);
+}
+
+.mobile-nav-link-exact-active {
+    background-color: var(--mobile-nav-link-active-bg);
+    color: var(--mobile-nav-link-active-text);
+}
+
+.mobile-nav-sublink {
+    @apply block text-base font-medium p-2 rounded-lg transition-colors duration-200;
+    color: var(--text-muted);
+}
+
+.mobile-nav-sublink:hover {
+    background-color: var(--mobile-nav-link-hover-bg);
+}
+
+/* Data Table Classes */
+.data-table {
+    @apply relative rounded-lg overflow-hidden border;
+
+    table {
+        @apply text-sm text-left w-full border-collapse;
+    }
+
+    table thead {
+        @apply text-sm capitalize leading-4;
+    }
+
+    table thead tr th {
+        @apply p-4;
+    }
+
+    table tbody tr {
+        @apply border-b transition duration-200;
+    }
+
+    table tbody tr td {
+        @apply p-4;
+    }
+}

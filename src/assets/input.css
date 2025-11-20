@@ -1,0 +1,71 @@
+.input {
+    @apply w-full rounded-lg border bg-white dark:bg-gray-1000;
+    @apply text-sm text-gray-900 dark:text-gray-100;
+    @apply px-4 py-2.5;
+    @apply border-gray-300 dark:border-gray-700;
+    @apply placeholder:text-gray-400 dark:placeholder:text-gray-500;
+    @apply transition-all duration-200 ease-in-out;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:border-blue-500;
+    @apply disabled:opacity-60 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed;
+}
+
+.invalid-input {
+    @apply !border-red-500 dark:!border-red-500;
+    @apply text-red-600 dark:text-red-400;
+    @apply placeholder:text-red-400/70;
+    @apply focus:!ring-red-500 focus:!border-red-500;
+}
+
+.dirty-input { @apply border-orange-400 dark:border-orange-500; }
+.label { @apply block text-sm font-medium text-gray-700 dark:text-gray-300; }
+
+.checkbox {
+    @apply appearance-none shrink-0;
+    @apply h-5 w-5 rounded-md border-2;
+    @apply bg-transparent border-gray-400/80 dark:border-gray-600;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+    @apply dark:ring-offset-gray-1100;
+    @apply hover:border-blue-500;
+    @apply cursor-pointer;
+}
+
+/* === CHECKED STATE === */
+.checkbox:checked {
+    @apply bg-blue-600 border-blue-600;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* === DISABLED STATE === */
+.checkbox:disabled {
+    @apply border-gray-300 dark:border-gray-700;
+    @apply bg-gray-100 dark:bg-gray-900;
+    @apply opacity-60 cursor-not-allowed;
+}
+.checkbox:checked:disabled {
+    @apply bg-blue-600/50 border-blue-600/50;
+}
+
+/* === INDETERMINATE STATE === */ 
+.checkbox:indeterminate {
+    @apply bg-blue-600 border-blue-600;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
+}
+
+/* === ERROR STATE === */
+.checkbox-error {
+    @apply !border-red-500;
+    @apply focus:!ring-red-500;
+}
+
+/* === SUCCESS STATE === */
+.checkbox-success {
+    @apply !border-green-500;
+    @apply focus:!ring-green-500;
+}
+.checkbox-success:checked {
+    @apply !bg-green-600 !border-green-600;
+}

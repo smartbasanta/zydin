@@ -1,0 +1,667 @@
+/* src/assets/css/_themes.css */
+
+/*
+ * VARIABLE NAMING CONVENTIONS:
+ *
+ * --color-{palette}-{shade}: Color palettes with numerical shades (50-1250)
+ *   - Primary: Main brand colors
+ *   - Secondary: Supporting colors
+ *   - Accent: Highlight colors
+ *   - Gray: Neutral grays
+ *   - Success/Warning/Error/Info: Semantic colors
+ *
+ * --btn-{variant}-{property}: Button styling variables
+ *   - Variants: primary, secondary, info, success, destructive, ghost, outline, link, icon, toggle, soft
+ *   - Properties: bg, hover, border, text, etc.
+ *
+ * --input-{property}: Form input styling
+ *   - Properties: bg, border, text, placeholder, focus-ring, etc.
+ *
+ * --card-{property}: Card component styling
+ *   - Properties: bg, border, shadow, backdrop, etc.
+ *
+ * --text-{variant}: Text color variants
+ *   - Variants: primary, secondary, muted, etc.
+ *
+ * --border-{variant}: Border color variants
+ *   - Variants: muted, secondary, etc.
+ *
+ * --gradient-{name}: CSS gradient definitions
+ *   - Names: primary, secondary, accent, hero, card, button
+ *
+ * --shadow-{size}: Box shadow definitions
+ *   - Sizes: sm, md, lg, xl, 2xl, inner, none
+ *
+ * --radius-{size}: Border radius definitions
+ *   - Sizes: none, sm, md, lg, xl, 2xl, 3xl, full
+ */
+
+/* Dynamic theme system - migrated from old themes.css */
+@theme {
+    /* Fonts */
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Colors - Primary */
+    --color-primary-50: #fbf9fc;
+    --color-primary-100: #f6f2f9;
+    --color-primary-200: #edeaf2;
+    --color-primary-300: #e4e1ec;
+    --color-primary-400: #dcd9e6;
+    --color-primary-500: #d3d0df;
+    --color-primary-600: #cac8d9;
+    --color-primary-700: #c1bfd2;
+    --color-primary-800: #b9b7cc;
+    --color-primary-900: #b0afc5;
+    --color-primary-1000: #a7a6bf;
+    --color-primary-1100: #9e9eb8;
+    --color-primary-1200: #9596b2;
+    --color-primary-1250: #8c8eab;
+
+    /* Colors - Secondary */
+    --color-secondary-0: #fffaf0;
+    --color-secondary-50: #fef6e6;
+    --color-secondary-100: #fef2dc;
+    --color-secondary-200: #fdedd2;
+    --color-secondary-300: #fde9c8;
+    --color-secondary-400: #fde5bf;
+    --color-secondary-500: #fce1b5;
+    --color-secondary-600: #fcddab;
+    --color-secondary-700: #fcd9a1;
+    --color-secondary-800: #fcd597;
+    --color-secondary-900: #fcd18d;
+    --color-secondary-1000: #fccc83;
+    --color-secondary-1100: #fcc879;
+    --color-secondary-1200: #fcc46f;
+    --color-secondary-1250: #fcbc5b;
+
+    /* Colors - Accent */
+    --color-accent-50: #fef7f6;
+    --color-accent-100: #fce7e5;
+    --color-accent-200: #f9d7d4;
+    --color-accent-300: #f7c7c2;
+    --color-accent-400: #f5b6b1;
+    --color-accent-500: #f3a6a0;
+    --color-accent-600: #f0968e;
+    --color-accent-700: #ee867d;
+    --color-accent-800: #ec766b;
+    --color-accent-900: #ea665a;
+
+    /* Colors - Gray */
+    --color-gray-0: #fbfbfb;
+    --color-gray-50: #f1f1f1;
+    --color-gray-100: #e7e7e7;
+    --color-gray-200: #dedede;
+    --color-gray-300: #d4d4d4;
+    --color-gray-400: #cacaca;
+    --color-gray-500: #c0c0c0;
+    --color-gray-600: #b6b6b6;
+    --color-gray-700: #adadad;
+    --color-gray-800: #a3a3a3;
+    --color-gray-900: #999999;
+    --color-gray-1000: #8f8f8f;
+    --color-gray-1100: #858585;
+    --color-gray-1200: #7c7c7c;
+    --color-gray-1250: #727272;
+
+    /* Semantic colors */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #8971a6 0%, #5f638b 100%);
+    --gradient-secondary: linear-gradient(135deg, #fcb13a 0%, #fb9801 100%);
+    --gradient-accent: linear-gradient(135deg, #e75549 0%, #c8281a 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(137, 113, 166, 0.9) 0%, rgba(95, 99, 139, 0.9) 100%);
+    --gradient-header: linear-gradient(135deg, rgba(137, 113, 166, 0.9) 0%, rgba(95, 99, 139, 0.9) 100%);
+    --gradient-footer: linear-gradient(135deg, rgba(137, 113, 166, 0.9) 0%, rgba(95, 99, 139, 0.9) 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    --gradient-button: linear-gradient(135deg, #fcb13a 0%, #fb9801 100%);
+
+    /* Spacing */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-none: none;
+
+    /* Border radius */
+    --radius-none: 0;
+    --radius-sm: 0.125rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px;
+
+    /* Animations */
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    --easing-linear: linear;
+    --easing-out: ease-out;
+    --easing-inOut: ease-in-out;
+}
+
+:root {
+    /* Section & Page Colors (Preserved from current) */
+    --section-bg: #f8fafc;
+    --section-text-color: #334155;
+    --section-title-color: #0f172a;
+    --section-description-color: #475569;
+
+    /* Header & Footer (Mapped to new gradients where appropriate, or preserved) */
+    --header-bg: var(--gradient-hero);
+    --header-text: #ffffff;
+    --footer-bg: var(--gradient-footer);
+    /* Updated to use old gradient */
+    --footer-text: rgba(255, 255, 255, 0.9);
+    --footer-heading: #ffffff;
+    --footer-link: rgba(255, 255, 255, 0.8);
+    --footer-link-hover: #ffffff;
+    --footer-social-bg: rgba(255, 255, 255, 0.1);
+    --footer-social-border: rgba(255, 255, 255, 0.2);
+
+    /* Buttons (Preserved from current) */
+    --btn-primary-bg: #475569;
+    --btn-primary-hover: #334155;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #e2e8f0;
+    --btn-secondary-hover: #cbd5e1;
+    --btn-secondary-text: #334155;
+    --btn-danger-bg: #ef4444;
+    --btn-danger-hover: #dc2626;
+    --btn-danger-text: #ffffff;
+    --btn-success-bg: #10b981;
+    --btn-success-hover: #059669;
+    --btn-success-text: #ffffff;
+    --btn-glass-bg: rgba(255, 255, 255, 0.2);
+    --btn-glass-hover: rgba(255, 255, 255, 0.3);
+    --btn-glass-border: rgba(255, 255, 255, 0.4);
+    --btn-glass-text: #ffffff;
+
+    /* Cards */
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --card-backdrop-bg: rgba(255, 255, 255, 0.5);
+    --card-backdrop-border: rgba(255, 255, 255, 0.7);
+
+    /* Inputs */
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --input-text: #0f172a;
+    --input-placeholder: #94a3b8;
+    --input-focus-ring: #64748b;
+    --input-invalid-border: #ef4444;
+    --input-dirty-border: #f59e0b;
+    --label-text: #334155;
+    --checkbox-border: #cbd5e1;
+    --checkbox-checked-bg: #475569;
+    --checkbox-checked-border: #475569;
+
+    /* Dropdowns & Modals */
+    --menu-dropdown-bg: var(--gradient-hero);
+    --menu-dropdown-border: rgba(255, 255, 255, 0.2);
+    --menu-dropdown-item-text: rgba(255, 255, 255, 0.95);
+    --menu-dropdown-item-hover-bg: rgba(255, 255, 255, 0.1);
+    --menu-dropdown-item-active-text: #ffffff;
+    --menu-dropdown-item-active-bg: rgba(255, 255, 255, 0.2);
+
+    /* Mobile Navigation Colors */
+    --mobile-nav-bg: rgba(255, 255, 255, 0.95);
+    --mobile-nav-border: rgba(0, 0, 0, 0.1);
+    --mobile-nav-link-text: #334155;
+    --mobile-nav-link-hover-bg: rgba(0, 0, 0, 0.05);
+    --mobile-nav-link-active-bg: rgba(71, 85, 105, 0.1);
+    --mobile-nav-link-active-text: #475569;
+
+    /* Misc */
+    --text-muted: #64748b;
+    --border-muted: #e2e8f0;
+    --divide-muted: #e2e8f0;
+}
+
+.dark {
+    /* Old dark mode overrides */
+    --color-gray-0: #0a0a0a;
+    --color-gray-50: #1a1a1a;
+    --color-gray-100: #262626;
+    --color-gray-200: #404040;
+    --color-gray-300: #525252;
+    --color-gray-400: #666666;
+    --color-gray-500: #808080;
+    --color-gray-600: #999999;
+    --color-gray-700: #b3b3b3;
+    --color-gray-800: #cccccc;
+    --color-gray-900: #e6e6e6;
+    --color-gray-1000: #f0f0f0;
+    --color-gray-1100: #f5f5f5;
+    --color-gray-1200: #fafafa;
+    --color-gray-1250: #fdfdfd;
+
+    /* Current dark mode overrides */
+    --section-bg: #0f172a;
+    --section-text-color: #94a3b8;
+    --section-title-color: #e2e8f0;
+    --section-description-color: #cbd5e1;
+    --header-text: #e2e8f0;
+    --footer-text: rgba(226, 232, 240, 0.9);
+    --footer-heading: #ffffff;
+    --footer-link: rgba(226, 232, 240, 0.8);
+    --footer-link-hover: #ffffff;
+    --btn-secondary-bg: #334155;
+    --btn-secondary-hover: #475569;
+    --btn-secondary-text: #e2e8f0;
+    --btn-glass-bg: rgba(51, 65, 85, 0.3);
+    --btn-glass-hover: rgba(51, 65, 85, 0.5);
+    --btn-glass-border: rgba(71, 85, 105, 0.6);
+    --btn-glass-text: #e2e8f0;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --card-backdrop-bg: rgba(15, 23, 42, 0.5);
+    --card-backdrop-border: rgba(51, 65, 85, 0.7);
+    --input-bg: #1e293b;
+    --input-border: #475569;
+    --input-text: #f1f5f9;
+    --input-placeholder: #64748b;
+    --input-focus-ring: #94a3b8;
+    --label-text: #cbd5e1;
+    --checkbox-border: #475569;
+    --menu-dropdown-bg: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
+    --menu-dropdown-border: #334155;
+    --menu-dropdown-item-text: #cbd5e1;
+    --menu-dropdown-item-hover-bg: rgba(148, 163, 184, 0.1);
+    --menu-dropdown-item-active-text: #ffffff;
+    --menu-dropdown-item-active-bg: rgba(148, 163, 184, 0.2);
+    --mobile-nav-bg: rgba(30, 41, 59, 0.95);
+    --mobile-nav-border: rgba(51, 65, 85, 0.8);
+    --mobile-nav-link-text: #cbd5e1;
+    --mobile-nav-link-hover-bg: rgba(148, 163, 184, 0.1);
+    --mobile-nav-link-active-bg: rgba(148, 163, 184, 0.15);
+    --mobile-nav-link-active-text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border-muted: #334155;
+    --divide-muted: #334155;
+}
+
+/* ================== BIOTECH THEME ================== */
+.theme-biotech {
+    /* Merged Gradients & Colors */
+    --gradient-hero: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-header: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-footer: linear-gradient(135deg, rgba(30, 64, 175, 0.98) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    --gradient-secondary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%);
+
+    /* Section Colors */
+    --section-bg: #eff6ff;
+    --section-text-color: #1e3a8a;
+    --section-title-color: #1e40af;
+    --section-description-color: #1d4ed8;
+
+    /* Biotech Primary Color Shades (from old) */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    --color-primary-1000: #172554;
+    --color-primary-1100: #0f172a;
+    --color-primary-1200: #0f1419;
+    --color-primary-1250: #0a0f14;
+
+    /* Biotech Secondary Color Shades (from old) */
+    --color-secondary-0: #f0fdf4;
+    --color-secondary-50: #dcfce7;
+    --color-secondary-100: #bbf7d0;
+    --color-secondary-200: #86efac;
+    --color-secondary-300: #4ade80;
+    --color-secondary-400: #22c55e;
+    --color-secondary-500: #16a34a;
+    --color-secondary-600: #15803d;
+    --color-secondary-700: #166534;
+    --color-secondary-800: #14532d;
+    --color-secondary-900: #052e16;
+    --color-secondary-1000: #041f0f;
+    --color-secondary-1100: #030f08;
+    --color-secondary-1200: #020804;
+    --color-secondary-1250: #010402;
+
+    /* Header & Footer overrides */
+    --header-bg: var(--gradient-header);
+    --header-text: #ffffff;
+    --footer-bg: var(--gradient-footer);
+    --footer-text: rgba(255, 255, 255, 0.9);
+    --footer-heading: #ffffff;
+    --footer-link: rgba(255, 255, 255, 0.8);
+    --footer-link-hover: #ffffff;
+    --footer-social-bg: rgba(255, 255, 255, 0.1);
+    --footer-social-border: rgba(255, 255, 255, 0.2);
+
+    /* Dropdown overrides */
+    --menu-dropdown-bg: var(--gradient-hero);
+    --menu-dropdown-border: rgba(30, 64, 175, 0.3);
+    --menu-dropdown-item-text: rgba(255, 255, 255, 0.95);
+    --menu-dropdown-item-hover-bg: rgba(30, 64, 175, 0.2);
+    --menu-dropdown-item-active-text: #ffffff;
+    --menu-dropdown-item-active-bg: rgba(30, 64, 175, 0.3);
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: rgba(239, 246, 255, 0.95);
+    --mobile-nav-border: rgba(30, 64, 175, 0.2);
+    --mobile-nav-link-text: #1e40af;
+    --mobile-nav-link-hover-bg: rgba(30, 64, 175, 0.1);
+    --mobile-nav-link-active-bg: rgba(30, 64, 175, 0.15);
+    --mobile-nav-link-active-text: #1e40af;
+
+    /* Other Overrides */
+    --btn-primary-bg: #1e40af;
+    --btn-primary-hover: #2563eb;
+    --card-backdrop-bg: rgba(30, 64, 175, 0.1);
+    --card-backdrop-border: rgba(30, 64, 175, 0.3);
+    --input-focus-ring: #2563eb;
+    --checkbox-checked-bg: #1e40af;
+    --checkbox-checked-border: #1e40af;
+}
+
+/* Biotech Header theme class overrides */
+.theme-biotech .header-bg {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    border-bottom: 1px solid rgba(30, 64, 175, 0.2);
+}
+
+.theme-biotech .header-text {
+    color: white;
+}
+
+.theme-biotech .header-logo-text {
+    color: white;
+}
+
+.theme-biotech .header-tagline {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Biotech Footer theme class overrides */
+.theme-biotech .footer-bg {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.98) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+}
+
+.theme-biotech .footer-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-biotech .footer-heading {
+    color: white;
+    font-weight: 700;
+}
+
+.theme-biotech .footer-link {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.theme-biotech .footer-link:hover {
+    color: white;
+}
+
+.theme-biotech .footer-social-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.theme-biotech .footer-social-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Biotech Dropdown theme class overrides */
+.theme-biotech .menu-dropdown-panel {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(139, 92, 246, 0.98) 100%);
+    border-color: rgba(30, 64, 175, 0.3);
+}
+
+.theme-biotech .menu-dropdown-item {
+    color: var(--color-gray-100);
+}
+
+.theme-biotech .menu-dropdown-item:hover {
+    background: rgba(30, 64, 175, 0.2);
+    color: white;
+}
+
+.theme-biotech .menu-dropdown-item.active {
+    color: var(--color-secondary-1200);
+}
+
+
+/* ================== PHARMACEUTICAL THEME ================== */
+.theme-pharmaceutical {
+    /* Merged Gradients & Colors */
+    --gradient-hero: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(22, 163, 74, 0.98) 100%);
+    --gradient-header: linear-gradient(135deg, rgba(30, 64, 175, 0.95) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(22, 163, 74, 0.98) 100%);
+    --gradient-footer: linear-gradient(135deg, rgba(30, 64, 175, 0.98) 0%, rgba(59, 130, 246, 0.95) 50%, rgba(22, 163, 74, 0.98) 100%);
+    --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    --gradient-secondary: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+    --gradient-accent: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%);
+
+    /* Section Colors */
+    --section-bg: #f0fdf4;
+    --section-text-color: #065f46;
+    --section-title-color: #064e3b;
+    --section-description-color: #059669;
+
+    /* Pharmaceutical Primary Color Shades (from old) */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    --color-primary-1000: #172554;
+    --color-primary-1100: #0f172a;
+    --color-primary-1200: #0f1419;
+    --color-primary-1250: #0a0f14;
+
+    /* Pharmaceutical Secondary Color Shades (from old) */
+    --color-secondary-0: #f0fdf4;
+    --color-secondary-50: #dcfce7;
+    --color-secondary-100: #bbf7d0;
+    --color-secondary-200: #86efac;
+    --color-secondary-300: #4ade80;
+    --color-secondary-400: #22c55e;
+    --color-secondary-500: #16a34a;
+    --color-secondary-600: #15803d;
+    --color-secondary-700: #166534;
+    --color-secondary-800: #14532d;
+    --color-secondary-900: #052e16;
+    --color-secondary-1000: #041f0f;
+    --color-secondary-1100: #030f08;
+    --color-secondary-1200: #020804;
+    --color-secondary-1250: #010402;
+
+    /* Header & Footer overrides */
+    --header-bg: var(--gradient-header);
+    --header-text: #ffffff;
+    --footer-bg: var(--gradient-footer);
+    --footer-text: rgba(255, 255, 255, 0.9);
+    --footer-heading: #ffffff;
+    --footer-link: rgba(255, 255, 255, 0.8);
+    --footer-link-hover: #ffffff;
+    --footer-social-bg: rgba(255, 255, 255, 0.1);
+    --footer-social-border: rgba(255, 255, 255, 0.2);
+
+    /* Dropdown overrides */
+    --menu-dropdown-bg: var(--gradient-hero);
+    --menu-dropdown-border: rgba(22, 163, 74, 0.3);
+    --menu-dropdown-item-text: rgba(255, 255, 255, 0.95);
+    --menu-dropdown-item-hover-bg: rgba(22, 163, 74, 0.2);
+    --menu-dropdown-item-active-text: #ffffff;
+    --menu-dropdown-item-active-bg: rgba(22, 163, 74, 0.3);
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: rgba(240, 253, 244, 0.95);
+    --mobile-nav-border: rgba(22, 163, 74, 0.2);
+    --mobile-nav-link-text: #064e3b;
+    --mobile-nav-link-hover-bg: rgba(22, 163, 74, 0.1);
+    --mobile-nav-link-active-bg: rgba(22, 163, 74, 0.15);
+    --mobile-nav-link-active-text: #16a34a;
+
+    /* Other Overrides */
+    --btn-primary-bg: #16a34a;
+    --btn-primary-hover: #15803d;
+    --card-backdrop-bg: rgba(22, 163, 74, 0.1);
+    --card-backdrop-border: rgba(22, 163, 74, 0.3);
+    --input-focus-ring: #16a34a;
+    --checkbox-checked-bg: #16a34a;
+    --checkbox-checked-border: #16a34a;
+}
+
+/* ================== STORYTELLING THEME ================== */
+.theme-storytelling {
+    /* Merged Gradients & Colors */
+    --gradient-hero: linear-gradient(135deg, rgba(234, 88, 12, 0.95) 0%, rgba(251, 146, 60, 0.95) 50%, rgba(220, 38, 38, 0.98) 100%);
+    --gradient-header: linear-gradient(135deg, rgba(234, 88, 12, 0.95) 0%, rgba(251, 146, 60, 0.95) 50%, rgba(220, 38, 38, 0.98) 100%);
+    --gradient-footer: linear-gradient(135deg, rgba(234, 88, 12, 0.98) 0%, rgba(251, 146, 60, 0.95) 50%, rgba(220, 38, 38, 0.98) 100%);
+    --gradient-primary: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+    --gradient-secondary: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+    --gradient-accent: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%);
+
+    /* Section Colors */
+    --section-bg: #fff7ed;
+    --section-text-color: #9a3412;
+    --section-title-color: #7c2d12;
+    --section-description-color: #c2410c;
+
+    /* Storytelling Primary Color Shades (from old) */
+    --color-primary-50: #fef3f2;
+    --color-primary-100: #fee2e2;
+    --color-primary-200: #fecaca;
+    --color-primary-300: #fca5a5;
+    --color-primary-400: #f87171;
+    --color-primary-500: #ef4444;
+    --color-primary-600: #dc2626;
+    --color-primary-700: #b91c1c;
+    --color-primary-800: #991b1b;
+    --color-primary-900: #7f1d1d;
+    --color-primary-1000: #450a0a;
+    --color-primary-1100: #2d0606;
+    --color-primary-1200: #1c0404;
+    --color-primary-1250: #120202;
+
+    /* Storytelling Secondary Color Shades (from old) */
+    --color-secondary-0: #fff7ed;
+    --color-secondary-50: #ffedd5;
+    --color-secondary-100: #fed7aa;
+    --color-secondary-200: #fdba74;
+    --color-secondary-300: #fb923c;
+    --color-secondary-400: #fb923c;
+    --color-secondary-500: #f97316;
+    --color-secondary-600: #ea580c;
+    --color-secondary-700: #c2410c;
+    --color-secondary-800: #9a3412;
+    --color-secondary-900: #7c2d12;
+    --color-secondary-1000: #431407;
+    --color-secondary-1100: #2d0a05;
+    --color-secondary-1200: #1c0603;
+    --color-secondary-1250: #120402;
+
+    /* Header & Footer overrides */
+    --header-bg: var(--gradient-header);
+    --header-text: #ffffff;
+    --footer-bg: var(--gradient-footer);
+    --footer-text: rgba(255, 255, 255, 0.9);
+    --footer-heading: #ffffff;
+    --footer-link: rgba(255, 255, 255, 0.8);
+    --footer-link-hover: #ffffff;
+    --footer-social-bg: rgba(255, 255, 255, 0.1);
+    --footer-social-border: rgba(255, 255, 255, 0.2);
+
+    /* Dropdown overrides */
+    --menu-dropdown-bg: var(--gradient-hero);
+    --menu-dropdown-border: rgba(234, 88, 12, 0.3);
+    --menu-dropdown-item-text: rgba(255, 255, 255, 0.95);
+    --menu-dropdown-item-hover-bg: rgba(234, 88, 12, 0.2);
+    --menu-dropdown-item-active-text: #ffffff;
+    --menu-dropdown-item-active-bg: rgba(234, 88, 12, 0.3);
+
+    /* Mobile Navigation */
+    --mobile-nav-bg: rgba(255, 247, 237, 0.95);
+    --mobile-nav-border: rgba(234, 88, 12, 0.2);
+    --mobile-nav-link-text: #7c2d12;
+    --mobile-nav-link-hover-bg: rgba(234, 88, 12, 0.1);
+    --mobile-nav-link-active-bg: rgba(234, 88, 12, 0.15);
+    --mobile-nav-link-active-text: #ea580c;
+
+    /* Other Overrides */
+    --btn-primary-bg: #ea580c;
+    --btn-primary-hover: #c2410c;
+    --card-backdrop-bg: rgba(234, 88, 12, 0.1);
+    --card-backdrop-border: rgba(234, 88, 12, 0.3);
+    --input-focus-ring: #ea580c;
+    --checkbox-checked-bg: #ea580c;
+    --checkbox-checked-border: #ea580c;
+}
+
+/* Utility classes for theme system (from old) */
+@utility bg-gradient-primary {
+    background: var(--gradient-primary);
+}
+
+@utility bg-gradient-secondary {
+    background: var(--gradient-secondary);
+}
+
+@utility bg-gradient-accent {
+    background: var(--gradient-accent);
+}
+
+@utility bg-gradient-hero {
+    background: var(--gradient-hero);
+}
+
+@utility bg-gradient-card {
+    background: var(--gradient-card);
+}
+
+@utility bg-gradient-button {
+    background: var(--gradient-button);
+}
+
+@utility bg-gradient-footer {
+    background: var(--gradient-footer);
+}
+
+@utility section-bg {
+    background: var(--section-bg);
+}
+
+@utility section-text {
+    color: var(--section-text-color);
+}
