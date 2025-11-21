@@ -32,33 +32,30 @@
 </script>
 
 <template>
-    <div class="p-4 border-b border-border-color">
-        <div class="flex items-center justify-between pb-3 gap-2">
-            <div class="flex flex-1 items-center gap-2">
-                <button v-if="refreshData" @click="resetData" class="btn-icon is-square btn-secondary-border" title="Reload Data">
+    <div class="p-4 md:px-6 border-b border-muted">
+        <!-- Top Row: Title and Global Actions -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
+            <div class="flex items-center gap-2">
+                <button v-if="refreshData" @click="resetData" class="btn btn-icon btn-secondary" title="Reload and Reset">
                     <RefreshCwIcon class="size-4" />
-                    <span class="sr-only">Reload</span>
                 </button>
-                <h5 class="font-semibold text-lg text-foreground">
-                    <slot name="title">Table Title</slot>
-                </h5>
-            </div>
-            <div class="flex items-center justify-end shrink-0 gap-2 sm:gap-4">
-                <slot name="actions-header"></slot>
-                <!-- <TableActions /> -->
-            </div>
-        </div>
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4">
-            <div class="flex items-center gap-2 sm:gap-4 w-full lg:w-auto">
-                <TableSearch class="flex-grow" />
-                <TableFilters v-if="hasFilterableColumns && width >= 768" class="hidden md:block" />
-            </div>
-            <div class="flex items-center gap-2 sm:gap-4 justify-between w-full lg:w-auto">
-                <TableFilters v-if="hasFilterableColumns && width < 768" class="block md:hidden flex-grow md:flex-grow-0" />
-                <div class="flex items-center lg:justify-end shrink-0">
-                    <slot name="add-new-button"></slot>
+                <div>
+                    <h2 class="text-xl font-bold section-title">
+                        <slot name="title">Data Records</slot>
+                    </h2>
+                     <p class="text-sm text-muted">Manage and review all records.</p>
                 </div>
             </div>
+            <div class="flex items-center justify-end shrink-0 gap-2">
+                <slot name="actions-header"></slot>
+                <slot name="add-new-button"></slot>
+            </div>
+        </div>
+
+        <!-- Bottom Row: Search and Filters -->
+        <div class="flex flex-col md:flex-row items-center gap-4">
+            <TableSearch class="w-full md:max-w-xs" />
+            <TableFilters v-if="hasFilterableColumns" />
         </div>
     </div>
 </template>

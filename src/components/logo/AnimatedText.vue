@@ -66,13 +66,13 @@ const props = withDefaults(defineProps<{
   cycleDuration: 8000,
   fontSize: '2.5rem',
   fontWeight: '600',
-  textColor: '#6d6d6d',
-  darkTextColor: '#ec4899',
+  textColor: 'var(--color-gray-600)',
+  darkTextColor: 'var(--color-primary-400)',
   charAnimationDelay: 30,
   wordAnimationDelay: 200,
   scatterIntensity: 150,
   autoColor: false, // Disabled by default
-  backgroundColor: '#FFFFFF', // Default to white
+  backgroundColor: 'var(--color-gray-0)', // Default to theme surface
 });
 
 // --- Animation Durations ---

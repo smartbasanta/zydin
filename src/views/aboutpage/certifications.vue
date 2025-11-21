@@ -11,47 +11,89 @@ onMounted(fetchCertifications);
 </script>
 
 <template>
-    <div class="bg-white dark:bg-primary-1200">
-        <!-- Page Header -->
-        <header class="py-20 text-center text-white bg-gradient-to-br from-primary-800 to-primary-1000">
-            <div class="container px-4 mx-auto">
-                <div class="inline-block p-4 mb-4 border-2 rounded-full border-white/20 bg-white/10">
-                    <ShieldCheckIcon class="w-10 h-10" />
+    <div class="section-bg">
+        <!-- Modern Hero Header -->
+        <header class="page-hero">
+            <div class="page-hero__glow page-hero__glow--primary" aria-hidden="true"></div>
+            <div class="page-hero__glow page-hero__glow--secondary" aria-hidden="true"></div>
+            <div class="container mx-auto px-6 py-20 md:py-28 text-center relative z-10">
+                <div class="inline-block p-5 mb-6 rounded-full bg-white/10 border-2 border-white/20 backdrop-blur-sm">
+                    <ShieldCheckIcon class="w-10 h-10 text-white" />
                 </div>
-                <h1 class="text-4xl font-bold md:text-5xl font-grotesk">Our Commitment to Quality</h1>
-                <p class="max-w-3xl mx-auto mt-4 text-lg text-primary-200">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-shadow-lg">Our Commitment to Quality</h1>
+                <p class="max-w-3xl mx-auto mt-4 text-lg text-white/90 text-shadow-md">
                     We adhere to the most rigorous global standards to ensure the safety, efficacy, and quality of every product we manufacture. Our certifications are a testament to this promise.
                 </p>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main class="py-20 sm:py-24">
-            <div class="container max-w-4xl px-4 mx-auto">
-                <!-- Loading State -->
-                <div v-if="isLoading" class="flex items-center justify-center">
+        <main class="py-20 md:py-28">
+            <div class="container max-w-6xl px-6 mx-auto">
+                <div v-if="isLoading" class="flex items-center justify-center h-64">
                     <LoadingState message="Loading Certifications..." />
                 </div>
 
-                <!-- Certifications List (Now a simple vertical stack) -->
-                <div v-else-if="certifications.length > 0" 
-                     class="space-y-8">
-                    
-                    <div v-for="(cert, index) in certifications" 
-                         :key="cert.id"
-                         class="wow animate__animated animate__fadeInUp"
-                         :data-wow-delay="`${index * 0.1}s`">
-                        
-                        <CertificationCard :certification="cert" />
+                <!-- Modern Grid Layout with Stagger Animation -->
+                <TransitionGroup
+                    v-else-if="certifications.length > 0" 
+                    tag="div"
+                    name="list"
+                    appear
+                    class="grid md:grid-cols-2 gap-8"
+                >
+                    <CertificationCard 
+                        v-for="(cert, index) in certifications" 
+                        :key="cert.id"
+                        :certification="cert"
+                        :style="{ transitionDelay: `${index * 100}ms` }"
+                    />
+                </TransitionGroup>
 
-                    </div>
-                </div>
-
-                <!-- Empty State -->
-                <div v-else class="text-center text-gray-500 dark:text-primary-400">
-                    <p>Certification details are currently unavailable. Please check back later.</p>
+                <div v-else class="text-center card-backdrop p-12 max-w-2xl mx-auto">
+                    <p class="text-lg text-muted">Certification details are currently unavailable. Please check back later.</p>
                 </div>
             </div>
         </main>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* Consistent Hero Styling */
+.page-hero {
+    position: relative;
+    overflow: hidden;
+    background-image: var(--gradient-hero);
+}
+.page-hero__glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+.page-hero__glow--primary {
+    background: var(--gradient-accent);
+    width: 350px; height: 350px;
+    top: -100px; right: -100px; opacity: 0.4;
+}
+.page-hero__glow--secondary {
+    background: var(--gradient-secondary);
+    width: 300px; height: 300px;
+    bottom: -100px; left: -50px; opacity: 0.3;
+}
+.text-shadow-lg { text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+.text-shadow-md { text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+/* Staggered List Animation */
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.5s ease;
+}
+</style>

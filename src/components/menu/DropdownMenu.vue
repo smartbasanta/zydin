@@ -72,10 +72,11 @@ const handleMouseLeave = () => {
 </template>
 
 <style scoped>
-@reference "@/assets/main.css";
+@reference "@/assets/css/main.css";
 
 .nav-link {
-    @apply hover:text-primary-1000 dark:hover:text-blue-800 transition-all duration-300 hover:scale-105 active:scale-95;
+    @apply transition-all duration-300 hover:scale-105 active:scale-95;
+    @apply hover:text-[var(--color-primary-800)] dark:hover:text-[var(--color-primary-400)];
 }
 
 

@@ -111,7 +111,7 @@ onUnmounted(() => {
 
                 <!-- Testimonial text -->
                 <blockquote class="text-center mb-8">
-                  <p class="text-lg md:text-xl text-gray-700 leading-relaxed font-medium italic">
+                  <p class="text-lg md:text-xl testimonial-quote leading-relaxed font-medium italic">
                     "{{ testimonial.text }}"
                   </p>
                 </blockquote>
@@ -121,21 +121,21 @@ onUnmounted(() => {
                   <div class="flex items-center justify-center gap-1 mb-3">
                     <!-- Stars -->
                     <svg v-for="i in testimonial.rating" :key="`filled-${testimonial.id}-${i}`" xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-yellow-400">
+                      viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 testimonial-star">
                       <path fill-rule="evenodd"
                         d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.007z"
                         clip-rule="evenodd"></path>
                     </svg>
                     <svg v-for="i in 5 - testimonial.rating" :key="`empty-${testimonial.id}-${i}`" xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-gray-300 dark:text-gray-600">
+                      viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 testimonial-star-empty">
                       <path fill-rule="evenodd"
                         d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.007z"
                         clip-rule="evenodd"></path>
                     </svg>
                   </div>
 
-                  <h4 class="font-semibold text-primary-1200 text-lg">{{ testimonial.name }}</h4>
-                  <p class="text-sm text-gray-600">{{ testimonial.role }}</p>
+                  <h4 class="font-semibold text-primary text-lg testimonial-author">{{ testimonial.name }}</h4>
+                  <p class="text-sm testimonial-role">{{ testimonial.role }}</p>
                 </div>
               </div>
             </div>
@@ -157,3 +157,23 @@ onUnmounted(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.testimonial-quote {
+  color: var(--section-text-color);
+}
+.testimonial-author {
+  color: var(--section-title-color);
+}
+.testimonial-role {
+  color: var(--section-description-color);
+}
+.testimonial-star {
+  color: color-mix(in srgb, var(--color-warning) 85%, transparent);
+}
+.testimonial-star-empty {
+  color: color-mix(in srgb, var(--section-description-color) 55%, transparent);
+}
+</style>

@@ -49,14 +49,14 @@
 </script>
 
 <template>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto overflow-y-visible">
         <table class="w-full min-w-[600px] text-sm">
-            <thead class="border-b border-secondary">
-                <tr class="text-muted">
-                    <th class="w-12 px-4 py-3 text-left font-medium">
+            <thead class="bg-section-bg">
+                <tr>
+                    <th class="table-header-cell w-12">
                         <input
-                            class="checkbox primary"
                             type="checkbox"
+                            class="checkbox"
                             :checked="isAllSelected"
                             @change="toggleRowSelection('all')"
                             :disabled="!dataToDisplay || dataToDisplay.length === 0"
@@ -65,83 +65,58 @@
                     <th
                         v-for="col in displayedColumns"
                         :key="col.key"
-                        class="px-4 py-3 text-left font-medium whitespace-nowrap"
-                        :class="[
-                            { 'text-right': col.align === 'right', 'text-center': col.align === 'center' },
-                            col.headerClass
-                        ]"
+                        class="table-header-cell"
+                        :class="[{ 'text-right': col.align === 'right', 'text-center': col.align === 'center' }, col.headerClass]"
                     >
-                        <Dropdown v-if="col.sortable">
+                        <Dropdown v-if="col.sortable" placement="bottom-start">
                             <template #trigger="{ toggle }">
-                                <button
-                                    @click="toggle()"
-                                    class="btn btn-link text-sm font-normal !no-underline"
-                                    :class="{ 'is-active': currentSort.includes(col.key) }"
-                                >
+                                <button @click="toggle()" class="sort-button" :class="{ 'is-active': currentSort.includes(col.key) }">
                                     <span>{{ col.name }}</span>
                                     <ArrowUpIcon v-if="getColumnSortDirection(col.key) === 'asc'" class="size-3.5" />
                                     <ArrowDownIcon v-else-if="getColumnSortDirection(col.key) === 'desc'" class="size-3.5" />
-                                    <ChevronsUpDownIcon v-else class="size-3.5 opacity-50" />
-                                    <span v-if="getSortOrderIndicator(col.key)" class="text-xs opacity-70">
-                                        {{ getSortOrderIndicator(col.key) }}
-                                    </span>
+                                    <ChevronsUpDownIcon v-else class="size-3.5 opacity-40" />
+                                    <span v-if="getSortOrderIndicator(col.key)" class="text-xs opacity-60">{{ getSortOrderIndicator(col.key) }}</span>
                                 </button>
                             </template>
                             <template #menu="{ close }">
-                                <div class="dropdown-content py-1"> 
-                                    <button
-                                        data-dropdown-item 
-                                        @click="performSort(col.key, 'asc'); close(true);"
-                                        class="menu-dropdown-item"
-                                        :class="{ 'active': getColumnSortDirection(col.key) === 'asc' }"
-                                    >
-                                        <ArrowUpIcon class="size-4 mr-2" /> Ascending
-                                    </button>
-                                    <button
-                                        data-dropdown-item
-                                        @click="performSort(col.key, 'desc'); close(true);"
-                                        class="menu-dropdown-item"
-                                        :class="{ 'active': getColumnSortDirection(col.key) === 'desc' }"
-                                    >
-                                        <ArrowDownIcon class="size-4 mr-2" /> Descending
-                                    </button>
-                                    <div v-if="getColumnSortDirection(col.key)" class="h-px bg-border-color my-1 mx-2"></div>
-                                    <button
-                                        v-if="getColumnSortDirection(col.key)"
-                                        data-dropdown-item
-                                        @click="performSort(col.key, null); close(true);"
-                                        class="menu-dropdown-item"
-                                    >
-                                        <ChevronsUpDownIcon class="size-4 mr-2 opacity-50" /> Reset Sort
-                                    </button>
+                                <!-- Uses the standard, theme-aware dropdown panel -->
+                                <div class="menu-dropdown-panel w-48">
+                                    <div class="p-1">
+                                        <button @click="performSort(col.key, 'asc'); close(true);" class="menu-dropdown-item" :class="{ 'active': getColumnSortDirection(col.key) === 'asc' }">
+                                            <ArrowUpIcon class="size-4" /> Ascending
+                                        </button>
+                                        <button @click="performSort(col.key, 'desc'); close(true);" class="menu-dropdown-item" :class="{ 'active': getColumnSortDirection(col.key) === 'desc' }">
+                                            <ArrowDownIcon class="size-4" /> Descending
+                                        </button>
+                                        <template v-if="getColumnSortDirection(col.key)">
+                                            <div class="h-px bg-muted my-1"></div>
+                                            <button @click="performSort(col.key, null); close(true);" class="menu-dropdown-item">
+                                                <ChevronsUpDownIcon class="size-4 opacity-50" /> Reset Sort
+                                            </button>
+                                        </template>
+                                    </div>
                                 </div>
                             </template>
                         </Dropdown>
                         <span v-else>{{ col.name }}</span>
                     </th>
-                    <th v-if="actionColumn"
-                        class="px-4 py-3 text-left font-medium whitespace-nowrap"
-                        :class="[
-                            { 'text-right': actionColumn.align === 'right', 'text-center': actionColumn.align === 'center' },
-                            actionColumn.headerClass
-                        ]"
-                    >
+                    <th v-if="actionColumn" class="table-header-cell" :class="[{ 'text-right': actionColumn.align === 'right', 'text-center': actionColumn.align === 'center' }, actionColumn.headerClass]">
                         {{ actionColumn.name }}
                     </th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-border-color">
+            <tbody class="">
                 <template v-if="dataToDisplay && dataToDisplay.length > 0">
                     <tr
                         v-for="row in dataToDisplay"
                         :key="row.id"
-                        class="hover:bg-muted/10 transition-colors"
-                        :class="{ 'bg-primary/5 font-medium': isRowSelected(row) }"
+                        class="table-row"
+                        :class="{ 'is-selected': isRowSelected(row) }"
                     >
-                        <td class="px-4 py-2.5">
+                        <td class="table-cell">
                             <input
-                                class="checkbox primary"
                                 type="checkbox"
+                                class="checkbox"
                                 :checked="isRowSelected(row)"
                                 @change="toggleRowSelection(row.id)"
                             />

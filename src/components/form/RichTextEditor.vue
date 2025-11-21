@@ -247,27 +247,29 @@ const isCommandActive = (cmd: string) => activeCommands.value.has(cmd);
     border-radius: 0.375rem;
     transition: background-color 0.2s;
 }
-.toolbar-btn:hover { background-color: #e5e7eb; }
-.dark .toolbar-btn:hover { background-color: #374151; }
-.toolbar-btn.is-active { background-color: #dbeafe; color: #2563eb; }
-.dark .toolbar-btn.is-active { background-color: #1e3a8a; color: #eff6ff; }
+.toolbar-btn:hover { background-color: var(--color-gray-200); }
+.toolbar-btn.is-active {
+    background-color: color-mix(in srgb, var(--color-primary-200) 75%, var(--color-gray-0));
+    color: var(--color-primary-700);
+}
 
 .divider {
     width: 1px;
     height: 1.25rem;
-    background-color: #d1d5db; /* gray-300 */
+    background-color: var(--color-gray-300);
     margin: 0 0.5rem;
 }
-.dark .divider { background-color: #4b5563; }
 
 .toolbar-select {
     @apply text-sm px-2 py-1 h-8;
 }
 
 .invalid-input-ring {
-    @apply border-red-500 dark:border-red-400 ring-2 ring-red-500/20;
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-error) 20%, transparent);
 }
 .dirty-input-ring {
-     @apply border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-info) 20%, transparent);
 }
 </style>

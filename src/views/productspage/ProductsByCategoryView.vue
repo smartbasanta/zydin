@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import ProductCard from './partials/ProductCard.vue';
+import ProductCard from '@/components/common/ProductCard.vue';
 import ProductFilters from './partials/ProductFilters.vue';
 import LoadingState from '@/components/loading/LoadingState.vue';
 import { useProductsAPI } from '@/composables/fetch-public-apis/useProductsAPI';

@@ -1,0 +1,67 @@
+/* src/assets/css/components/graph.css */
+/*
+=================================================================
+"Living Access Graph" Styles
+=================================================================
+*/
+.graph-node {
+    @apply relative flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all duration-300;
+    @apply backdrop-blur-sm;
+    background-color: color-mix(in srgb, var(--card-bg) 85%, transparent);
+    border: 1px solid color-mix(in srgb, var(--card-border) 85%, transparent);
+}
+
+.graph-node:hover {
+    background-color: color-mix(in srgb, var(--card-bg) 95%, var(--color-gray-0));
+    border-color: color-mix(in srgb, var(--card-border) 95%, var(--color-gray-600));
+    @apply scale-105;
+}
+
+/* When a node is active, it gets a bright border */
+.graph-node.active {
+    @apply scale-105 border-2;
+}
+
+/* Dim inactive nodes */
+#access-graph-container.is-inspecting .graph-node:not(.active) {
+    @apply opacity-30 scale-95;
+}
+
+/* Node type-specific styles */
+.user-node.active { border-color: var(--color-secondary-600); }
+.role-node.active { border-color: var(--color-accent-600); }
+.perm-node.active { border-color: var(--color-primary-600); }
+
+/* Node icon styles */
+.node-icon {
+    @apply flex-shrink-0 grid place-content-center size-12 text-2xl rounded-lg border-2;
+}
+
+/* Special states based on your schema */
+.graph-node.expiring {
+    border-color: color-mix(in srgb, var(--color-warning) 80%, transparent);
+    background-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
+}
+.graph-node.unused {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--color-gray-600) 80%, transparent);
+    background-color: color-mix(in srgb, var(--color-gray-700) 30%, transparent);
+    opacity: 0.7;
+}
+
+/* Connection line styles */
+.connection-line {
+    stroke-width: 2;
+    stroke: var(--color-gray-500);
+    opacity: 0.3;
+    transition: all 0.3s ease-in-out;
+}
+#access-graph-container.is-inspecting .connection-line {
+    opacity: 0.1;
+}
+.connection-line.active {
+    opacity: 1;
+    stroke-width: 3;
+}
+.connection-line.user-role { stroke: var(--color-secondary-500); }
+.connection-line.role-perm { stroke: var(--color-accent-500); }

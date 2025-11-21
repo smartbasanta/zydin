@@ -7,14 +7,8 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
 </script>
 
 <template>
-    <footer
-        class="relative footer-bg text-primary-1200 border-gray-200 print:hidden">
-        <!-- Background Glow Effect -->
-        <!-- <div
-            class="absolute inset-x-0 -top-24 h-48 bg-gradient-to-t from-gray-100/80 dark:from-gray-1150/80 to-transparent blur-2xl pointer-events-none">
-        </div> -->
-
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <footer class="footer-shell relative print:hidden">
+        <div class="footer-shell__content container mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Main Footer Content -->
             <div class="py-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
 
@@ -34,7 +28,7 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                             </div>
                             <!-- <img :src="zydinLogoImage" class="w-18" /> -->
                             <div class="hidden sm:block">
-                                <div class="font-bold text-3xl text-primary-100">
+                                <div class="font-bold text-3xl text-white">
                                     Zydin Biotech
                                 </div>
                                 <div class="flex items-center justify-end gap-1.5">
@@ -117,7 +111,8 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
 
             <!-- Bottom Bar -->
             <div
-                class="py-6 border-t border-secondary-1250 flex flex-col sm:flex-row justify-between items-center gap-4">
+                class="py-6 border-t flex flex-col sm:flex-row justify-between items-center gap-4"
+                :style="{ borderColor: 'var(--footer-border)' }">
                 <p class="text-sm text-center sm:text-left">
                     © {{ new Date().getFullYear() }} Zydin Biotech. All rights reserved.
                 </p>
@@ -129,23 +124,3 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
     </footer>
 </template>
 
-<style>
-@reference "@/assets/main.css";
-
-.footer-heading {
-    @apply text-xl font-semibold text-white uppercase tracking-wider;
-}
-
-.footer-link {
-    @apply inline-block text-lg text-white/90;
-    @apply transition-all duration-200;
-    @apply hover:text-white hover:translate-x-1;
-}
-
-.footer-social-link {
-    @apply grid place-content-center size-10 rounded-full text-white;
-    @apply bg-white/10 border border-white/20;
-    @apply transition-all duration-300;
-    @apply hover:bg-white/20 hover:border-white/40 hover:scale-110;
-}
-</style>

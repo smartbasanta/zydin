@@ -4,7 +4,7 @@ import AppLogo from '@/components/logo/AppLogo.vue';
 import ThemeMenu from '@/components/menu/ThemeMenu.vue';
 import UserMenu from '@/components/menu/UserMenu.vue';
 import DropdownMenu from '@/components/menu/DropdownMenu.vue';
-import { BellIcon, MenuIcon, XIcon, ChevronDownIcon, CheckIcon, LogInIcon, UserIcon as UserPlusIcon, LayoutDashboardIcon, UserSquareIcon, LogOutIcon } from 'lucide-vue-next';
+import { BellIcon, MenuIcon, XIcon, ChevronDownIcon, CheckIcon, LogInIcon, UserIcon as UserPlusIcon, LayoutDashboardIcon, UserSquareIcon, LogOutIcon, SparklesIcon, ArrowUpRightIcon } from 'lucide-vue-next';
 import { useSystemNotificationStore } from '@/stores/systemNotification.store';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
@@ -57,6 +57,9 @@ const toggleMobileSubmenu = (name: string) => {
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const user = computed(() => authStore.currentUser);
+const headerStatusMessage = computed(() =>
+    isAuthenticated.value ? 'Secure portal active' : 'Guest preview mode'
+);
 
 const navigateTo = (path: string) => {
     router.push(path);
@@ -114,70 +117,71 @@ const navLinks: DropdownParent[] = [
 ]
 </script>
 <template>
-    <header class="sticky top-0 z-50 w-full border-b header-bg">
-        <div class="mx-auto px-8 min-h-20 flex items-center justify-around">
-            <!-- Left Side: Logo -->
-            <RouterLink to="/" class="flex items-center space-x-3 group">
-                <!-- <AppLogo class="size-10 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-[-10deg]" /> -->
-                <!-- Fallback for AppLogo if not created -->
-                <!-- <div
-                    class="size-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl transition-transform duration-300 group-hover:scale-105 group-hover:rotate-[-10deg]">
-                    Z
-                </div> -->
-                <!-- <div class="w-full max-w-lg mx-auto">
-                    <div class="relative aspect-square">
-                    </div>
-                </div> -->
-                <div class="w-18 max-w-lg mx-auto mr-2">
-                    <div class="relative aspect-square">
-                        <AppLogoAnimation :glow="false" :animation="true" />
-                    </div>
-                </div>
-                <!-- <img :src="zydinLogoImage" class="w-18" /> -->
-                <div class="hidden sm:block">
-                    <div class="font-bold text-3xl header-logo-text">
-                        Zydin Biotech
-                    </div>
-                    <div class="flex items-center justify-end gap-1.5">
-                        <div class="h-px w-8 rounded-full bg-gradient-to-r from-primary-400 to-transparent">
+    <header class="header-shell sticky top-0 z-50 w-full">
+        <!-- <header class="header-shell sticky top-0 z-50 w-full"> -->
+        <div class="header-shell__aura" aria-hidden="true">
+            <span class="header-shell__glow header-shell__glow--primary"></span>
+            <span class="header-shell__glow header-shell__glow--accent"></span>
+            <span class="header-shell__grid"></span>
+        </div>
+        <div class="header-shell__content mx-auto px-6 md:px-8 min-h-20 flex items-center justify-between gap-4 flex-nowrap">
+            <div class="header-brand flex items-center gap-4 min-w-0">
+                <RouterLink to="/" class="flex items-center gap-3 group">
+                    <div class="header-logo-shell">
+                        <div class="relative aspect-square">
+                            <AppLogoAnimation :glow="false" :animation="true" />
                         </div>
-                        <div class="text-xs font-bold tracking-wider header-tagline">From Farm to Formulation</div>
                     </div>
-                </div>
-            </RouterLink>
+                    <div class="header-brand__text block lg:hidden xl:block">
+                        <div class="header-brand__title">
+                            <div class="font-bold text-3xl header-logo-text inline-flex items-center gap-2">
+                                Zydin Biotech
+                                <SparklesIcon class="w-4 h-4 header-logo-text drop-shadow" />
+                            </div>
+                        </div>
+                        <!-- <div class="header-brand__meta">
+                            <span class="header-meta-chip">From Farm to Formulation</span>
+                            <span class="header-meta-separator" aria-hidden="true"></span>
+                            <span class="header-meta-chip header-meta-chip--accent">Life Sciences AI</span>
+                        </div> -->
+                    </div>
+                </RouterLink>
+                <!-- <div class="header-signal hidden xl:flex items-center gap-2">
+                    <span class="header-signal__dot" :class="{ 'header-signal__dot--active': isAuthenticated }"></span>
+                    <span class="header-signal__text">{{ headerStatusMessage }}</span>
+                </div> -->
+            </div>
 
-            <!-- Center: Desktop Navigation -->
-            <nav class="hidden lg:flex items-center gap-6 text-[17px]">
+            <nav class="header-nav hidden lg:flex items-center gap-3 justify-center min-w-0">
                 <DropdownMenu v-for="link in navLinks" :key="link.name" :item="link" />
             </nav>
 
-            <!-- Right Side: Actions -->
-            <div class="flex items-center gap-2 sm:gap-4">
-                <!-- Notifications -->
-                <!-- <button @click="notificationStore.togglePanel(route.name?.toString() ?? '')" class="header-menu-trigger relative">
-                    <BellIcon class="w-5 h-5" />
-                    <span v-if="notificationStore.unreadCount > 0" class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold border-2 border-white dark:border-gray-1100">
-                        {{ notificationStore.unreadCount }}
-                    </span>
-                </button> -->
-                <button @click="notificationStore.togglePanel()"
-                    class="header-menu-trigger relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                    <BellIcon class="w-5 h-5 text-white" />
-                    <span v-if="notificationStore.unreadCount > 0"
-                        class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold border-2 border-white dark:border-gray-1100">
-                        {{ notificationStore.unreadCount }}
-                    </span>
-                </button>
-
-                <!-- Theme menu -->
-                <ThemeSwitcher variant="dropdown" />
-
-                <!-- User Menu -->
+            <div class="flex items-center gap-2 sm:gap-4 header-actions flex-none">
+                <div class="header-quick-actions hidden md:flex items-center gap-2">
+                    <button @click="notificationStore.togglePanel()" class="header-menu-trigger relative header-pill-button">
+                        <BellIcon class="w-5 h-5" />
+                        <span
+                            v-if="notificationStore.unreadCount > 0"
+                            class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold border-2"
+                            :style="{
+                                backgroundColor: 'var(--color-error)',
+                                color: 'var(--color-static-white)',
+                                borderColor: 'var(--color-gray-0)'
+                            }"
+                        >
+                            {{ notificationStore.unreadCount }}
+                        </span>
+                    </button>
+                    <div class="header-pill-button">
+                        <ThemeSwitcher variant="dropdown" />
+                    </div>
+                </div>
+                <RouterLink to="/contact" class="header-cta hidden 3xl:inline-flex items-center gap-2" @click="isMobileMenuOpen = false">
+                    <span>Contact Team</span>
+                    <ArrowUpRightIcon class="w-4 h-4" />
+                </RouterLink>
                 <UserMenu />
-
-                <!-- Mobile Menu Burger -->
-                <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-                    class="lg:hidden p-2 rounded-md text-primary-1250 hover:bg-secondary-900 dark:hover:bg-gray-700 transition-colors">
+                <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="header-menu-trigger mobile-toggle-button">
                     <MenuIcon v-if="!isMobileMenuOpen" class="w-6 h-6" />
                     <XIcon v-else class="w-6 h-6" />
                 </button>
@@ -195,7 +199,8 @@ const navLinks: DropdownParent[] = [
                     enter-to-class="opacity-100" leave-active-class="ease-in-out duration-500"
                     leave-from-class="opacity-100" leave-to-class="opacity-0">
                     <div v-show="isMobileMenuOpen" @click="isMobileMenuOpen = false"
-                        class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"></div>
+                        class="fixed inset-0 backdrop-blur-sm transition-opacity"
+                        :style="{ backgroundColor: 'color-mix(in srgb, var(--color-gray-900) 70%, transparent)' }"></div>
                 </Transition>
                 <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
                     <Transition enter-active-class="transform transition ease-in-out duration-500 sm:duration-700"
@@ -207,7 +212,11 @@ const navLinks: DropdownParent[] = [
                             <div class="flex h-full flex-col overflow-y-auto shadow-xl ">
                                 <!-- Header -->
                                 <div
-                                    class="px-4 py-4 sm:px-6 border-b border-gray-400/70 bg-gradient-to-r from-white via-blue-100/70 to-white">
+                                    class="px-4 py-4 sm:px-6 border-b"
+                                    :style="{
+                                        borderColor: 'color-mix(in srgb, var(--header-link-hover) 20%, transparent)',
+                                        background: 'linear-gradient(120deg, color-mix(in srgb, var(--header-link-hover) 10%, transparent), rgba(255,255,255,0.85))'
+                                    }">
                                     <div class="flex items-center justify-between">
                                         <RouterLink to="/" class="flex items-center space-x-3 group">
                                             <!-- <AppLogo class="size-10 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-[-10deg]" /> -->
@@ -231,7 +240,10 @@ const navLinks: DropdownParent[] = [
                                 </div>
 
                                 <!-- Navigation List -->
-                                <div class="flex flex-col justify-between flex-1 bg-white dark:bg-gray-1100">
+                                <div class="flex flex-col justify-between flex-1"
+                                    :style="{
+                                        background: 'color-mix(in srgb, var(--color-gray-0) 92%, transparent)'
+                                    }">
                                     <!-- <div class="flex flex-col justify-between flex-1  mobile-nav-panel"> -->
                                     <nav class="relative flex-1 p-4 sm:p-6 space-y-2">
                                         <div v-for="link in navLinks" :key="link.name">
@@ -255,7 +267,8 @@ const navLinks: DropdownParent[] = [
                                             </RouterLink>
 
                                             <div v-if="link.children && openMobileSubmenu === link.name"
-                                                class="mt-2 pl-4 flex flex-col space-y-1 border-l-2 border-blue-900/70 dark:border-blue-700">
+                                                class="mt-2 pl-4 flex flex-col space-y-1 border-l-2"
+                                                :style="{ borderColor: 'color-mix(in srgb, var(--header-link-hover) 35%, transparent)' }">
                                                 <RouterLink v-for="child in link.children" :key="child.name"
                                                     :to="child.path"
                                                     class="mobile-nav-sublink w-full flex justify-between items-center text-left"
@@ -276,7 +289,8 @@ const navLinks: DropdownParent[] = [
                                         <div v-if="isAuthenticated && user" class="p-3 pb-2 flex gap-3 items-center"
                                             role="none">
                                             <div
-                                                class="flex-shrink-0 grid place-content-center size-10 rounded-full bg-gray-200 dark:bg-gray-700">
+                                                class="flex-shrink-0 grid place-content-center size-10 rounded-full"
+                                                :style="{ backgroundColor: 'color-mix(in srgb, var(--color-gray-300) 80%, transparent)' }">
                                                 <UserSquareIcon class="w-5 h-5 text-gray-600 dark:text-gray-300" />
                                             </div>
                                             <div class="truncate">
@@ -317,22 +331,3 @@ const navLinks: DropdownParent[] = [
         </div>
     </div>
 </template>
-<style scoped>
-@reference "@/assets/main.css";
-
-.mobile-nav-link {
-    @apply text-lg font-semibold text-gray-700 dark:text-gray-200 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 active:scale-95;
-}
-
-.mobile-nav-sublink {
-    @apply text-base font-medium text-gray-600 dark:text-gray-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 hover:scale-105 active:scale-95;
-}
-
-.mobile-nav-link-active {
-    @apply text-blue-800 dark:text-blue-500;
-}
-
-.mobile-nav-link-exact-active {
-    @apply bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-500;
-}
-</style>

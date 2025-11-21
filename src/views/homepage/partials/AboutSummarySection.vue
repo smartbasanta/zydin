@@ -18,7 +18,10 @@ onMounted(async () => {
 </script>
 
 <template>
-    <section class="py-20 md:py-28 clip-path-section relative overflow-hidden section-bg">
+    <section class="py-20 md:py-28 clip-path-section relative overflow-hidden section-bg about-section">
+        <div class="about-section__glow about-section__glow--primary" aria-hidden="true"></div>
+        <div class="about-section__glow about-section__glow--secondary" aria-hidden="true"></div>
+        <div class="about-section__grid" aria-hidden="true"></div>
         <div class="container items-center mx-auto px-6 relative z-10">
             <div class="flex flex-col items-center mb-16">
                 <h1 class="text-3xl md:text-4xl font-bold text-center section-title mb-4">
@@ -29,8 +32,8 @@ onMounted(async () => {
 
             <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
                 <div class="flex-1 max-w-2xl">
-                    <div class="card-backdrop p-8 md:p-10">
-                        <p class="text-lg md:text-xl leading-relaxed section-text font-medium">
+                    <div class="card-backdrop about-section__card p-8 md:p-10">
+                        <p class="text-lg md:text-xl leading-relaxed about-section__summary font-medium">
                             {{ summary }}
                         </p>
                     </div>
@@ -38,7 +41,7 @@ onMounted(async () => {
 
                 <div class="flex-1 max-w-md mx-auto lg:mx-0">
                     <div class="relative">
-                        <div class="relative card-backdrop p-8">
+                        <div class="relative card-backdrop about-section__logo-card p-8">
                             <div class="aspect-square relative">
                                 <AppLogoAnimation :glow="true" :animation="true" />
                             </div>
@@ -51,9 +54,60 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Optional: If you aren't using the typography plugin, you can style the text manually */
-.prose p {
-  font-size: 1.5rem; /* Corresponds to text-2xl */
-  font-weight: 600; /* Corresponds to font-semibold */
+@reference "@/assets/css/main.css";
+
+.about-section {
+  position: relative;
+}
+.about-section__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--section-title-color) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(0deg, color-mix(in srgb, var(--section-title-color) 6%, transparent) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mix-blend-mode: soft-light;
+}
+.about-section__glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.about-section__glow--primary {
+  top: -40px;
+  left: 5%;
+  background: var(--gradient-primary);
+}
+.about-section__glow--secondary {
+  bottom: -80px;
+  right: 10%;
+  background: var(--gradient-secondary);
+}
+.about-section__card {
+  border-color: color-mix(in srgb, var(--section-title-color) 25%, transparent);
+  background-color: color-mix(in srgb, var(--section-bg) 80%, transparent);
+}
+.about-section__summary {
+  color: color-mix(in srgb, var(--section-title-color) 85%, var(--section-text-color));
+  text-shadow: 0 8px 25px color-mix(in srgb, var(--section-title-color) 15%, transparent);
+}
+.about-section__logo-card {
+  border-color: color-mix(in srgb, var(--section-title-color) 20%, transparent);
+  background: color-mix(in srgb, var(--section-bg) 65%, var(--section-title-color) 5%);
+  box-shadow: 0 35px 65px -45px color-mix(in srgb, var(--section-title-color) 60%, transparent);
+}
+.about-section__logo-card::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 1.5rem;
+  border: 1px dashed color-mix(in srgb, var(--section-title-color) 20%, transparent);
+  pointer-events: none;
+  opacity: 0.5;
 }
 </style>

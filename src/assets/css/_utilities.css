@@ -19,7 +19,12 @@
 /* Header Classes */
 .header-bg { background: var(--header-bg); }
 .header-text { color: var(--header-text); }
-.header-logo-text { color: var(--header-text); }
+.header-logo-text {
+    color: color-mix(in srgb, var(--header-link-hover) 60%, var(--header-link));
+}
+.dark .header-logo-text {
+    color: color-mix(in srgb, var(--header-link-hover) 70%, var(--color-gray-0));
+}
 .header-tagline { color: var(--header-text); opacity: 0.8; }
 
 /* Footer Classes */

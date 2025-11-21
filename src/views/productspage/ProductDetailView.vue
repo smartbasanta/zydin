@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import LoadingState from '@/components/loading/LoadingState.vue';
-import ProductCard from './partials/ProductCard.vue';
+import ProductCard from '@/components/common/ProductCard.vue';
 import { useProductsAPI } from '@/composables/fetch-public-apis/useProductsAPI';
 import { useDefaultImages } from '@/composables/useDefaultImages';
 

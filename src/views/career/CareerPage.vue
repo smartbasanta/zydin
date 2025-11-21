@@ -10,7 +10,7 @@ import type { JobOpening } from '@/types';
 const benefits = [
     { icon: LightbulbIcon, title: 'Innovate with Purpose', text: 'Work on challenging problems that directly impact patient lives and advance the field of oncology.' },
     { icon: TrendingUpIcon, title: 'Professional Growth', text: 'We invest in our people with continuous learning opportunities, mentorship, and clear career paths.' },
-    { icon: HeartIcon, title: 'Impactful Work', text: 'Be part of a mission-driven company making high-quality healthcare accessible in Nepal and beyond.' },
+    { icon: HeartIcon, title: 'Impactful Work', text: 'Be part of a mission-driven company making high-quality healthcare accessible.' },
     { icon: UsersIcon, title: 'Collaborative Culture', text: 'Join a diverse and inclusive team of experts who value teamwork, respect, and open communication.' },
 ];
 
@@ -21,7 +21,6 @@ onMounted(fetchJobs);
 const selectedDept = ref('');
 const selectedType = ref('');
 
-// Filters are now dynamically generated from the live job data
 const departments = computed(() => [...new Set(jobs.value.map(j => j.department))].sort());
 const types = computed(() => [...new Set(jobs.value.map(j => j.type))].sort());
 
@@ -47,66 +46,71 @@ const closeApplicationModal = () => {
 </script>
 
 <template>
-    <div class="bg-white dark:bg-primary-1200">
-        <!-- Header -->
-        <header class="py-20 text-center bg-primary-50 dark:bg-primary-1100">
-            <div class="container px-4 mx-auto">
-                <h1 class="text-4xl font-bold md:text-5xl font-grotesk text-primary-900 dark:text-white">Shape the Future of Oncology</h1>
-                <p class="max-w-2xl mx-auto mt-4 text-lg text-gray-600 dark:text-primary-300">
+    <div class="section-bg">
+        <!-- Modern Hero Header -->
+        <header class="career-hero">
+            <div class="career-hero__glow career-hero__glow--primary" aria-hidden="true"></div>
+            <div class="career-hero__glow career-hero__glow--secondary" aria-hidden="true"></div>
+            <div class="container mx-auto px-6 py-20 md:py-28 text-center relative z-10">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-shadow-lg">Shape the Future of Oncology</h1>
+                <p class="max-w-3xl mx-auto mt-4 text-lg text-white/90 text-shadow-md">
                     Join our passionate team and contribute to a mission that matters. Discover your next opportunity at Zydin Biotech.
                 </p>
             </div>
         </header>
 
-        <!-- Why Work With Us Section -->
-        <section class="py-20 bg-white dark:bg-primary-1200">
-            <div class="container px-4 mx-auto">
-                <h2 class="mb-12 text-3xl font-bold text-center sm:text-4xl font-grotesk text-primary-900 dark:text-white">Why Join Zydin?</h2>
+        <!-- "Why Join Zydin?" Section -->
+        <section class="py-20 md:py-28">
+            <div class="container px-6 mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Why Join Zydin Biotech?</h2>
+                </div>
                 <div class="grid max-w-6xl grid-cols-1 gap-8 mx-auto md:grid-cols-2 lg:grid-cols-4">
-                    <div v-for="item in benefits" :key="item.title" class="p-6 text-center">
-                        <div class="inline-block p-4 mb-4 rounded-full bg-secondary-100 dark:bg-secondary-900/50">
-                            <component :is="item.icon" class="w-8 h-8 text-secondary-600 dark:text-secondary-400" />
+                    <div v-for="item in benefits" :key="item.title" class="card-backdrop text-center p-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-xl bg-gradient-secondary shadow-lg">
+                            <component :is="item.icon" class="w-8 h-8 text-white" />
                         </div>
-                        <h3 class="text-xl font-semibold font-grotesk text-primary-900 dark:text-white">{{ item.title }}</h3>
-                        <p class="text-gray-600 dark:text-primary-300">{{ item.text }}</p>
+                        <h3 class="text-xl font-bold section-title mb-2">{{ item.title }}</h3>
+                        <p class="section-text leading-relaxed">{{ item.text }}</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Job Listings -->
-        <main class="py-20 bg-primary-50 dark:bg-primary-1100">
-            <div class="container px-4 mx-auto">
-                <h2 class="mb-12 text-3xl font-bold text-center sm:text-4xl font-grotesk text-primary-900 dark:text-white">Current Openings</h2>
+        <main id="openings" class="py-20 md:py-28 bg-white dark:bg-gray-1200 border-y border-muted">
+            <div class="container px-6 mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Current Openings</h2>
+                </div>
                 
                 <div v-if="isLoading" class="flex items-center justify-center h-64">
                     <LoadingState message="Loading Open Positions..." />
                 </div>
                 
                 <div v-else-if="jobs.length > 0">
-                    <!-- Filters -->
-                    <div class="flex flex-col gap-4 mx-auto mb-8 sm:flex-row max-w-2xl">
-                        <select v-model="selectedDept" class="input">
+                    <!-- Modern Filters -->
+                    <div class="grid sm:grid-cols-2 gap-4 mx-auto mb-10 max-w-3xl p-4 rounded-xl border border-muted bg-gray-50 dark:bg-gray-1100">
+                        <select v-model="selectedDept" aria-label="Filter by Department" class="input">
                             <option value="">All Departments</option>
                             <option v-for="dept in departments" :key="dept" :value="dept">{{ dept }}</option>
                         </select>
-                        <select v-model="selectedType" class="input">
+                        <select v-model="selectedType" aria-label="Filter by Job Type" class="input">
                             <option value="">All Types</option>
                             <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
                         </select>
                     </div>
 
-                    <!-- List -->
                     <div class="max-w-4xl mx-auto space-y-4">
                         <JobListingItem v-for="job in filteredJobs" :key="job.id" :job="job" @apply-now="openApplicationModal" />
-                        <div v-if="filteredJobs.length === 0" class="p-12 text-center bg-white rounded-lg dark:bg-primary-1000">
-                            <p class="text-gray-500">No open positions match your criteria. Please check back later.</p>
+                        <div v-if="filteredJobs.length === 0" class="text-center p-12 rounded-lg bg-gray-100 dark:bg-gray-1000">
+                            <p class="text-muted">No open positions match your criteria. Please check back later or adjust your filters.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div v-else class="text-center p-12 bg-white rounded-lg dark:bg-primary-1000 max-w-4xl mx-auto">
-                    <p class="text-lg text-gray-500">There are currently no open positions. We encourage you to check back soon for new opportunities.</p>
+                <div v-else class="text-center p-12 card-backdrop max-w-4xl mx-auto">
+                    <p class="text-lg text-muted">There are currently no open positions. We encourage you to check back soon for new opportunities.</p>
                 </div>
             </div>
         </main>
@@ -118,3 +122,32 @@ const closeApplicationModal = () => {
         />
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.career-hero {
+    position: relative;
+    overflow: hidden;
+    background-image: var(--gradient-hero);
+}
+
+.career-hero__glow {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+.career-hero__glow--primary {
+    background: var(--gradient-accent);
+    width: 350px; height: 350px;
+    top: -100px; left: -100px; opacity: 0.4;
+}
+.career-hero__glow--secondary {
+    background: var(--gradient-secondary);
+    width: 300px; height: 300px;
+    bottom: -100px; right: -50px; opacity: 0.3;
+}
+.text-shadow-lg { text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+.text-shadow-md { text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+</style>

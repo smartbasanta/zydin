@@ -49,18 +49,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-<AnimatedText
-    text="Zydin Biotech"
-    :repeat="true"
-    animation-type="scatter"
-    font-size="2.5rem"
-    font-weight="bold"
-    text-color="#333"
-    dark-text-color="#f0f0f0"
-    :char-animation-delay="50"
-    :word-animation-delay="300"
-  />    
-  <div class="fixed w-full h-full opacity-20" >
+  <!-- <div class="fixed w-full h-full opacity-20" >
 
     <AppLogoInteraction 
         :glow="true" 
@@ -70,7 +59,7 @@ onUnmounted(() => {
       :mouse-interaction-radius="320"
       :mouse-repel-strength="10" 
     />
-  </div>    
+  </div>     -->
     <RouterView />
     <Teleport to="body">
         <NotificationPanel />

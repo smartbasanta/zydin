@@ -48,6 +48,9 @@ onUnmounted(() => {
   <section class="relative w-full h-[75vh] min-h-[500px] md:h-[85vh] text-white overflow-hidden">
     <!-- Theme-aware background with clipping effect -->
     <div class="absolute inset-0 bg-gradient-hero clip-path-hero"></div>
+    <div class="absolute inset-0 hero-grid-overlay" aria-hidden="true"></div>
+    <div class="hero-glow hero-glow--one" aria-hidden="true"></div>
+    <div class="hero-glow hero-glow--two" aria-hidden="true"></div>
 
     <!-- Loading Skeleton -->
     <div v-if="isLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-gradient-primary">
@@ -105,17 +108,17 @@ onUnmounted(() => {
     <!-- Navigation & Indicators (only if more than one slide) -->
     <template v-if="slides.length > 1">
       <button @click="prevSlide" aria-label="Previous Slide"
-        class="absolute top-1/2 left-10 -translate-y-1/2 z-30 p-2 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-sm transition-colors storytelling-slide-in-left">
+        class="hero-control hero-control--left storytelling-slide-in-left">
         <ChevronLeftIcon class="w-8 h-8" />
       </button>
       <button @click="nextSlide" aria-label="Next Slide"
-        class="absolute top-1/2 right-4 -translate-y-1/2 z-30 p-2 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-sm transition-colors storytelling-slide-in-right">
+        class="hero-control hero-control--right storytelling-slide-in-right">
         <ChevronRightIcon class="w-8 h-8" />
       </button>
 
       <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2 storytelling-fade-in-up">
         <button v-for="(_, index) in slides" :key="`indicator-${index}`" @click="currentSlide = index"
-          :class="['w-3 h-3 rounded-full transition-all duration-300', currentSlide === index ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/70']"
+          :class="['hero-indicator', { 'hero-indicator--active': currentSlide === index }]"
           :aria-label="`Go to slide ${index + 1}`">
         </button>
       </div>
@@ -124,6 +127,8 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+@reference "@/assets/css/main.css";
+
 .text-shadow {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -151,5 +156,65 @@ onUnmounted(() => {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-40px);
+}
+
+.hero-grid-overlay {
+  background-image:
+    linear-gradient(0deg, color-mix(in srgb, var(--color-gray-0) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-gray-0) 4%, transparent) 1px, transparent 1px);
+  background-size: 120px 120px;
+  mix-blend-mode: soft-light;
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+.hero-glow--one {
+  width: 320px;
+  height: 320px;
+  top: 10%;
+  right: 15%;
+  background: var(--gradient-secondary);
+}
+.hero-glow--two {
+  width: 260px;
+  height: 260px;
+  bottom: 5%;
+  left: 10%;
+  background: var(--gradient-accent);
+}
+
+.hero-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  @apply p-3 rounded-full backdrop-blur-lg transition-all duration-300;
+  color: var(--color-static-white);
+  box-shadow: 0 20px 30px -20px rgba(0,0,0,0.45);
+  background: color-mix(in srgb, rgba(0,0,0,0.2) 40%, transparent);
+}
+.hero-control--left { left: 2.5rem; }
+.hero-control--right { right: 1.25rem; }
+.hero-control:hover {
+  background: color-mix(in srgb, var(--header-link-hover) 25%, transparent);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.hero-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, rgba(255,255,255,0.5) 70%, transparent);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.hero-indicator--active {
+  transform: scale(1.3);
+  background-image: var(--gradient-secondary);
+  box-shadow: 0 0 20px rgba(255,255,255,0.45);
 }
 </style>

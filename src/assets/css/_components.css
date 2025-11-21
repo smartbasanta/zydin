@@ -252,7 +252,16 @@
 }
 
 .header-logo-text {
-    color: var(--header-text);
+    color: color-mix(in srgb, var(--header-link-hover) 60%, var(--header-link));
+    text-shadow:
+        0 8px 24px color-mix(in srgb, var(--header-link-hover) 45%, transparent),
+        0 0 45px color-mix(in srgb, var(--color-static-white) 18%, transparent);
+}
+.dark .header-logo-text {
+    color: color-mix(in srgb, var(--header-link-hover) 70%, var(--color-gray-0));
+    text-shadow:
+        0 8px 24px color-mix(in srgb, var(--header-link-hover) 55%, transparent),
+        0 0 45px color-mix(in srgb, var(--header-link-hover) 25%, transparent);
 }
 
 .header-tagline {

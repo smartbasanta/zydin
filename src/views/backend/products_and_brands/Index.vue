@@ -74,7 +74,7 @@ const activeTab = computed<'products' | 'brands'>(() => {
 </template>
 
 <style scoped>
-@reference "@/assets/main.css";
+@reference "@/assets/css/main.css";
 
 .tab-button {
     @apply flex items-center px-4 py-3 text-sm font-medium border-b-2 border-transparent -mb-px;

@@ -1,0 +1,100 @@
+/* =============================================
+   Theme-Aware Data Table Styles
+   ============================================= */
+
+/* 
+  The main container that wraps the entire table.
+  It provides the card-like appearance with theme-aware background, border, and shadow.
+*/
+.data-table-shell {
+    @apply relative border overflow-hidden;
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    box-shadow: var(--shadow-lg);
+}
+
+/* 
+  The <table> element itself. We apply styles to its children from here.
+  This ensures any table inside the shell gets styled correctly.
+*/
+.data-table-shell table {
+    @apply w-full text-sm text-left border-collapse;
+}
+
+/* 
+  The table header (<thead>). Uses the theme's `section-bg` for a subtle
+  contrast and `text-muted` for the text, ensuring it looks right in light/dark modes.
+*/
+.data-table-shell thead {
+    background-color: var(--section-bg);
+}
+
+/*
+  Header cells (<th>).
+  Uses theme variables and professional typography for a clean, readable header.
+*/
+.data-table-shell th {
+    @apply px-6 py-3 font-semibold uppercase tracking-wider;
+    color: var(--section-title-color);
+    border-bottom: 1px solid var(--border-muted);
+}
+/*
+  Table body rows (<tr>).
+  Uses `border-muted` for separation and a theme-aware hover effect.
+*/
+.data-table-shell tbody tr {
+    @apply border-b transition-colors duration-150;
+    border-color: var(--border-muted);
+}
+
+.data-table-shell tbody tr:last-child {
+    @apply border-b-0;
+}
+
+.data-table-shell tbody tr:hover {
+    background-color: color-mix(in srgb, var(--header-link-hover) 4%, transparent);
+}
+
+/*
+  A class for selected rows to give them a distinct highlight.
+*/
+.data-table-shell tbody tr.is-selected {
+    background-color: color-mix(in srgb, var(--header-link-hover) 8%, transparent);
+}
+
+/*
+  Table data cells (<td>).
+  Uses `section-text-color` for the main text, ensuring great readability.
+*/
+.data-table-shell td {
+    @apply px-6 py-4 align-middle;
+    color: var(--section-text-color);
+}
+
+/* Make text in selected rows slightly more prominent */
+.data-table-shell tbody tr.is-selected td {
+    color: var(--section-title-color);
+}
+
+.pagination-button {
+    @apply flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-all duration-200;
+    color: var(--text-muted);
+}
+
+/* Hover state for clickable buttons */
+.pagination-button:not(:disabled):hover {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+}
+
+/* Active state for the current page */
+.pagination-button.is-active {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    font-weight: 700;
+}
+
+/* Disabled state for non-clickable buttons */
+.pagination-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}

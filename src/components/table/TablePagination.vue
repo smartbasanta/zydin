@@ -117,25 +117,22 @@
 </script>
 
 <template>
-  <nav v-if="totalPages && totalPages > 1" class="flex items-center justify-center gap-1.5 text-sm" aria-label="Pagination">
-    <!-- First Page Button -->
+  <nav v-if="totalPages && totalPages > 1" class="flex items-center justify-center gap-1 text-sm" aria-label="Pagination">
+    
+    <!-- First & Previous Buttons -->
     <button 
       v-if="!isSimplePagination"
       @click="handlePageClick(firstPageUrl)"
       :disabled="!firstPageUrl || currentPage === 1"
       class="pagination-button"
-      :class="{'cursor-not-allowed opacity-50': !firstPageUrl || currentPage === 1}"
       aria-label="First Page"
     >
       <ChevronsLeftIcon class="size-4" />
     </button>
-
-    <!-- Previous Page Button -->
     <button 
       @click="handlePageClick(prevPageUrl)"
       :disabled="!prevPageUrl"
       class="pagination-button"
-      :class="{'cursor-not-allowed opacity-50': !prevPageUrl}"
       aria-label="Previous Page"
     >
       <ArrowLeftIcon class="size-4" />
@@ -146,50 +143,42 @@
       <template v-for="(linkItem, index) in pageLinks" :key="`page-link-${index}`">
         <span 
           v-if="'type' in linkItem && linkItem.type === 'dots'"
-          class="flex h-8 w-8 items-center justify-center text-muted-foreground"
+          class="flex h-8 w-8 items-center justify-center text-muted"
         >
-          ...
+          &hellip;
         </span>
         <button
           v-else
           @click="handlePageClick((linkItem as PaginationLink).url)"
           :disabled="!(linkItem as PaginationLink).url || (linkItem as PaginationLink).active"
           class="pagination-button"
-          :class="{
-            'bg-primary text-primary-foreground': (linkItem as PaginationLink).active,
-            'cursor-not-allowed opacity-50': !(linkItem as PaginationLink).url
-          }"
+          :class="{ 'is-active': (linkItem as PaginationLink).active }"
           :aria-current="(linkItem as PaginationLink).active ? 'page' : undefined"
-          :aria-label="`Page ${cleanLabel((linkItem as PaginationLink).label)}`"
         >
           {{ cleanLabel((linkItem as PaginationLink).label) }}
         </button>
       </template>
     </template>
 
-    <!-- Current Page Info (Mobile) -->
-    <div v-if="isSimplePagination" class="px-3 py-1.5 text-sm text-muted-foreground">
-      {{ currentPage }} / {{ totalPages }}
+    <!-- Simple Pagination Info (Mobile/Simple Mode) -->
+    <div v-if="isSimplePagination" class="px-3 py-1.5 text-sm text-muted">
+      Page {{ currentPage }} of {{ totalPages }}
     </div>
 
-    <!-- Next Page Button -->
+    <!-- Next & Last Buttons -->
     <button 
       @click="handlePageClick(nextPageUrl)"
       :disabled="!nextPageUrl"
       class="pagination-button"
-      :class="{'cursor-not-allowed opacity-50': !nextPageUrl}"
       aria-label="Next Page"
     >
       <ArrowRightIcon class="size-4" />
     </button>
-
-    <!-- Last Page Button -->
     <button 
       v-if="!isSimplePagination"
       @click="handlePageClick(lastPageUrl)"
       :disabled="!lastPageUrl || currentPage === totalPages"
       class="pagination-button"
-      :class="{'cursor-not-allowed opacity-50': !lastPageUrl || currentPage === totalPages}"
       aria-label="Last Page"
     >
       <ChevronsRightIcon class="size-4" />

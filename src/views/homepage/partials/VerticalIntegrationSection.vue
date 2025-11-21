@@ -4,7 +4,10 @@ import { FlaskConical, Pilcrow, ShieldCheck } from 'lucide-vue-next';
 
 </script>
 <template>
-    <section class="py-20 md:py-28 relative overflow-hidden clip-path-section section-bg">
+    <section class="py-20 md:py-28 relative overflow-hidden clip-path-section section-bg vertical-section">
+        <div class="vertical-section__glow vertical-section__glow--primary" aria-hidden="true"></div>
+        <div class="vertical-section__glow vertical-section__glow--secondary" aria-hidden="true"></div>
+        <div class="vertical-section__grid" aria-hidden="true"></div>
         <div class="container px-6 mx-auto text-center relative z-10">
             <div class="max-w-4xl mx-auto mb-16">
                 <h2 class="text-3xl md:text-4xl lg:text-5xl section-title tracking-tight mb-6">
@@ -44,3 +47,49 @@ import { FlaskConical, Pilcrow, ShieldCheck } from 'lucide-vue-next';
         </div>
     </section>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.vertical-section {
+  position: relative;
+}
+.vertical-section__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: linear-gradient(120deg, color-mix(in srgb, var(--section-title-color) 10%, transparent) 1px, transparent 1px);
+  background-size: 120px 120px;
+}
+.vertical-section__glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.vertical-section__glow--primary {
+  top: -60px;
+  right: 15%;
+  background: var(--gradient-secondary);
+}
+.vertical-section__glow--secondary {
+  bottom: -80px;
+  left: 10%;
+  background: var(--gradient-accent);
+}
+
+.card-icon-feature {
+  background-color: color-mix(in srgb, var(--section-bg) 80%, transparent);
+  border-color: color-mix(in srgb, var(--section-title-color) 20%, transparent);
+  box-shadow: 0 25px 55px -35px color-mix(in srgb, var(--section-title-color) 40%, transparent);
+}
+.card-icon-feature h3 {
+  color: var(--section-title-color);
+}
+.card-icon-feature p {
+  color: var(--section-text-color);
+}
+</style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
-import ProductCard from '@/views/productspage/partials/ProductCard.vue';
 import LoadingState from '@/components/loading/LoadingState.vue';
 import { RouterLink } from 'vue-router';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-vue-next';
 import { useProductsAPI } from '@/composables/fetch-public-apis/useProductsAPI';
+import ProductCard from '@/components/common/ProductCard.vue';
 
 const { products, activeFilters, isLoading, fetchProducts } = useProductsAPI();
 
@@ -64,18 +64,17 @@ const onMouseMove = (e: MouseEvent) => {
 </script>
 
 <template>
-    <section class="py-20 md:py-28 overflow-hidden relative clip-path-section section-bg">
-        <!-- Subtle background pattern -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 45%), radial-gradient(circle at 70% 70%, rgba(255,255,255,0.05) 0%, transparent 45%);"></div>
-        </div>
+    <section class="py-20 md:py-28 overflow-hidden relative clip-path-section section-bg featured-section">
+        <div class="featured-section__glow featured-section__glow--primary" aria-hidden="true"></div>
+        <div class="featured-section__glow featured-section__glow--secondary" aria-hidden="true"></div>
+        <div class="featured-section__pattern" aria-hidden="true"></div>
 
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto mb-16 text-center">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl section-text font-bold mb-6 tracking-tight">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl section-title font-bold mb-6 tracking-tight featured-section__title">
                     Our Featured Treatments
                 </h2>
-                <p class="text-lg md:text-xl lg:text-2xl section-text max-w-3xl mx-auto leading-relaxed font-medium">
+                <p class="text-lg md:text-xl lg:text-2xl section-description max-w-3xl mx-auto leading-relaxed font-medium featured-section__subtitle">
                     Discover our comprehensive range of innovative oncology solutions, meticulously developed to advance patient care and improve outcomes.
                 </p>
             </div>
@@ -102,23 +101,24 @@ const onMouseMove = (e: MouseEvent) => {
                         class="w-2/6 sm:w-1/2 md:w-1/3 lg:w-2/7 xl:w-1/4 flex-shrink-0 snap-center"
                     >
                         <!-- Reuse the exact same ProductCard. It fits perfectly. -->
+                        <!-- <ProductCard :product="product" /> -->
                         <ProductCard :product="product" />
                     </div>
                 </div>
 
                 <!-- Slider Navigation Buttons -->
                 <div class="absolute top-1/2 left-0 right-0 flex justify-between transform -translate-y-1/2 pointer-events-none">
-                    <button @click="slidePrev" :disabled="activeIndex === 0" class="p-3 transition-colors transform -translate-x-1/2 bg-white border rounded-full shadow-lg pointer-events-auto disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-100">
-                        <ChevronLeftIcon class="w-6 h-6 text-primary-800" />
+                    <button @click="slidePrev" :disabled="activeIndex === 0" class="slider-control -translate-x-1/2 pointer-events-auto" :class="{ 'opacity-30 cursor-not-allowed': activeIndex === 0 }">
+                        <ChevronLeftIcon class="w-6 h-6" />
                     </button>
-                    <button @click="slideNext" :disabled="activeIndex >= products.length - 1" class="p-3 transition-colors transform translate-x-1/2 bg-white border rounded-full shadow-lg pointer-events-auto disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-100">
-                        <ChevronRightIcon class="w-6 h-6 text-primary-800" />
+                    <button @click="slideNext" :disabled="activeIndex >= products.length - 1" class="slider-control translate-x-1/2 pointer-events-auto" :class="{ 'opacity-30 cursor-not-allowed': activeIndex >= products.length - 1 }">
+                        <ChevronRightIcon class="w-6 h-6" />
                     </button>
                 </div>
             </div>
 
             <!-- Empty State -->
-            <div v-else class="px-4 text-center text-gray-500">
+            <div v-else class="px-4 text-center text-muted">
                 <p>Featured products are not available at the moment. Please check back later.</p>
             </div>
 
@@ -126,7 +126,7 @@ const onMouseMove = (e: MouseEvent) => {
             <div class="px-4 mt-16 text-center">
                 <RouterLink
                     :to="{ name: 'products' }"
-                    class="inline-block px-8 py-3 text-lg font-semibold transition-transform transform rounded-full bg-secondary-900 text-primary-1200 hover:bg-secondary-600 hover:scale-105"
+                    class="cta-pill"
                 >
                     View Our Full Catalog
                 </RouterLink>
@@ -136,17 +136,84 @@ const onMouseMove = (e: MouseEvent) => {
 </template>
 
 <style scoped>
+@reference "@/assets/css/main.css";
+
+.featured-section {
+  position: relative;
+}
+.featured-section__pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--section-title-color) 12%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at 80% 60%, color-mix(in srgb, var(--section-description-color) 20%, transparent) 0%, transparent 50%);
+}
+
+.featured-section__title {
+  color: color-mix(in srgb, var(--section-title-color) 90%, var(--color-primary-400) 10%);
+  text-shadow: 0 20px 35px color-mix(in srgb, var(--section-title-color) 20%, transparent);
+}
+.featured-section__subtitle {
+  color: color-mix(in srgb, var(--section-description-color) 80%, transparent);
+}
+.featured-section__glow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 9999px;
+  filter: blur(140px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.featured-section__glow--primary {
+  top: -60px;
+  left: 5%;
+  background: var(--gradient-primary);
+}
+.featured-section__glow--secondary {
+  bottom: -80px;
+  right: 10%;
+  background: var(--gradient-accent);
+}
+
 /* Custom scrollbar hiding utility */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom cursor for dragging state */
 .grabbing {
   cursor: grabbing;
+}
+
+.slider-control {
+  @apply p-3 rounded-full border transition-all duration-300;
+  background-color: color-mix(in srgb, var(--section-bg) 40%, var(--section-title-color) 10%);
+  border-color: color-mix(in srgb, var(--section-title-color) 25%, transparent);
+  color: color-mix(in srgb, var(--section-title-color) 80%, transparent);
+  box-shadow: 0 20px 35px -25px color-mix(in srgb, var(--section-title-color) 40%, transparent);
+}
+.slider-control:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: color-mix(in srgb, var(--section-title-color) 15%, var(--section-bg));
+  color: var(--section-title-color);
+}
+.slider-control:disabled {
+  opacity: 0.4;
+}
+
+.cta-pill {
+  @apply inline-block px-10 py-3 text-lg font-semibold rounded-full transition-transform duration-300;
+  background-image: var(--gradient-secondary);
+  color: var(--color-static-white);
+  box-shadow: 0 25px 45px -30px color-mix(in srgb, var(--section-title-color) 35%, transparent);
+}
+.cta-pill:hover {
+  transform: translateY(-2px) scale(1.02);
 }
 </style>

@@ -6,6 +6,7 @@ import CoreValuesSection from './partials/CoreValuesSection.vue';
 import CompanyTimeline from './partials/CompanyTimeline.vue';
 import LeadershipPreview from './partials/LeadershipPreview.vue';
 import EmployeeLifeSection from './partials/EmployeeLifeSection.vue';
+import SectionDivider from '@/views/homepage/partials/SectionDivider.vue';
 import LoadingState from '@/components/loading/LoadingState.vue';
 import { usePageDataAPI } from '@/composables/fetch-public-apis/usePageDataAPI';
 
@@ -19,20 +20,20 @@ onMounted(fetchAboutPageData);
         <LoadingState message="Loading Our Story..." />
     </div>
 
-    <div v-else-if="aboutPageData" class="bg-white dark:bg-primary-1200">
+    <div v-else-if="aboutPageData" class="about-page-shell">
         <AboutHero :summary="aboutPageData.content.summary.content.value" />
-        
+        <SectionDivider variant="wave" accent="primary" />
         <MissionVisionSection
             :mission="aboutPageData.content.mission_statement.content.value"
             :vision="aboutPageData.content.company_vision.content.value"
         />
-
+        <SectionDivider variant="diagonal" accent="secondary" />
         <CoreValuesSection :values="aboutPageData.content.core_values.content" />
-
+        <SectionDivider variant="dots" accent="accent" />
         <CompanyTimeline :events="aboutPageData.content.timeline.content" />
-
+        <SectionDivider variant="wave" accent="secondary" flip />
         <LeadershipPreview :leaders="aboutPageData.leaders" />
-        
+        <SectionDivider variant="diagonal" accent="primary" />
         <EmployeeLifeSection :testimonials="aboutPageData.employeeTestimonials" />
     </div>
 
@@ -40,3 +41,12 @@ onMounted(fetchAboutPageData);
         <p>Could not load page content. Please try again later.</p>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.about-page-shell {
+    background-color: var(--section-bg);
+    color: var(--section-title-color);
+}
+</style>

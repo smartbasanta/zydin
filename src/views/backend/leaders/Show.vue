@@ -169,7 +169,7 @@ const formatDate = (dateString: string | null | undefined) => {
 </template>
 
 <style scoped>
-@reference "@/assets/main.css";
+@reference "@/assets/css/main.css";
 .card-base {
     @apply rounded-lg shadow-sm border border-gray-200 dark:border-gray-700;
 }

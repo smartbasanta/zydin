@@ -1,0 +1,14 @@
+/* src/assets/css/components/inputs.css */
+.input {
+    @apply w-full rounded-lg border px-4 py-2.5 text-sm transition-all duration-200 ease-in-out;
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--input-text);
+    @apply placeholder:text-[var(--input-placeholder)];
+    @apply focus:outline-none focus:ring-2 focus:ring-[var(--input-focus-ring)] focus:border-[var(--input-focus-border)];
+    @apply disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+.label {
+    @apply block text-sm font-medium text-[var(--input-label)];
+}

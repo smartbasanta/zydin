@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import { useTheme } from '@/composables/useTheme'
 import type { RouteRecordNormalized } from 'vue-router'
+import '@/assets/css/main.css'
 
 // Initialize theme system
 const { initTheme } = useTheme()

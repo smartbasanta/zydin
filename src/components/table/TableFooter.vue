@@ -34,29 +34,45 @@
 </script>
 
 <template>
-    <div class="flex flex-col sm:flex-row items-center gap-4 justify-between my-4 px-4">
-        <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-            <!-- isPaginated && :: tara yo rakhesi suppose 200 hane bhane 200 rows napuge samma visible hudaina  -->
+    <!-- The root element is now styled as a proper footer, matching the header's design -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-6 border-t border-muted">
+        
+        <!-- Left Side: Record count and rows-per-page selector -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 text-sm text-muted">
             <div v-if="rowsPerPageOptions.length > 0 && updateRowsPerPage" class="flex items-center gap-2">
-                <label for="rows-per-page-select" class="whitespace-nowrap">Rows per page:</label>
+                <label for="rows-per-page-select" class="whitespace-nowrap">Rows:</label>
                 <select
                     id="rows-per-page-select"
                     v-model="selectedRppForInput"
                     @change="onRowsPerPageChange"
-                    class="input !py-1.5 !px-2 !h-auto text-sm w-20"
+                    class="input !py-1 !px-2 !w-20 text-sm"
                 >
                     <option v-for="option in rowsPerPageOptions" :key="option.value" :value="option.value">
                         {{ option.text }}
                     </option>
                 </select>
             </div>
+
+            <!-- Record count text -->
             <span v-if="isPaginated && paginatedModel && totalRecords > 0" class="whitespace-nowrap">
-                Showing {{ fromRecords }}-{{ toRecords }} of {{ totalRecords }}
+                Showing
+                <strong class="font-semibold section-title">{{ fromRecords }}</strong>-<strong class="font-semibold section-title">{{ toRecords }}</strong>
+                of
+                <strong class="font-semibold section-title">{{ totalRecords }}</strong>
             </span>
             <span v-else-if="!isPaginated && dataToDisplay.length > 0">
-                {{ dataToDisplay.length }} record<span v-if="dataToDisplay.length !== 1">s</span> displayed
+                <strong class="font-semibold section-title">{{ dataToDisplay.length }}</strong> 
+                record<span v-if="dataToDisplay.length !== 1">s</span> displayed
             </span>
         </div>
+
+        <!-- Right Side: Pagination controls -->
         <TablePagination v-if="isPaginated && totalRecords > 0 && lastPage > 1" />
     </div>
 </template>
+
+<style scoped>
+/* No scoped styles are needed as all styling comes from global, theme-aware classes. */
+@reference "@/assets/css/main.css";
+
+</style>

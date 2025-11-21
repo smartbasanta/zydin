@@ -1,0 +1,54 @@
+/* src/assets/css/components/buttons.css */
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 cursor-pointer;
+    @apply px-5 py-2.5;
+    @apply text-base font-semibold tracking-wide;
+    @apply rounded-lg; /* Standardized to lg */
+    @apply transition-all duration-200 ease-in-out;
+    @apply border-b-2 shadow-sm;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-[var(--color-gray-900)];
+    @apply disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none;
+    @apply active:translate-y-px active:shadow-none;
+}
+
+.btn-primary {
+    @apply bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] border-b-[var(--btn-primary-border)];
+    @apply hover:bg-[var(--btn-primary-hover-bg)] hover:border-b-[var(--btn-primary-hover-border)];
+    @apply focus:ring-[var(--btn-primary-bg)];
+}
+
+.btn-secondary {
+    @apply bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-text)] border border-[var(--btn-secondary-border)] border-b-2 border-b-[var(--btn-secondary-border-b)];
+    @apply shadow-sm;
+    @apply hover:bg-[var(--btn-secondary-hover-bg)];
+    @apply focus:ring-[var(--color-primary-500)];
+}
+
+.btn-danger {
+    @apply bg-[var(--btn-danger-bg)] text-[var(--btn-danger-text)] border-b-[var(--btn-danger-border)];
+    @apply hover:bg-[var(--btn-danger-hover-bg)] hover:border-b-[var(--btn-danger-hover-border)];
+    @apply focus:ring-[var(--btn-danger-bg)];
+}
+
+.btn-success {
+    @apply bg-[var(--btn-success-bg)] text-[var(--btn-success-text)] border-b-[var(--btn-success-border)];
+    @apply hover:bg-[var(--btn-success-hover-bg)] hover:border-b-[var(--btn-success-hover-border)];
+    @apply focus:ring-[var(--btn-success-bg)];
+}
+
+.btn-glass {
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-semibold text-sm;
+    @apply bg-[var(--btn-glass-bg)] border border-[var(--btn-glass-border)] text-[var(--btn-glass-text)];
+    @apply backdrop-blur-md shadow-xl dark:shadow-gray-900/50;
+    @apply transition-all duration-300 hover:scale-[1.03] cursor-pointer;
+}
+.btn-glass:hover .btn-glass-border-effect {
+    @apply border-[var(--btn-glass-hover-border)];
+}
+.btn-glass .btn-glass-border-effect {
+    @apply absolute inset-0 rounded-2xl border border-white/20 dark:border-white/10 transition-colors duration-300;
+}
+.btn-glass > * {
+    @apply relative z-10;
+}

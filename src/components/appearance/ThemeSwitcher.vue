@@ -104,12 +104,12 @@ import ThemeMenu from '../menu/ThemeMenu.vue'
         <button
             v-if="variant === 'simple'"
             @click="toggleTheme"
-            class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-1000 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/50 dark:focus:ring-blue-600/80"
+            class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-1000 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/50 dark:focus:ring-blue-600/80 theme-switcher-trigger"
             :title="getButtonTitle()"
         >
-            <SunIcon v-if="currentTheme === 'light'" class="w-5 h-5 text-primary-50" />
-            <MoonIcon v-else-if="currentTheme === 'dark'" class="w-5 h-5 text-primary-50" />
-            <MonitorIcon v-else class="w-5 h-5 text-primary-50" />
+            <SunIcon v-if="currentTheme === 'light'" class="w-5 h-5" />
+            <MoonIcon v-else-if="currentTheme === 'dark'" class="w-5 h-5" />
+            <MonitorIcon v-else class="w-5 h-5" />
         </button>
 
         <div v-else-if="variant === 'segmented'" class="flex bg-gray-100/50 dark:bg-gray-600/40 rounded-lg p-1">
@@ -141,12 +141,12 @@ import ThemeMenu from '../menu/ThemeMenu.vue'
             <button
                 ref="triggerRef"
                 @click="toggleDropdown()"
-                class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-1000 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/50 dark:focus:ring-blue-600/80"
+                class="header-menu-trigger theme-switcher-trigger"
                 :title="`Current: ${getCurrentThemeLabel()} - ${currentPreset} theme - Click to change`"
             >
-                <SunIcon v-if="currentTheme === 'light'" class="w-5 h-5 text-primary-50" />
-                <MoonIcon v-else-if="currentTheme === 'dark'" class="w-5 h-5 text-primary-50" />
-                <MonitorIcon v-else class="w-5 h-5 text-primary-50" />
+                <SunIcon v-if="currentTheme === 'light'" class="w-5 h-5" />
+                <MoonIcon v-else-if="currentTheme === 'dark'" class="w-5 h-5" />
+                <MonitorIcon v-else class="w-5 h-5" />
             </button>
 
             <Transition

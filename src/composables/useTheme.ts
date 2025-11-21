@@ -35,6 +35,134 @@ const currentThemeConfig = computed<ThemePreset>(() => {
     return themePresets[currentPreset.value]
 })
 
+const mixColor = (base: string, amount: number, target: string): string => {
+    return `color-mix(in srgb, ${base} ${amount}%, ${target})`
+}
+
+const applyComponentTokens = (mode: Theme, config: ThemePreset): void => {
+    const root = document.documentElement
+    const { colors, shadows } = config
+    const set = (token: string, value: string) => root.style.setProperty(token, value)
+    const primaryStrong = colors.primary[700] ?? colors.primary[600]
+    const secondaryStrong = colors.secondary[500] ?? primaryStrong
+    const baseSurface = colors.gray[0]
+    const neutralBorder = colors.gray[200] ?? colors.gray[300]
+
+    // Section surfaces
+    set('--section-bg', colors.gray[50])
+    set('--section-title-color', colors.primary[800] ?? colors.primary[700])
+    set('--section-description-color', colors.gray[500])
+
+    // Buttons - primary
+    set('--btn-primary-bg', colors.primary[600])
+    set('--btn-primary-text', '#ffffff')
+    set('--btn-primary-border', colors.primary[700])
+    set('--btn-primary-hover-bg', colors.primary[700])
+    set('--btn-primary-hover-border', colors.primary[800] ?? colors.primary[700])
+
+    // Buttons - secondary
+    set('--btn-secondary-bg', colors.gray[0])
+    set('--btn-secondary-text', colors.gray[700])
+    set('--btn-secondary-border', colors.gray[300])
+    set('--btn-secondary-border-b', colors.gray[400])
+    set('--btn-secondary-hover-bg', colors.gray[50])
+
+    // Buttons - status
+    set('--btn-danger-bg', colors.error)
+    set('--btn-danger-text', '#ffffff')
+    set('--btn-danger-border', mixColor(colors.error, 85, colors.gray[900]))
+    set('--btn-danger-hover-bg', mixColor(colors.error, 90, colors.gray[50]))
+    set('--btn-danger-hover-border', mixColor(colors.error, 90, colors.gray[900]))
+
+    set('--btn-success-bg', colors.success)
+    set('--btn-success-text', '#ffffff')
+    set('--btn-success-border', mixColor(colors.success, 85, colors.gray[900]))
+    set('--btn-success-hover-bg', mixColor(colors.success, 90, colors.gray[50]))
+    set('--btn-success-hover-border', mixColor(colors.success, 90, colors.gray[900]))
+
+    // Buttons - glass
+    set('--btn-glass-bg', mixColor(colors.gray[0], 60, 'transparent'))
+    set('--btn-glass-border', mixColor(colors.gray[200], 60, 'transparent'))
+    set('--btn-glass-text', colors.gray[800])
+    set('--btn-glass-hover-border', mixColor(colors.primary[400], 90, 'transparent'))
+
+    // Cards
+    set('--card-bg', colors.gray[0])
+    set('--card-border', colors.gray[200])
+    set('--card-shadow', shadows.lg)
+    set('--card-backdrop-bg', mixColor(colors.gray[0], 60, 'transparent'))
+    set('--card-backdrop-border', mixColor(colors.gray[0], 20, 'transparent'))
+
+    // Inputs
+    set('--input-bg', colors.gray[0])
+    set('--input-border', colors.gray[300])
+    set('--input-text', colors.gray[900])
+    set('--input-placeholder', colors.gray[400])
+    set('--input-focus-ring', colors.info)
+    set('--input-focus-border', colors.info)
+    set('--input-label', colors.gray[700])
+
+    // Header & footer
+    set('--header-surface', mixColor(baseSurface, 88, 'transparent'))
+    set('--header-border', mixColor(primaryStrong, 25, neutralBorder))
+    set('--header-link', mixColor(colors.gray[900], 90, 'transparent'))
+    set('--header-link-hover', secondaryStrong)
+
+    set('--footer-surface', config.gradients.hero)
+    set('--footer-border', mixColor(secondaryStrong, 25, baseSurface))
+    set('--footer-text', 'rgba(255, 255, 255, 0.9)')
+    set('--footer-heading', '#ffffff')
+    set('--footer-link', 'rgba(255, 255, 255, 0.85)')
+    set('--footer-link-hover', '#ffffff')
+
+    // Panels / dropdowns
+    set('--panel-surface', mixColor(baseSurface, 95, 'rgba(255, 255, 255, 0.9)'))
+    set('--panel-border', mixColor(neutralBorder, 80, 'transparent'))
+    set('--panel-shadow', '0 30px 55px -35px rgba(15, 23, 42, 0.35)')
+
+    if (mode === Theme.DARK) {
+        const deepSurface = colors.gray[1100] ?? colors.gray[900]
+        const accentGlow = colors.primary[900] ?? colors.primary[800] ?? deepSurface
+
+        set('--section-bg', mixColor(deepSurface, 78, accentGlow))
+        set('--section-title-color', colors.secondary[50] ?? colors.gray[50])
+        set('--section-description-color', mixColor(colors.gray[400], 85, 'transparent'))
+
+        set('--btn-secondary-bg', colors.gray[800])
+        set('--btn-secondary-text', colors.gray[200])
+        set('--btn-secondary-border', colors.gray[700])
+        set('--btn-secondary-border-b', colors.gray[600])
+        set('--btn-secondary-hover-bg', colors.gray[700])
+
+        set('--btn-glass-bg', mixColor(colors.gray[900], 50, 'transparent'))
+        set('--btn-glass-border', mixColor(colors.gray[600], 60, 'transparent'))
+        set('--btn-glass-text', colors.gray[200])
+
+        set('--card-bg', mixColor(colors.gray[900], 85, 'rgba(8, 12, 20, 0.85)'))
+        set('--card-border', mixColor(colors.gray[700], 75, 'transparent'))
+        set('--card-shadow', '0 22px 50px -30px rgba(0, 0, 0, 0.7)')
+        set('--card-backdrop-bg', mixColor(colors.gray[900], 60, 'rgba(8, 13, 23, 0.8)'))
+        set('--card-backdrop-border', colors.gray[700])
+
+        set('--input-bg', colors.gray[800])
+        set('--input-border', colors.gray[700])
+        set('--input-text', colors.gray[100])
+        set('--input-placeholder', colors.gray[500])
+        set('--input-label', colors.gray[300])
+
+        set('--header-surface', mixColor(colors.gray[900], 75, 'transparent'))
+        set('--header-border', mixColor(primaryStrong, 35, colors.gray[800] ?? neutralBorder))
+        set('--header-link', colors.gray[50])
+        set('--header-link-hover', colors.secondary[300] ?? colors.primary[300])
+
+        set('--footer-border', mixColor(colors.gray[50], 25, colors.gray[900]))
+
+        set('--panel-surface', mixColor(colors.gray[900], 90, 'rgba(12, 20, 32, 0.95)'))
+        set('--panel-border', mixColor(primaryStrong, 30, colors.gray[800] ?? neutralBorder))
+        set('--panel-shadow', '0 35px 65px -35px rgba(0, 0, 0, 0.8)')
+    }
+}
+
 const applyTheme = (theme: Theme, preset: ThemePresetKey): void => {
     const html = document.documentElement
     const themeConfig = themePresets[preset]
@@ -116,6 +244,8 @@ const applyTheme = (theme: Theme, preset: ThemePresetKey): void => {
     Object.entries(themeConfig.animations.easing).forEach(([key, value]) => {
         root.style.setProperty(`--easing-${key}`, value)
     })
+
+    applyComponentTokens(theme, themeConfig)
 
     // Update meta theme color
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')

@@ -28,47 +28,41 @@
 </script>
 
 <template>
-    <LoadingState v-if="isLoading" />
+    <LoadingState v-if="isLoading" message="Loading Data..." />
     <div v-else>
         <slot name="above-table"></slot>
-        <div class="data-table" :class="dataTableClass">
+
+        <!-- The new data table shell provides a consistent, theme-aware container -->
+        <div class="data-table-shell" :class="dataTableClass">
             <TableHeader>
-                <template #add-new-button>
-                    <slot name="add-new-button"></slot>
-                </template>
-                <template #title>
-                    <slot name="title"></slot>
-                </template>
-                <template #actions-header>
-                    <slot name="actions-header"></slot>
-                </template>
+                <template #add-new-button><slot name="add-new-button"></slot></template>
+                <template #title><slot name="title"></slot></template>
+                <template #actions-header><slot name="actions-header"></slot></template>
             </TableHeader>
 
-            <div v-if="isLoading" class="p-6 text-center text-muted-foreground">
-                <svg class="animate-spin h-8 w-8 text-primary mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <p class="mt-2">Loading data...</p>
-            </div>
-            <div v-else-if="apiError" class="p-6 text-center text-red-500">
+            <div v-if="apiError" class="p-8 text-center text-red-500">
                 <p>Error loading data: {{ apiError.message || 'Unknown error' }}</p>
-                <!-- TODO :: retry button here -->
             </div>
+            
             <TableBody v-else>
                 <template #row="{ row, columns }">
                     <slot name="row" :row="row" :columns="columns"></slot>
                 </template>
                 <template #empty-state>
                     <slot name="empty-state">
-                        <td :colspan="100" class="text-center py-10 text-muted-foreground"> 
-                            No data available.
+                        <!-- A much-improved, professional empty state -->
+                        <td :colspan="100" class="text-center p-16"> 
+                            <FileX2Icon class="mx-auto h-12 w-12 text-gray-400" />
+                            <h3 class="mt-2 text-sm font-semibold section-title">No data available</h3>
+                            <p class="mt-1 text-sm text-muted">There are no records to display at this time.</p>
                         </td>
                     </slot>
                 </template>
             </TableBody>
-            <TableFooter v-if="!isLoading && !apiError && dataToDisplay.length > 0" />
+            
+            <TableFooter v-if="!apiError && dataToDisplay.length > 0" />
         </div>
+        
         <slot name="below-table"></slot>
     </div>
 </template>
