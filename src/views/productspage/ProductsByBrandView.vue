@@ -71,7 +71,7 @@ const brandName = computed(() => {
                 </div>
                 <div v-else-if="products.length > 0">
                     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-                        <ProductCard v-for="product in products" :key="product.id" :product="product" />
+                        <ProductCard v-for="product in products" :key="product.id" :product="product" type="expanded" />
                     </div>
                     <!-- <Pagination :pagination="pagination" @page-changed="activeFilters.page = $event" class="mt-12" /> -->
                 </div>

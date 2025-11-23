@@ -10,7 +10,7 @@ const { aboutPageData, isLoading, fetchAboutPageData } = usePageDataAPI();
 
 const summary = computed(() => {
     // Added a fallback to prevent errors before data is loaded
-    return aboutPageData.value?.content.summary.content.value ?? 'Loading...';
+    return aboutPageData.value?.content.summary.content ?? 'Loading...';
 })
 onMounted(async () => {
     await fetchAboutPageData();

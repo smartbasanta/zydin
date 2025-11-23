@@ -35,7 +35,7 @@ const handleMouseLeave = () => {
 </script>
 
 <template>
-    <div class="relative py-2 font-bold" @touchstart="handleTouchStart" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @keydown="onKeyDown">
+    <div class="relative py-2 font-bold section-title" @touchstart="handleTouchStart" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @keydown="onKeyDown">
         <RouterLink v-if="!item.children" :to="item.path" class="nav-link" exact-active-class="nav-link-active">
             {{ item.name }}
         </RouterLink>

@@ -22,34 +22,34 @@ const typeDetails = computed(() => {
         case 'success':
             return {
                 icon: CheckCircle2,
-                textClass: 'text-green-700 dark:text-green-400',
-                hoverBgClass: 'hover:bg-green-50 dark:hover:bg-green-500/10',
-                borderClass: 'hover:border-green-200 dark:hover:border-green-500/20',
-                dotClass: 'bg-green-500',
+                textClass: 'text-[var(--color-success)]',
+                hoverBgClass: 'hover:bg-[color-mix(in srgb, var(--color-success) 10%, transparent)]',
+                borderClass: 'hover:border-[color-mix(in srgb, var(--color-success) 20%, transparent)]',
+                dotClass: 'bg-[var(--color-success)]',
             };
         case 'warning':
             return {
                 icon: AlertTriangle,
-                textClass: 'text-amber-700 dark:text-amber-400',
-                hoverBgClass: 'hover:bg-amber-50 dark:hover:bg-amber-500/10',
-                borderClass: 'hover:border-amber-200 dark:hover:border-amber-500/20',
-                dotClass: 'bg-amber-500',
+                textClass: 'text-[var(--color-warning)]',
+                hoverBgClass: 'hover:bg-[color-mix(in srgb, var(--color-warning) 10%, transparent)]',
+                borderClass: 'hover:border-[color-mix(in srgb, var(--color-warning) 20%, transparent)]',
+                dotClass: 'bg-[var(--color-warning)]',
             };
         case 'error':
             return {
                 icon: XCircle,
-                textClass: 'text-red-700 dark:text-red-400',
-                hoverBgClass: 'hover:bg-red-50 dark:hover:bg-red-500/10',
-                borderClass: 'hover:border-red-200 dark:hover:border-red-500/20',
-                dotClass: 'bg-red-500',
+                textClass: 'text-[var(--color-error)]',
+                hoverBgClass: 'hover:bg-[color-mix(in srgb, var(--color-error) 10%, transparent)]',
+                borderClass: 'hover:border-[color-mix(in srgb, var(--color-error) 20%, transparent)]',
+                dotClass: 'bg-[var(--color-error)]',
             };
         default: // 'info'
             return {
                 icon: Info,
-                textClass: 'text-blue-700 dark:text-blue-400',
-                hoverBgClass: 'hover:bg-blue-50 dark:hover:bg-blue-500/10',
-                borderClass: 'hover:border-blue-200 dark:hover:border-blue-500/20',
-                dotClass: 'bg-blue-500',
+                textClass: 'text-[var(--color-info)]',
+                hoverBgClass: 'hover:bg-[color-mix(in srgb, var(--color-info) 10%, transparent)]',
+                borderClass: 'hover:border-[color-mix(in srgb, var(--color-info) 20%, transparent)]',
+                dotClass: 'bg-[var(--color-info)]',
             };
     }
 });
@@ -74,7 +74,7 @@ const timeAgo = (dateString: string) => {
 
 <template>
     <div
-        class="notification-item group flex w-full cursor-pointer items-start gap-4 rounded-lg border border-transparent p-3 transition-all duration-200"
+        class=" group flex w-full cursor-pointer items-start gap-4 rounded-lg border border-transparent p-3 transition-all duration-200"
         :class="[
             // Apply hover and border classes only if not cleared
             !isCleared ? [typeDetails.hoverBgClass, typeDetails.borderClass] : '',
@@ -94,7 +94,7 @@ const timeAgo = (dateString: string) => {
                 :class="typeDetails.textClass"
                 v-html="notification.text"
             ></div>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p class="mt-1 text-xs text-muted">
                 {{ timeAgo(notification.created_at) }}
             </p>
         </div>
@@ -117,18 +117,18 @@ const timeAgo = (dateString: string) => {
                 <!-- Bottom: Action Buttons (appear on hover) -->
                  <span v-if="store.isAuthenticated">
                      <div v-if="!isCleared" class="mt-2 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                         <button
+                        <button
                              v-if="!isSeen"
                              @click.stop="store.markAsSeen(notification.id)"
                              title="Mark as read"
-                             class="rounded-full p-1.5 text-gray-500 hover:bg-gray-200/80 dark:hover:bg-gray-700/60 hover:text-blue-500"
+                             class="rounded-full p-1.5 text-muted hover:bg-[color-mix(in srgb, var(--color-gray-200) 80%, transparent)] hover:text-[var(--color-info)]"
                          >
                              <Check class="h-4 w-4" />
                          </button>
                          <button
                              @click.stop="store.clearNotification(notification.id)"
                              title="Clear notification"
-                             class="rounded-full p-1.5 text-gray-500 hover:bg-gray-200/80 dark:hover:bg-gray-700/60 hover:text-red-500"
+                             class="rounded-full p-1.5 text-muted hover:bg-[color-mix(in srgb, var(--color-gray-200) 80%, transparent)] hover:text-[var(--color-error)]"
                          >
                              <Trash2 class="h-4 w-4" />
                          </button>

@@ -87,10 +87,10 @@
                 <div class="flex items-center justify-between">
                     <label for="remember" class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="remember" name="remember" class="checkbox" />
-                        <span class="text-sm text-gray-600 dark:text-gray-300">Remember me</span>
+                        <span class="text-sm section-description">Remember me</span>
                     </label>
 
-                    <router-link :to="{ name: 'forgot-password' }" class="text-sm link">
+                    <router-link :to="{ name: 'forgot-password' }" class="text-sm link section-description">
                         Forgot your password?
                     </router-link>
                 </div>          
@@ -101,7 +101,7 @@
                 </button>
             </form>
             
-            <p class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+            <p class="mt-8 text-center text-sm section-description">
                 Don't have an account?
                 <router-link :to="{ name: 'register' }" class="link">
                     Sign up

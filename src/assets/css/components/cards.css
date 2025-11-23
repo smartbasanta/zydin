@@ -2,14 +2,15 @@
 
 /* Used for Hero section, testimonials etc. */
 .card-backdrop {
-    background: var(--card-backdrop-bg);
+    background: var(--section-bg);
+    /* background: var(--card-backdrop-bg); */
     border: 1px solid var(--card-backdrop-border);
     @apply rounded-2xl p-8 md:p-10 shadow-xl backdrop-blur-xl;
 }
 
 /* Used for Auth pages */
 .auth-card {
-    @apply relative w-full max-w-lg mx-auto rounded-xl overflow-hidden;
+    @apply relative w-full max-w-sm mx-auto rounded-xl overflow-hidden;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     box-shadow: var(--card-shadow);

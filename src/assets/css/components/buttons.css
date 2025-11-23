@@ -6,7 +6,7 @@
     @apply text-base font-semibold tracking-wide;
     @apply rounded-lg; /* Standardized to lg */
     @apply transition-all duration-200 ease-in-out;
-    @apply border-b-2 shadow-sm;
+    /* @apply border-b-2 shadow-sm; */
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-[var(--color-gray-900)];
     @apply disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none;
     @apply active:translate-y-px active:shadow-none;

@@ -45,7 +45,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="relative w-full h-[75vh] min-h-[500px] md:h-[85vh] text-white overflow-hidden">
+  <section class="relative w-full h-[75vh] min-h-[500px] md:h-[85vh] overflow-hidden">
     <!-- Theme-aware background with clipping effect -->
     <div class="absolute inset-0 bg-gradient-hero clip-path-hero"></div>
     <div class="absolute inset-0 hero-grid-overlay" aria-hidden="true"></div>
@@ -83,10 +83,10 @@ onUnmounted(() => {
             <transition name="slide-up" mode="out-in">
               <div :key="currentSlide" class="card-backdrop">
                 <div class="relative z-10">
-                  <h1 class="mb-6 text-3xl md:text-4xl lg:text-5xl leading-tight text-white font-bold tracking-tight drop-shadow-lg">
+                  <h1 class="mb-6 text-3xl md:text-4xl lg:text-5xl leading-tight section-title font-bold tracking-tight drop-shadow-lg">
                     {{ slides[currentSlide]?.title }}
                   </h1>
-                  <p class="mb-8 text-base md:text-lg lg:text-xl text-white/90 font-medium leading-relaxed drop-shadow-md max-w-2xl">
+                  <p class="mb-8 text-base md:text-lg lg:text-xl section-description font-medium leading-relaxed drop-shadow-md max-w-2xl">
                     {{ slides[currentSlide]?.description }}
                   </p>
                   <div class="flex flex-col sm:flex-row gap-4">

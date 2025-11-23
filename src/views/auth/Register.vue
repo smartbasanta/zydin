@@ -47,7 +47,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex items-center justify-center mt-8 bg-primary-50 dark:bg-gray-1100">
+    <div class="flex items-center justify-center mt-8 section-bg">
         <div
             class="w-full max-w-2xl p-8 space-y-8 bg-white border rounded-3xl shadow-xl sm:p-10 border-primary-100 dark:bg-gray-1150 dark:border-gray-1000">
             <AuthHeader title="Create Your Account"

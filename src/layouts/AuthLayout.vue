@@ -108,7 +108,7 @@ watch(() => route.fullPath, () => {
                 </div>
             </header>
 
-            <main class="flex-1 overflow-y-auto custom-scrollbar">
+            <main class="flex-1 overflow-y-auto custom-scrollbar section-bg">
                 <ErrorUnauthorized :can-retry="canRetry" v-if="globalStateStore.isUnauthorized"
                     @retry="handleUnauthorizedRetry" />
                 <router-view v-else v-slot="{ Component }">

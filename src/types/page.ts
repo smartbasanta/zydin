@@ -29,6 +29,9 @@ export interface AboutPageData {
     leaders: Leader[];
 }
 
+export interface RepeaterItem {
+    [key: string]: any;
+}
 
 export interface RepeaterField {
     label: string;

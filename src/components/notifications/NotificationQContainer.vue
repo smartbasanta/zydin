@@ -27,7 +27,7 @@
 <template>
     <div
         aria-live="assertive"
-        class="pointer-events-none fixed inset-0 flex flex-col p-4 space-y-4 z-[100]"
+        class="pointer-events-none fixed inset-0 flex flex-col p-4 space-y-4 z-[100] text-[var(--color-gray-900)]"
         :class="positionClasses"
     >
         <TransitionGroup

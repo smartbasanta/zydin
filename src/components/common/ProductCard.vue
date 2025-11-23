@@ -7,6 +7,7 @@ import { useDefaultImages } from '@/composables/useDefaultImages';
 const { defaultProductAPIImage, defaultProductFFImage } = useDefaultImages();
 const props = defineProps<{
     product: Product;
+    type?: 'mini' |'expanded'
 }>();
 
 const isFinishedFormulation = computed(() => props.product.type === 'ff');
@@ -129,7 +130,7 @@ const conciseFeatures = computed(() => featureItems.value.slice(0, 2));
                 <p v-if="secondaryMeta" class="product-card__meta">{{ secondaryMeta }}</p>
             </div>
 
-            <div v-if="conciseFeatures.length" class="product-card__stats">
+            <div v-if="conciseFeatures.length && (type === 'expanded')" class="product-card__stats">
                 <div v-for="feature in conciseFeatures" :key="feature.label" class="product-card__stat">
                     <component :is="feature.icon" class="w-4 h-4" />
                     <div>

@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, type PropType } from 'vue';
-import { Plus, Trash2 } from 'lucide-vue-next';
+import { GripVerticalIcon, Plus, PlusIcon, Trash2, Trash2Icon } from 'lucide-vue-next';
 import TextInput from './TextInput.vue';
 import TextareaInput from './TextareaInput.vue';
 import DeleteButton from '../button/DeleteButton.vue';
-import type { RepeaterField } from '@/types';
-
-
-interface RepeaterItem {
-    [key: string]: any;
-}
+import type { RepeaterField, RepeaterItem } from '@/types';
 
 // --- Component Props & Emits ---
 const props = defineProps({
@@ -50,6 +45,7 @@ watch(items, (newValue) => {
 
 // Watch for changes in the 'modelValue' prop (from the parent) and parse it to update our internal state
 watch(() => props.modelValue, (newVal) => {
+    // console.log(newVal);
     try {
         const parsedValue = JSON.parse(newVal || '[]');
         // Only update if the parsed value is different from our current items to avoid infinite loops
@@ -65,52 +61,67 @@ watch(() => props.modelValue, (newVal) => {
         items.value = [];
     }
 }, { immediate: true }); // 'immediate' ensures this runs on component mount
-
 </script>
 
 <template>
-    <div class="w-full">
-        <!-- 1. Component Header: Title and Primary "Add" Button -->
-        <div class="flex justify-between items-center mb-2">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+    <div class="w-full space-y-3">
+        <!-- Header: Label + Add Button -->
+        <div class="flex items-center justify-between">
+            <label class="block text-sm font-semibold section-title">
                 {{ label }}
             </label>
-            <button @click="addItem" type="button" class="btn btn-primary flex items-center gap-2">
-                <Plus class="size-4"/>
-                Add New
+            <button 
+                @click="addItem" 
+                type="button" 
+                class="btn btn-sm btn-secondary"
+            >
+                <PlusIcon class="size-4 mr-1.5"/>
+                Add New Item
             </button>
         </div>
 
-        <!-- 2. Main Container: Holds the list or the empty state -->
-        <div class="bg-gray-50 dark:bg-gray-1000/30 border border-gray-200 dark:border-gray-700 rounded-lg">
-
-            <!-- 3. The List of Items (v-if there are items) -->
-            <ul v-if="items.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
-                <li v-for="(item, index) in items" :key="index" class="p-4 sm:p-6">
-                    
-                    <!-- Item Header: Title and Delete Button -->
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-semibold text-gray-800 dark:text-gray-200">
-                            {{ label.slice(0,-1) }} #{{ index + 1 }}
-                        </h3>
-                        <DeleteButton 
-                            @confirm="removeItem(index)" 
-                            variant="danger" 
-                            size="sm"
+        <!-- Container -->
+        <div class="space-y-4">
+            
+            <!-- List of Items -->
+            <TransitionGroup name="list" tag="div" class="space-y-4">
+                <div 
+                    v-for="(item, index) in items" 
+                    :key="index" 
+                    class="relative p-4 md:p-6 rounded-xl border border-muted bg-card transition-all duration-200 hover:shadow-md group"
+                >
+                    <!-- Item Actions (Top Right) -->
+                    <div class="absolute top-4 right-4 flex items-center gap-2">
+                        <span class="text-xs font-mono text-muted bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                            #{{ index + 1 }}
+                        </span>
+                        <button 
+                            @click="removeItem(index)" 
+                            type="button"
+                            class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                            title="Remove Item"
                         >
-                            <Trash2 class="size-4"/>
-                        </DeleteButton>
+                            <Trash2Icon class="size-4"/>
+                        </button>
                     </div>
 
-                    <!-- Item Body: The Form Fields -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                        <div v-for="(fieldConfig, fieldKey) in fields" :key="fieldKey">
+                    <!-- Dynamic Form Fields Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-8 md:pr-0">
+                        <!-- Loop through the 'fields' definition to render inputs -->
+                        <div 
+                            v-for="(fieldConfig, fieldKey) in fields" 
+                            :key="fieldKey"
+                            :class="{ 'md:col-span-2': fieldConfig.type === 'textarea' }"
+                        >
+                            <!-- Render Text Input -->
                             <TextInput
                                 v-if="fieldConfig.type === 'text'"
                                 :label="fieldConfig.label"
                                 v-model="item[fieldKey]"
                                 :placeholder="fieldConfig.placeholder"
                             />
+                            
+                            <!-- Render Textarea Input -->
                             <TextareaInput
                                 v-if="fieldConfig.type === 'textarea'"
                                 :label="fieldConfig.label"
@@ -120,24 +131,45 @@ watch(() => props.modelValue, (newVal) => {
                             />
                         </div>
                     </div>
-                </li>
-            </ul>
-
-            <!-- 4. The Empty State (v-else) -->
-            <div v-else class="text-center p-8">
-                <div class="flex flex-col items-center gap-2 text-gray-500 dark:text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-10 mb-2 text-gray-400"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
-                    <p class="font-semibold">{{ placeholder }}</p>
-                    <p class="text-sm">Click the button below to add the first item.</p>
-                    <button @click="addItem" type="button" class="btn btn-primary mt-4 flex items-center gap-2">
-                        <Plus class="size-4"/>
-                        Add First Item
-                    </button>
                 </div>
+            </TransitionGroup>
+
+            <!-- Empty State -->
+            <div v-if="items.length === 0" class="p-8 text-center rounded-xl border border-dashed border-muted bg-gray-50 dark:bg-gray-900/30">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 mb-3">
+                    <GripVerticalIcon class="size-6" />
+                </div>
+                <h3 class="text-sm font-semibold section-title mb-1">No items added</h3>
+                <p class="text-xs text-muted mb-4">{{ placeholder }}</p>
+                <button @click="addItem" type="button" class="btn btn-primary">
+                    <PlusIcon class="size-4 mr-2"/>
+                    Add First Item
+                </button>
             </div>
+
         </div>
 
-        <!-- 5. Display Validation Error -->
-        <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
+        <!-- Validation Error -->
+        <p v-if="error" class="text-sm text-red-500 mt-1">{{ error }}</p>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* Use the global theme variables for background colors */
+.bg-card {
+    background-color: var(--card-bg);
+}
+
+/* Simple list transition animation */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

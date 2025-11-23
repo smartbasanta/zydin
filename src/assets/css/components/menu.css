@@ -19,7 +19,8 @@
 }
 
 .menu-dropdown-panel {
-    @apply absolute right-0 mt-2 w-56 origin-top-right rounded-2xl overflow-hidden;
+    /* @apply absolute right-0 mt-2 w-56 origin-top-right rounded-2xl overflow-hidden; */
+    @apply w-56 rounded-2xl overflow-hidden;
     z-index: 70;
     border: 1px solid var(--panel-border);
     background-color: var(--panel-surface);
@@ -33,10 +34,10 @@
 
 .menu-dropdown-item {
     @apply flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm font-medium transition-all duration-150 rounded-xl;
-    color: color-mix(in srgb, var(--header-link) 90%, transparent);
+    /* color: color-mix(in srgb, var(--header-link) 90%, transparent); */
 }
 .dark .menu-dropdown-item {
-    color: color-mix(in srgb, var(--footer-text) 90%, transparent);
+    /* color: color-mix(in srgb, var(--footer-text) 90%, transparent); */
 }
 .menu-dropdown-item:hover,
 .menu-dropdown-item:focus-visible {

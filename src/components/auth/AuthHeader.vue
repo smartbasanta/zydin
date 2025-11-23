@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
         </RouterLink>
 
         <!-- <div class="font-grotesk"> -->
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight section-title">
             {{ title }}
         </h2>
         <p class="text-muted mt-2 text-sm sm:text-base max-w-sm">

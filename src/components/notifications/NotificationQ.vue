@@ -10,16 +10,28 @@
     const store = useNotifyQStore();
     // const emit = defineEmits(['close']);
 
+    // const typeDetails = computed(() => {
+    //     switch (props.notifyQ.type) {
+    //         case 'success':
+    //             return { icon: CheckCircle2, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-success)] bg-gradient-to-br from-[var(--color-success)] to-[color-mix(in srgb,var(--color-success), black)]' };
+    //         case 'warning':
+    //             return { icon: AlertTriangle, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-warning)] bg-gradient-to-br from-[var(--color-warning)] to-[color-mix(in srgb, var(--color-warning) black)]' };
+    //         case 'error':
+    //             return { icon: XCircle, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-error)] bg-gradient-to-br from-[var(--color-error)] to-[color-mix(in srgb, var(--color-error) black)]' };
+    //         default: // 'info'
+    //             return { icon: Info, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-info)] bg-gradient-to-br from-[var(--color-info)] to-[color-mix(in srgb, var(--color-info) black)]' };
+    //     }
+    // });
     const typeDetails = computed(() => {
         switch (props.notifyQ.type) {
             case 'success':
-                return { icon: CheckCircle2, class: 'rounded-lg shadow-lg shadow-black/40 border bg-white text-green-800 border-green-200 bg-gradient-to-br from-green-50 to-green-100' };
+                return { icon: CheckCircle2, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-success)] bg-[var(--color-success)]' };
             case 'warning':
-                return { icon: AlertTriangle, class: 'rounded-lg shadow-lg shadow-black/40 border bg-white text-amber-800 border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100' };
+                return { icon: AlertTriangle, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-warning)] bg-[var(--color-warning)]' };
             case 'error':
-                return { icon: XCircle, class: 'rounded-lg shadow-lg shadow-black/40 border bg-white text-red-800 border-red-200 bg-gradient-to-br from-red-50 to-red-100' };
+                return { icon: XCircle, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-error)] bg-[var(--color-error)]' };
             default: // 'info'
-                return { icon: Info, class: 'rounded-lg shadow-lg shadow-black/40 border bg-white text-blue-800 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100' };
+                return { icon: Info, class: 'rounded-lg shadow-lg shadow-black/40 border text-white border-[var(--color-info)] bg-[var(--color-info)]' };
         }
     });
 

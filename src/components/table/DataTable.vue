@@ -4,6 +4,7 @@
     import TableFooter from '@/components/table/TableFooter.vue';
     import { type Ref, inject, ref } from 'vue';
     import LoadingState from '../card/LoadingState.vue';
+import { FileX2Icon } from 'lucide-vue-next';
 
     defineSlots<{
         'add-new-button': () => any;

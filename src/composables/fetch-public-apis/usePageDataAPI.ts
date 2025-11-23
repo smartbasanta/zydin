@@ -27,6 +27,7 @@ export function usePageDataAPI() {
         error.value = null;
         try {
             const response: ApiResponse = await apiService.get<ApiResponse>('/public/about-us');
+            console.log(response.data);
             aboutPageData.value = response.data;
         } catch (err: any) {
             error.value = err.message;

@@ -2,12 +2,13 @@
    Theme-Aware Data Table Styles
    ============================================= */
 
-/* 
+/*
   The main container that wraps the entire table.
   It provides the card-like appearance with theme-aware background, border, and shadow.
+  Updated to take full available space and make tbody scrollable.
 */
 .data-table-shell {
-    @apply relative border overflow-hidden;
+    @apply relative border overflow-scroll flex flex-col h-full;
     background-color: var(--card-bg);
     border-color: var(--card-border);
     box-shadow: var(--shadow-lg);
@@ -44,7 +45,7 @@
 */
 .data-table-shell tbody tr {
     @apply border-b transition-colors duration-150;
-    border-color: var(--border-muted);
+    border-color: var(--card-border);
 }
 
 .data-table-shell tbody tr:last-child {
@@ -74,6 +75,46 @@
 /* Make text in selected rows slightly more prominent */
 .data-table-shell tbody tr.is-selected td {
     color: var(--section-title-color);
+}
+
+/* Additional table cell styles */
+.table-header-cell {
+    @apply px-6 py-3 font-semibold uppercase tracking-wider;
+    color: var(--section-title-color);
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.table-cell {
+    @apply px-6 py-4 align-middle;
+    color: var(--section-text-color);
+}
+
+.table-row {
+    @apply border-b transition-colors duration-150;
+    border-color: var(--card-border);
+}
+
+.table-row:last-child {
+    @apply border-b-0;
+}
+
+.table-row:hover {
+    background-color: color-mix(in srgb, var(--header-link-hover) 4%, transparent);
+}
+
+.table-row.is-selected {
+    background-color: color-mix(in srgb, var(--header-link-hover) 8%, transparent);
+}
+
+/* Sort button styles */
+.sort-button {
+    @apply flex items-center gap-1 cursor-pointer transition-colors duration-150 px-2 py-1 rounded;
+    /* @apply  hover:bg-gray-100 dark:hover:bg-gray-700; */
+    color: var(--section-title-color);
+}
+
+.sort-button.is-active {
+    /* @apply bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300; */
 }
 
 .pagination-button {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { SaveButton } from "@/components/button";
 import CRUDCard from "@/components/card/CRUDCard.vue";
@@ -14,6 +14,14 @@ const route = useRoute();
 const pageSlug = computed(() => route.params.pageSlug as string);
 
 const { form, errors, isLoading, submit, isDirty, pageDetails } = usePageContentFormAPI(pageSlug.value);
+watch(isLoading, (newValue)=>{
+    console.log(form.content_blocks);
+    form.content_blocks.forEach((block, index )=> {
+        if(block.type === 'repeater'){
+            // console.log(form.content_blocks[index]);
+        }
+    });
+})
 </script>
 
 <template>

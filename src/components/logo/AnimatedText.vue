@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, withDefaults, defineProps } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
 // --- Type Definitions ---
 interface TextChar {
@@ -191,7 +191,7 @@ const getCharStyle = (char: TextChar) => {
       :aria-label="text"
     >
       <span
-        class="inline-block text-secondary-1200 dark:text-pink-950"
+        class="inline-block section-title"
         :style="{ fontSize: 'var(--font-size)', fontWeight: 'var(--font-weight)' }"
       >
         <span

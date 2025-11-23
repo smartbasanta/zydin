@@ -64,7 +64,7 @@
 
 <template>
     <div class="flex items-center">
-        <Dropdown v-if="filterableColumns.length > 0">
+        <Dropdown v-if="filterableColumns.length > 0" placement="bottom-center" menuClass="menu-dropdown-panel">
             <template #trigger="{ toggle }">
                 <button @click="toggle()" class="btn btn-secondary">
                     <FilterIcon class="size-4 mr-1.5" />
@@ -90,11 +90,11 @@
                             @keyup.enter="handleApplyFiltersInMenu(close)"
                         />
 
-                        <select 
-                            v-else-if="col.filterType === 'select'" 
+                        <select
+                            v-else-if="col.filterType === 'select'"
                             :id="`filter-${col.key}`"
-                            v-model="localFilterValues[col.key]" 
-                            class="input w-full"
+                            v-model="localFilterValues[col.key]"
+                            class="input w-full text-left"
                         >
                             <option value="">All {{ col.name }}</option>
                             <option v-for="option in col.filterOptions" :key="String(option.value)" :value="option.value">
@@ -117,13 +117,13 @@
                     <div v-if="filterableColumns.length > 0" class="flex gap-2 mt-4 pt-3 border-t border-border-color">
                         <button 
                             @click="handleApplyFiltersInMenu(close)" 
-                            class="btn primary w-full flex-1"
+                            class="btn btn-primary w-full flex-1"
                         >
                             Apply Filters
                         </button>
                         <button 
                             @click="handleResetFiltersInMenu(close)" 
-                            class="btn outline w-full flex-1"
+                            class="btn btn-secondary w-full flex-1"
                         >
                             Reset All
                         </button>
