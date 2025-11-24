@@ -61,7 +61,7 @@ export function usePageContentFormAPI(pageSlug: string) {
         try {
             const response = await apiService.get<ApiResponse>(`/dashboard/page-content/${pageSlug}`);
             form.content_blocks = response.data.pageContent;
-            console.log(response.data.pageContent);
+            // console.log(response.data.pageContent);
             pageDetails.title = response.data.title;
             pageDetails.description = response.data.description;
 

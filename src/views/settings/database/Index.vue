@@ -118,7 +118,7 @@ const downloadBackupFile = async (path: string) => {
 
         // SUCCESS! TypeScript now knows `response.headers` exists.
         const contentDisposition = response.headers['content-disposition'];
-        console.log(contentDisposition);
+        // console.log(contentDisposition);
         let filename = 'download';
         if (contentDisposition) {
             const filenameMatch = contentDisposition.match(/filename\*?=['"]?([^'"]+)['"]?$/);

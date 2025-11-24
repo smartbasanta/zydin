@@ -147,7 +147,7 @@
 	<LoadingState v-if="isLoading" />
 	<div
 		v-else-if="dashboardData && can?.viewAccessControlDashboard"
-		class="bg-gray-50 dark:bg-gray-1200 text-gray-700 dark:text-gray-300 min-h-screen p-4 sm:p-6 lg:p-8 font-grotesk selection:bg-blue-500/30"
+		class="section-bg section-title min-h-screen p-4 sm:p-6 lg:p-8 font-grotesk selection:bg-blue-500/30"
 	>
 		<Header />
 

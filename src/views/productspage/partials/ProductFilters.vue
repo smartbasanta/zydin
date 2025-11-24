@@ -41,7 +41,7 @@ watch(() => activeFilters.value?.type, (newType) => {
         - Uses 'card-backdrop' for consistent theme styling.
         - Adjusted 'top-28' to account for the height of the new sticky header.
     -->
-    <aside class="sticky top-28 card-backdrop p-6">
+    <aside class="sticky top-28 card-backdrop p-8">
         <!-- Header Section -->
         <div class="flex items-center justify-between gap-4 pb-4 mb-6 border-b border-muted">
             <h3 class="flex items-center gap-2 text-lg font-bold section-title">

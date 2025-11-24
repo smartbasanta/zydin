@@ -60,7 +60,7 @@ watch(() => props.isOpen, (newVal) => {
                                 <h2 class="text-xl font-bold section-title">Apply for {{ job?.title }}</h2>
                                 <p class="text-sm text-muted">{{ job?.department }} &middot; {{ job?.location }}</p>
                             </div>
-                            <button @click="emit('close')" class="btn btn-ghost btn-icon"><XIcon /></button>
+                            <button @click="emit('close')" class="btn btn-icon section-title"><XIcon /></button>
                         </header>
 
                         <form @submit.prevent="handleSubmit" class="p-6 space-y-4 overflow-y-auto">

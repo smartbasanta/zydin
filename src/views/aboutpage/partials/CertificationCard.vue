@@ -15,18 +15,20 @@ defineProps<{
         class="certification-card group"
         :class="{ 'is-featured': certification.is_featured }"
     >
-        <!-- Card Header with Logo -->
+        <!-- Card Header with Cover Image -->
         <header class="card__header">
             <img 
                 :src="certification.logo_url ?? certification.logo_thumbnail_url ?? defaultCertificationImage"
                 :alt="`${certification.name} Logo`"
-                class="h-16 w-auto max-w-[80%] object-contain transition-transform duration-300 group-hover:scale-105"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
+            <!-- Optional: Subtle overlay to ensure image isn't too bright against white text if you change themes later -->
+            <div class="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </header>
 
         <!-- Card Body with Details -->
         <div class="card__body">
-            <h2 class="text-2xl font-bold section-title">
+            <h2 class="text-2xl font-bold section-title line-clamp-2">
                 {{ certification.name }}
             </h2>
 
@@ -34,7 +36,7 @@ defineProps<{
                 Issuing Body: <span class="font-semibold section-title">{{ certification.issuing_body }}</span>
             </p>
 
-            <p class="flex-grow mt-4 section-text leading-relaxed">
+            <p class="flex-grow mt-4 section-text leading-relaxed line-clamp-3">
                 {{ certification.description }}
             </p>
         </div>
@@ -51,7 +53,7 @@ defineProps<{
                 <DownloadIcon class="w-4 h-4" />
                 <span>Download Certificate</span>
             </a>
-            <span v-else class="text-sm italic text-muted">
+            <span v-else class="text-sm italic text-muted text-center block w-full">
                 Certificate document not available.
             </span>
         </footer>
@@ -76,7 +78,7 @@ defineProps<{
     border-color: var(--color-primary-600);
 }
 
-/* Featured variant with a clean top border */
+/* Featured variant */
 .certification-card.is-featured {
     border-top: 4px solid var(--color-secondary-500);
 }
@@ -86,10 +88,12 @@ defineProps<{
 }
 
 .card__header {
-    @apply flex items-center justify-center p-8 border-b;
+    @apply relative w-full border-b overflow-hidden;
     border-color: var(--card-border);
     background-color: color-mix(in srgb, var(--section-bg) 50%, transparent);
-    min-height: 140px;
+    /* Set a fixed height for the cover aspect ratio */
+    height: 200px; 
+    padding: 0; /* Removed padding so image touches edges */
 }
 
 .card__body {
@@ -100,5 +104,10 @@ defineProps<{
     @apply p-6 mt-auto border-t;
     border-color: var(--card-border);
     background-color: color-mix(in srgb, var(--section-bg) 50%, transparent);
+}
+
+/* Text utility to handle long descriptions elegantly */
+.section-text {
+    color: var(--section-text-color);
 }
 </style>

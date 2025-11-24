@@ -3,12 +3,20 @@
     import { useRouter } from "vue-router";
 
     const router = useRouter();
+    
     const props = defineProps({
         to: {
             type: [String, Object],
             default: null,
         },
-
+        iconOnly: {
+            type: Boolean,
+            default: false,
+        },
+        label: {
+            type: String,
+            default: "Back",
+        }
     });
 
     function goBack() {
@@ -21,18 +29,23 @@
 </script>
 
 <template>
-	<button
+    <button
         type="button"
-		@click="goBack"
-		class="group relative inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/60 dark:bg-white/5 border border-gray-200/60 dark:border-gray-800/60 backdrop-blur-md shadow-xl dark:shadow-gray-900/50 text-gray-800 dark:text-gray-200 font-semibold text-sm font-poppins transition-all duration-300 hover:scale-[1.03] cursor-pointer"
-	>
-		<span class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-200/10 via-purple-200/10 to-pink-200/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm z-0"></span>
-		<span class="absolute inset-0 rounded-2xl border border-white/30 dark:border-white/10 group-hover:border-blue-400/40 transition-colors duration-300 z-10"></span>
-		<ArrowLeftIcon class="w-5 h-5 relative z-20 transition-transform duration-300 group-hover:-translate-x-1 group-hover:rotate-[5deg]" />
-		<span class="relative z-20">
-            <slot>
-                Back
-            </slot>
-        </span>
-	</button>
+        @click="goBack"
+        class="group relative inline-flex items-center justify-center rounded-2xl bg-white/60 dark:bg-white/5 border border-gray-200/60 dark:border-gray-800/60 backdrop-blur-md shadow-xl text-gray-600 dark:text-gray-300 font-semibold text-sm font-poppins transition-all duration-300 hover:scale-[1.03] cursor-pointer"
+        :class="[ 
+            iconOnly ? 'p-3' : 'px-5 py-3 gap-2' 
+        ]"
+        :title="iconOnly ? label : undefined"
+    >
+        <!-- Background Effects (Neutral/Slate Theme) -->
+        <span class="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-200/10 via-slate-200/10 to-zinc-200/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm z-0"></span>
+        <span class="absolute inset-0 rounded-2xl border border-white/30 dark:border-white/10 group-hover:border-gray-400/40 transition-colors duration-300 z-10"></span>
+        
+        <!-- Icon (Slides left on hover) -->
+        <ArrowLeftIcon class="w-5 h-5 relative z-20 transition-transform duration-300 group-hover:-translate-x-1" />
+        
+        <!-- Text Label (Conditional) -->
+        <span v-if="!iconOnly" class="relative z-20">{{ label }}</span>
+    </button>
 </template>

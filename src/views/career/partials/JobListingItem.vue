@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { ChevronDownIcon, MapPinIcon, Building2Icon, ClockIcon } from 'lucide-vue-next';
 import type { JobOpening } from '@/types';
 
-defineProps<{
+const props = defineProps<{
     job: JobOpening;
 }>();
-
 defineEmits(['apply-now']);
-
 const isOpen = ref(false);
 </script>
 
@@ -50,16 +48,16 @@ const isOpen = ref(false);
         <transition name="expand">
             <div v-show="isOpen" class="overflow-hidden">
                 <div class="job-item__body">
-                    <div class="prose dark:prose-invert max-w-none prose-h4:font-semibold prose-h4:section-title">
+                    <div class="prose dark:prose-invert max-w-none prose-h4:font-semibold prose-h4:section-title section-title">
                         <p>{{ job.description }}</p>
 
-                        <h4>Key Responsibilities</h4>
-                        <ul>
+                        <h4 class="font-semibold">Key Responsibilities</h4>
+                        <ul class="list-disc pl-8">
                             <li v-for="(item, i) in job.responsibilities" :key="`resp-${i}`">{{ item }}</li>
                         </ul>
                         
-                        <h4>Qualifications</h4>
-                        <ul>
+                        <h4 class="font-semibold">Qualifications</h4>
+                        <ul class="list-disc pl-8">
                             <li v-for="(item, i) in job.qualifications" :key="`qual-${i}`">{{ item }}</li>
                         </ul>
                     </div>
@@ -96,6 +94,7 @@ const isOpen = ref(false);
     transition: color 0.2s;
 }
 .job-item--open .job-item__title {
+    /* color: var(--section-title-color); */
     color: var(--color-primary-600);
 }
 :global(.dark) .job-item--open .job-item__title {
@@ -105,14 +104,15 @@ const isOpen = ref(false);
 .job-item__chip {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full;
     background-color: color-mix(in srgb, var(--color-primary-500) 8%, transparent);
-    color: color-mix(in srgb, var(--text-muted) 100%, black);
+    color: var(--section-title-color);
+    /* color: color-mix(in srgb, var(--text-muted) 100%, black); */
 }
 :global(.dark) .job-item__chip {
     color: var(--text-muted);
 }
 
 .job-item__chevron {
-    @apply text-muted;
+    @apply section-title;
 }
 .job-item--open .job-item__chevron {
     transform: rotate(180deg);

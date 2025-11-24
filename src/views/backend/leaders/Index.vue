@@ -4,12 +4,14 @@ import { apiService } from '@/services/api.service';
 import type { ApiResponse } from '@/types/api';
 import type { Leader } from '@/types';
 import { useNotifier } from '@/composables/useNotifier';
-import { PlusIcon, UserSquare, LinkedinIcon, TwitterIcon } from 'lucide-vue-next';
+import { PlusIcon, UserIcon } from 'lucide-vue-next';
 import EditButton from '@/components/button/EditButton.vue';
 import DeleteModel from '@/components/button/DeleteModel.vue';
-// --- (1) IMPORT THE NEW VIEW BUTTON ---
 import ViewButton from '@/components/button/ViewButton.vue';
+import LoadingState from '@/components/loading/LoadingState.vue';
+import { useDefaultImages } from '@/composables/useDefaultImages';
 
+const { defaultProfileImage } = useDefaultImages();
 const leaders = ref<Leader[]>([]);
 const can = ref({ create: false });
 const isLoading = ref(true);
@@ -32,68 +34,117 @@ onMounted(fetchLeaders);
 </script>
 
 <template>
-    <div class="p-4 sm:p-6 lg:p-8">
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div class="p-6 md:p-8 space-y-8">
+        <!-- Page Header -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Leadership Team</h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Manage your organization's leaders.</p>
+                <h1 class="text-2xl font-bold section-title">Leadership Team</h1>
+                <p class="text-muted mt-1">Manage the profiles of your organization's executive members.</p>
             </div>
-            <RouterLink v-if="can.create" :to="{ name: 'dashboard.leaders.create' }" title="Add New Leader" class="btn btn-primary">
-                <PlusIcon class="size-4" />
-                Add Leader
+            <RouterLink v-if="can.create" :to="{ name: 'dashboard.leaders.create' }" class="btn btn-primary">
+                <PlusIcon class="w-4 h-4 mr-2" />
+                Add New Leader
             </RouterLink>
         </header>
 
-        <div v-if="isLoading" class="text-center py-10">
-            <p>Loading leaders...</p>
+        <!-- Loading State -->
+        <div v-if="isLoading" class="h-64 flex items-center justify-center">
+            <LoadingState message="Loading Team..." />
         </div>
 
-        <div v-else-if="leaders.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="leader in leaders" :key="leader.id" class="bg-white dark:bg-gray-1100 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-                
-                <RouterLink :to="{ name: 'dashboard.leaders.show', params: { id: leader.id } }" class="p-5 flex-grow block hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors duration-200">
-                    <div class="flex items-start gap-4">
-                        <img v-if="leader.image_thumbnail_url" :src="leader.image_thumbnail_url" :alt="leader.name" class="h-20 w-20 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600">
-                        <div v-else class="h-20 w-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
-                            <UserSquare class="size-10" />
+        <!-- Leaders Grid -->
+        <div v-else-if="leaders.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div 
+                v-for="leader in leaders" 
+                :key="leader.id" 
+                class="leader-card group"
+            >
+                <!-- Card Body (Clickable to View) -->
+                <RouterLink 
+                    :to="{ name: 'dashboard.leaders.show', params: { id: leader.id } }" 
+                    class="block p-6 flex-grow"
+                >
+                    <div class="flex items-start gap-5">
+                        <!-- Avatar -->
+                        <div class="relative flex-shrink-0">
+                            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-muted bg-gray-100 dark:bg-gray-800">
+                                <img 
+                                    :src="leader.image_thumbnail_url ?? leader.image_url ?? defaultProfileImage" 
+                                    :alt="leader.name" 
+                                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                >
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ leader.name }}</h3>
-                            <p class="text-sm text-indigo-600 dark:text-indigo-400 font-semibold">{{ leader.position }}</p>
-                            <p v-if="leader.title" class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ leader.title }}</p>
+
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0 pt-1">
+                            <h3 class="text-lg font-bold section-title truncate group-hover:text-primary-600 transition-colors">
+                                {{ leader.name }}
+                            </h3>
+                            <p class="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-0.5 truncate">
+                                {{ leader.position }}
+                            </p>
+                            <p v-if="leader.title" class="text-xs text-muted truncate">
+                                {{ leader.title }}
+                            </p>
                         </div>
                     </div>
-                    <p v-if="leader.quote" class="mt-4 text-sm italic text-gray-600 dark:text-gray-300 border-l-4 border-gray-200 dark:border-gray-600 pl-4">
-                        "{{ leader.quote }}"
-                    </p>
+
+                    <!-- Quote Preview -->
+                    <div v-if="leader.quote" class="mt-5 pt-4 border-t border-dashed border-muted">
+                        <p class="text-sm italic section-title line-clamp-2 relative pl-3">
+                            <span class="absolute left-0 top-0 bottom-0 w-0.5 bg-primary-300 dark:bg-primary-700 rounded-full"></span>
+                            "{{ leader.quote }}"
+                        </p>
+                    </div>
                 </RouterLink>
 
-                <footer class="bg-gray-50 dark:bg-gray-1100/50 px-5 py-3 flex justify-end items-center border-t border-gray-200 dark:border-gray-700">
-                    <!-- <div class="flex items-center gap-3">
-                        <a v-if="leader.socials?.linkedin" :href="leader.socials.linkedin" target="_blank" class="text-gray-400 hover:text-blue-600">
-                            <LinkedinIcon class="size-5" />
-                        </a>
-                        <a v-if="leader.socials?.twitter" :href="leader.socials.twitter" target="_blank" class="text-gray-400 hover:text-sky-500">
-                            <TwitterIcon class="size-5" />
-                        </a>
-                    </div> -->
-                    <div class="flex items-center justify-end gap-1">
-                        <ViewButton v-if="leader.can?.view" :to="{ name: 'dashboard.leaders.show', params: { id: leader.id } }" size="sm" />
-                        <EditButton v-if="leader.can?.update" :to="{ name: 'dashboard.leaders.edit', params: { id: leader.id } }" size="sm" />
-                        <DeleteModel v-if="leader.can?.delete" :item-id="leader.id" :item-name="leader.name" delete-url="/dashboard/leaders/" size="sm" @deleted="fetchLeaders" />
+                <!-- Card Footer (Actions) -->
+                <footer class="px-6 py-3 border-t border-muted flex justify-between items-center">
+                    <div class="text-xs section-title font-medium">
+                        <!-- Optional: Status or Last Updated could go here -->
+                        ID: #{{ leader.id }}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <ViewButton :icon-only="true" v-if="leader.can?.view" :to="{ name: 'dashboard.leaders.show', params: { id: leader.id } }" size="sm" />
+                        <EditButton :icon-only="true" v-if="leader.can?.update" :to="{ name: 'dashboard.leaders.edit', params: { id: leader.id } }" size="sm" />
+                        <DeleteModel :icon-only="true" v-if="leader.can?.delete" :item-id="leader.id" :item-name="leader.name" delete-url="/dashboard/leaders/" size="sm" @deleted="fetchLeaders" />
                     </div>
                 </footer>
             </div>
         </div>
 
-        <div v-else class="text-center py-20 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
-            <UserSquare class="mx-auto size-16 text-gray-400 mb-4" />
-            <h3 class="text-xl font-semibold mb-1 text-gray-800 dark:text-gray-200">No Leaders Found</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Get started by adding the first member of your leadership team.</p>
-            <RouterLink v-if="can.create" :to="{ name: 'dashboard.leaders.create' }" title="Add New Leader" class="btn btn-primary mt-4">
-                <PlusIcon class="size-4" />
-                Add Leader
+        <!-- Empty State -->
+        <div v-else class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-muted rounded-xl bg-gray-50/50 dark:bg-gray-900/20">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 text-muted">
+                <UserIcon class="w-8 h-8" />
+            </div>
+            <h3 class="text-lg font-semibold section-title">No Leaders Found</h3>
+            <p class="text-muted max-w-sm mt-1 mb-6">Your leadership roster is currently empty. Add your first executive member to get started.</p>
+            <RouterLink v-if="can.create" :to="{ name: 'dashboard.leaders.create' }" class="btn btn-primary">
+                <PlusIcon class="w-4 h-4 mr-2" />
+                Add First Leader
             </RouterLink>
         </div>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.leader-card {
+    @apply flex flex-col rounded-xl border overflow-hidden transition-all duration-300;
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.leader-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary-300);
+}
+:global(.dark) .leader-card:hover {
+    border-color: var(--color-primary-600);
+}
+</style>

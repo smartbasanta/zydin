@@ -38,7 +38,7 @@ watch(
     () => authUser.value?.avatar_url,
     (newUrl) => {
         currentAvatarUrl.value = newUrl || getDefaultAvatar();
-        console.log('Avatar URL updated:', currentAvatarUrl.value);
+        // console.log('Avatar URL updated:', currentAvatarUrl.value);
     },
 );
 

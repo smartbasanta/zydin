@@ -20,6 +20,7 @@ export function useCareerAPI() {
             jobs.value = response.data.paginatedData.data; // Adjusted to match backend
             // If you add filters to your backend response, you can uncomment this:
             // availableFilters.value = response.data.filters;
+            // console.log(response.data.paginatedData.data);
         } finally {
             isLoading.value = false;
         }

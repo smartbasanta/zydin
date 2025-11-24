@@ -27,9 +27,12 @@
   contrast and `text-muted` for the text, ensuring it looks right in light/dark modes.
 */
 .data-table-shell thead {
+    @apply border-b-1 border-muted;
     background-color: var(--section-bg);
 }
-
+.data-table-shell .table-footer {
+    background-color: var(--section-bg);
+}
 /*
   Header cells (<th>).
   Uses theme variables and professional typography for a clean, readable header.
@@ -69,7 +72,7 @@
 */
 .data-table-shell td {
     @apply px-6 py-4 align-middle;
-    color: var(--section-text-color);
+    color: var(--section-title-color);
 }
 
 /* Make text in selected rows slightly more prominent */
@@ -119,13 +122,13 @@
 
 .pagination-button {
     @apply flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-all duration-200;
-    color: var(--text-muted);
+    color: var(--section-title-color);
 }
 
 /* Hover state for clickable buttons */
 .pagination-button:not(:disabled):hover {
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
 }
 
 /* Active state for the current page */

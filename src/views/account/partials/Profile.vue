@@ -73,7 +73,7 @@ const submit = async () => {
   form.errors = {};
 
   try {
-    console.log(form.data.timezone +" is a type of "+typeof(form.data.timezone));
+    // console.log(form.data.timezone +" is a type of "+typeof(form.data.timezone));
     const response = await apiService.put<ApiResponse<Profile>>('/user/account/profile/update', form.data);
     notify(response); // Show success notification from API
   } catch (error) {

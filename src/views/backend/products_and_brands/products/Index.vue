@@ -2,28 +2,29 @@
 import { provide } from 'vue';
 import useDataTable from '@/composables/useDatatable';
 import DataTable from '@/components/table/DataTable.vue';
-import ConfirmModal from '@/components/modal/ConfirmModal.vue';
+// We don't need the global ConfirmModal anymore since DeleteModel handles it internally
+// import ConfirmModal from '@/components/modal/ConfirmModal.vue';
 
 import {
   PackageIcon,
   CheckCircleIcon,
-  XCircleIcon
+  XCircleIcon,
+  PlusIcon
 } from 'lucide-vue-next';
 
-import {
-  TableAddButton,
-  TableDeleteButton,
-  TableEditButton,
-  TableViewButton
-} from '@/components/table/button';
+// Use the new universal buttons
+import { EditButton } from '@/components/button';
+import ViewButton from '@/components/button/ViewButton.vue';
+import DeleteModel from '@/components/button/DeleteModel.vue';
 
 import type { Product } from '@/types';
 import { useDefaultImages } from '@/composables/useDefaultImages';
 
-const { defaultProductAPIImage, defaultProductFFImage } = useDefaultImages(); // 2. Get the images you need
+const { defaultProductAPIImage, defaultProductFFImage } = useDefaultImages();
+
 const { can, visibleColumns, refreshData, currentColumns: productColumns } = useDataTable<Product>({
   apiEndpoint: 'dashboard.products.index',
-  columns: [],
+  columns: [], // Assuming your composable fetches columns or they are defined elsewhere
   tableName: 'products',
   modelKeyInData: 'paginatedData',
   configKeyInData: 'config',
@@ -41,84 +42,122 @@ provide('refreshData', refreshData);
       </template>
 
       <template #add-new-button v-if="can.create">
-        <TableAddButton :to="{ name: 'dashboard.products.create' }" title="Create New Product" />
+        <!-- Using standard btn classes instead of specific TableAddButton component -->
+        <RouterLink :to="{ name: 'dashboard.products.create' }" class="btn btn-primary">
+          <PlusIcon class="size-4 mr-2" />
+          Add Product
+        </RouterLink>
       </template>
 
       <template #row="{ row }">
-        <td v-if="visibleColumns.id" class="px-4 py-2.5 text-muted">
-          {{ row.id }}
+        <!-- ID -->
+        <td v-if="visibleColumns.id" class="table-cell text-muted font-mono text-xs">
+          #{{ row.id }}
         </td>
-        <td v-if="visibleColumns.image_thumbnail_url || visibleColumns.image_url" class="px-4 py-2.5 text-muted">
-            <img :src="row.image_thumbnail_url ?? row.image_url ?? (row.type === 'api' ? defaultProductAPIImage: defaultProductFFImage)" :alt="row.name" class="h-10 w-10 object-contain rounded-md">
-            <!-- <div v-else class="h-10 w-10 bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center text-muted">
-              <PackageIcon class="size-5" />
-            </div> -->
-          </td>
-        <td v-if="visibleColumns.name" class="px-4 py-2.5 font-medium">
-          <RouterLink v-if="row.can?.view" :to="{ name: 'dashboard.products.show', params: { id: row.id } }" class="link">
+
+        <!-- Image -->
+        <td v-if="visibleColumns.image_thumbnail_url || visibleColumns.image_url" class="table-cell">
+          <div
+            class="h-10 w-10 rounded-lg border border-muted overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center">
+            <img
+              :src="row.image_thumbnail_url ?? row.image_url ?? (row.type === 'api' ? defaultProductAPIImage : defaultProductFFImage)"
+              :alt="row.name" class="h-full w-full object-cover">
+          </div>
+        </td>
+
+        <!-- Name -->
+        <td v-if="visibleColumns.name" class="table-cell font-medium">
+          <RouterLink v-if="row.can?.view" :to="{ name: 'dashboard.products.show', params: { id: row.id } }"
+            class="text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400">
             {{ row.name }}
           </RouterLink>
           <span v-else>{{ row.name }}</span>
         </td>
-        <td v-if="visibleColumns.generic_name" class="px-4 py-2.5">
-          {{ row.generic_name || 'N/A' }}
-        </td>
-        <td v-if="visibleColumns.type" class="px-4 py-2.5">
-            <span class="px-2 py-1 text-xs font-semibold uppercase rounded-full"
-                  :class="{
-                      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': row.type === 'api',
-                      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300': row.type === 'ff'
-                  }">
-                {{ row.type }}
-            </span>
+
+        <!-- Generic Name -->
+        <td v-if="visibleColumns.generic_name" class="table-cell text-muted">
+          {{ row.generic_name || '-' }}
         </td>
 
-        <td v-if="visibleColumns.brand" class="px-4 py-2.5">
-            {{ row.brand?.name || 'N/A' }}
-        </td>
-        <td v-if="visibleColumns.category" class="px-4 py-2.5">
-            {{ row.category || 'N/A' }}
-        </td>
-        <td v-if="visibleColumns.therapeutic_area" class="px-4 py-2.5">
-          {{ row.therapeutic_area || 'N/A' }}
-        </td>
-        <td v-if="visibleColumns.is_featured" class="px-4 py-2.5 text-center">
-          <span v-if="row.is_featured"
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-700/30 dark:text-green-500">
-            <CheckCircleIcon class="size-3.5" /> Yes
-          </span>
-          <span v-else
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-400">
-            <XCircleIcon class="size-3.5" /> No
+        <!-- Type Badge -->
+        <td v-if="visibleColumns.type" class="table-cell">
+          <span class="inline-flex px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded-md border"
+            :class="{
+              // API: Clean Sky Blue
+              'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20': row.type === 'api',
+
+              // FF: Rich Violet
+              'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-500/10 dark:text-violet-400 dark:border-violet-500/20': row.type === 'ff'
+            }">
+            {{ row.type }}
           </span>
         </td>
 
-        <td class="px-4 py-3 whitespace-nowrap text-right">
-          <div class="flex items-center justify-end gap-1">
-            <TableViewButton v-if="row.can?.view" :to="{ name: 'dashboard.products.show', params: { id: row.id } }" />
-            <TableEditButton v-if="row.can?.update" :to="{ name: 'dashboard.products.edit', params: { id: row.id } }" />
-            <TableDeleteButton v-if="row.can?.delete" :item-id="row.id" :item-name="row.name"
-              delete-url="/dashboard/products/" @deleted="refreshData" />
+        <!-- Brand -->
+        <td v-if="visibleColumns.brand" class="table-cell">
+          {{ row.brand?.name || '-' }}
+        </td>
+
+        <!-- Category -->
+        <td v-if="visibleColumns.category" class="table-cell">
+          {{ row.category || '-' }}
+        </td>
+
+        <!-- Therapeutic Area -->
+        <td v-if="visibleColumns.therapeutic_area" class="table-cell">
+          {{ row.therapeutic_area || '-' }}
+        </td>
+
+        <!-- Featured Status -->
+        <td v-if="visibleColumns.is_featured" class="table-cell text-center">
+          <!-- Featured: Vibrant but clean -->
+          <span v-if="row.is_featured" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wide rounded-full 
+           bg-emerald-50 text-emerald-700 border border-emerald-200 
+           dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
+            <CheckCircleIcon class="size-3.5" />
+            Featured
+          </span>
+
+          <!-- Not Featured: Subtle and recessive -->
+          <span v-else class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-slate-500 bg-white border border-slate-200 rounded-full 
+           dark:bg-transparent dark:text-slate-400 dark:border-slate-700">
+            No
+          </span>
+        </td>
+
+        <!-- Actions -->
+        <td class="table-cell text-right">
+          <div class="flex items-center justify-end gap-2">
+            <ViewButton v-if="row.can?.view" :to="{ name: 'dashboard.products.show', params: { id: row.id } }" icon-only
+              size="sm" />
+            <EditButton v-if="row.can?.update" :to="{ name: 'dashboard.products.edit', params: { id: row.id } }"
+              icon-only size="sm" />
+            <DeleteModel v-if="row.can?.delete" :item-id="row.id" :item-name="row.name"
+              delete-url="/dashboard/products/" icon-only size="sm" @deleted="refreshData" />
           </div>
         </td>
       </template>
 
+      <!-- Empty State -->
       <template #empty-state>
-        <td :colspan="productColumns.filter(c => c.visible !== false).length + 1" class="text-center py-10 text-muted-foreground">
-          <div class="flex flex-col items-center">
-            <PackageIcon class="size-16 text-slate-400 mb-4" />
-            <h3 class="text-xl font-semibold mb-1">
+        <td :colspan="100" class="text-center py-12">
+          <div class="flex flex-col items-center justify-center text-muted">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+              <PackageIcon class="size-8 text-gray-400" />
+            </div>
+            <h3 class="text-lg font-bold section-title mb-1">
               No Products Found
             </h3>
-            <p class="text-sm">
-              Create your first product to get started.
+            <p class="text-sm mb-6 max-w-xs mx-auto">
+              Get started by adding your first product to the inventory.
             </p>
-            <TableAddButton v-if="can.create" :to="{ name: 'dashboard.products.create' }"
-              title="Add New Product" class="mt-4" />
+            <RouterLink v-if="can.create" :to="{ name: 'dashboard.products.create' }" class="btn btn-primary">
+              <PlusIcon class="size-4 mr-2" />
+              Add New Product
+            </RouterLink>
           </div>
         </td>
       </template>
     </DataTable>
-    <ConfirmModal />
   </div>
 </template>

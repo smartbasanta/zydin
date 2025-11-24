@@ -35,7 +35,7 @@
 
 <template>
     <!-- The root element is now styled as a proper footer, matching the header's design -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-6 border-t border-muted">
+    <div class="table-footer flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 md:p-6 border-t border-muted">
         
         <!-- Left Side: Record count and rows-per-page selector -->
         <div class="flex flex-col sm:flex-row items-center gap-4 text-sm text-muted">

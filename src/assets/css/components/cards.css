@@ -4,8 +4,8 @@
 .card-backdrop {
     background: var(--section-bg);
     /* background: var(--card-backdrop-bg); */
-    border: 1px solid var(--card-backdrop-border);
-    @apply rounded-2xl p-8 md:p-10 shadow-xl backdrop-blur-xl;
+    border: 1px solid var(--card-border);
+    @apply rounded-2xl p-8 md:p-10 shadow-2xl backdrop-blur-xl;
 }
 
 /* Used for Auth pages */

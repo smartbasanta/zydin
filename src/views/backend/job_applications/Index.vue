@@ -1,17 +1,23 @@
 <script setup lang="ts">
-import { provide } from 'vue';
+import { provide, ref } from 'vue';
 import useDataTable from '@/composables/useDatatable';
 import DataTable from '@/components/table/DataTable.vue';
-import ConfirmModal from '@/components/modal/ConfirmModal.vue';
-import { FileTextIcon, DownloadIcon, LoaderCircleIcon } from 'lucide-vue-next';
-import {
-  TableDeleteButton,
-  TableViewButton
-} from '@/components/table/button';
+import { 
+    FileTextIcon, 
+    DownloadIcon, 
+    LoaderCircleIcon, 
+    MailIcon, 
+    PhoneIcon, 
+    BriefcaseIcon 
+} from 'lucide-vue-next';
+
+// Use universal buttons
+import ViewButton from '@/components/button/ViewButton.vue';
+import DeleteModel from '@/components/button/DeleteModel.vue';
+
 import type { JobApplication } from '@/types';
 import type { AxiosResponse } from 'axios';
 import { apiService } from '@/services/api.service';
-import { ref } from 'vue';
 import { useNotifier } from '@/composables/useNotifier';
 
 const { can, visibleColumns, refreshData, currentColumns: appColumns } = useDataTable<JobApplication>({
@@ -24,9 +30,9 @@ const { can, visibleColumns, refreshData, currentColumns: appColumns } = useData
 });
 
 provide('refreshData', refreshData);
-const { error:notifyError } = useNotifier();
+const { error: notifyError } = useNotifier();
 
-const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
+const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
 // Helper to get the correct, non-SPA download URL
 const isDownloadingId = ref<number | null>(null);
@@ -36,14 +42,13 @@ const downloadResumeFile = async (applicationId: number) => {
     try {
         const url = `/dashboard/job-applications/${applicationId}/download-resume`;
 
-        // Use the exact same pattern as your backup download
         const response: AxiosResponse<Blob> = await apiService.get(url, {
             responseType: 'blob',
             getFullResponse: true,
         });
 
         const contentDisposition = response.headers['content-disposition'];
-        let filename = 'resume.pdf'; // Default filename
+        let filename = 'resume.pdf';
         if (contentDisposition) {
             const filenameMatch = contentDisposition.match(/filename\*?=['"]?([^'"]+)['"]?$/);
             if (filenameMatch && filenameMatch[1]) {
@@ -64,12 +69,10 @@ const downloadResumeFile = async (applicationId: number) => {
         window.URL.revokeObjectURL(blobUrl);
 
     } catch (err: any) {
-        // Handle cases where the file might not be found (404) or permissions fail (403)
         if (err.response && err.response.data instanceof Blob && err.response.data.type.includes('application/json')) {
             const errorBlob = err.response.data;
             const errorText = await errorBlob.text();
             const errorJson = JSON.parse(errorText);
-            // Assuming your backend sends a notification object on error
             if (errorJson.notification) {
                 notifyError(errorJson.notification);
             } else {
@@ -92,62 +95,107 @@ const downloadResumeFile = async (applicationId: number) => {
       </template>
 
       <template #row="{ row }">
-        <td v-if="visibleColumns.id" class="px-4 py-2.5 text-muted">
-          {{ row.id }}
+        <!-- ID -->
+        <td v-if="visibleColumns.id" class="table-cell text-muted font-mono text-xs">
+          #{{ row.id }}
         </td>
-        <td v-if="visibleColumns.name" class="px-4 py-2.5 font-medium">
-          <RouterLink v-if="row.can?.view" :to="{ name: 'dashboard.job-applications.show', params: { id: row.id } }" class="link">
+
+        <!-- Applicant Name -->
+        <td v-if="visibleColumns.name" class="table-cell font-medium">
+          <RouterLink 
+            v-if="row.can?.view" 
+            :to="{ name: 'dashboard.job-applications.show', params: { id: row.id } }" 
+            class="text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400"
+          >
             {{ row.name }}
           </RouterLink>
           <span v-else>{{ row.name }}</span>
         </td>
-        <td v-if="visibleColumns.job_opening" class="px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400">
-            {{ row.job_title }}
+
+        <!-- Job Position -->
+        <td v-if="visibleColumns.job_opening" class="table-cell text-sm text-muted">
+            <div class="flex items-center gap-1.5">
+                <BriefcaseIcon class="size-3.5 opacity-70" />
+                {{ row.job_title }}
+            </div>
         </td>
-        <td v-if="visibleColumns.email" class="px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400">
-            <a :href="`mailto:${row.email}`" class="link">{{ row.email }}</a>
+
+        <!-- Email -->
+        <td v-if="visibleColumns.email" class="table-cell">
+            <a :href="`mailto:${row.email}`" class="inline-flex items-center gap-1.5 text-sm text-muted hover:text-primary-600 transition-colors">
+                <MailIcon class="size-3.5 opacity-70" />
+                {{ row.email }}
+            </a>
         </td>
-        <td v-if="visibleColumns.phone" class="px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400">
-            {{ row.phone }}
+
+        <!-- Phone -->
+        <td v-if="visibleColumns.phone" class="table-cell text-sm text-muted">
+            <div class="flex items-center gap-1.5">
+                <PhoneIcon class="size-3.5 opacity-70" />
+                {{ row.phone }}
+            </div>
         </td>
-        <td v-if="visibleColumns.created_at" class="px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400">
+
+        <!-- Date -->
+        <td v-if="visibleColumns.created_at" class="table-cell text-sm text-muted font-mono">
             {{ formatDate(row.created_at) }}
         </td>
 
-        <td class="px-4 py-3 whitespace-nowrap text-right">
-          <div class="flex items-center justify-end gap-1">
+        <!-- Actions -->
+        <td class="table-cell text-right">
+          <div class="flex items-center justify-end gap-2">
+            <!-- Resume Download Button (Styled to match ViewButton) -->
             <button
               v-if="row.resume_url"
               @click="downloadResumeFile(row.id)"
               :disabled="isDownloadingId === row.id"
-              class="btn btn-sm btn-icon" 
+              class="group relative inline-flex items-center justify-center p-2.5 rounded-xl border transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-slate-500/40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 shadow-sm hover:border-slate-500/50 dark:hover:border-slate-400/50 hover:text-slate-700 dark:hover:text-slate-300 hover:shadow-md hover:-translate-y-0.5"
               title="Download Resume"
             >
-              <!-- Show loader when this specific row's resume is downloading -->
-              <LoaderCircleIcon v-if="isDownloadingId === row.id" class="size-4 animate-spin" />
-              <DownloadIcon v-else class="size-4" />
+                <span class="absolute inset-0 bg-gradient-to-br from-gray-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
+                <component 
+                    :is="isDownloadingId === row.id ? LoaderCircleIcon : DownloadIcon" 
+                    class="relative z-10 size-5 transition-transform duration-300 group-hover:scale-110"
+                    :class="{ 'animate-spin': isDownloadingId === row.id }"
+                />
             </button>
-            <TableViewButton v-if="row.can?.view" :to="{ name: 'dashboard.job-applications.show', params: { id: row.id } }" />
-            <TableDeleteButton v-if="row.can?.delete" :item-id="row.id" :item-name="`application from ${row.name}`"
-              delete-url="/dashboard/job-applications/" @deleted="refreshData" />
+
+            <ViewButton 
+                v-if="row.can?.view" 
+                :to="{ name: 'dashboard.job-applications.show', params: { id: row.id } }" 
+                icon-only
+                size="sm"
+            />
+            
+            <DeleteModel 
+                v-if="row.can?.delete" 
+                :item-id="row.id" 
+                :item-name="`application from ${row.name}`"
+                delete-url="/dashboard/job-applications/" 
+                icon-only
+                size="sm"
+                @deleted="refreshData" 
+            />
           </div>
         </td>
       </template>
 
+      <!-- Empty State -->
       <template #empty-state>
-        <td :colspan="appColumns.filter(c => c.visible !== false).length + 1" class="text-center py-10 text-muted-foreground">
-          <div class="flex flex-col items-center">
-            <FileTextIcon class="size-16 text-slate-400 mb-4" />
-            <h3 class="text-xl font-semibold mb-1">
+        <td :colspan="appColumns.filter(c => c.visible !== false).length + 1" class="text-center py-12">
+          <div class="flex flex-col items-center justify-center text-muted">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                <FileTextIcon class="size-8 text-gray-400" />
+            </div>
+            <h3 class="text-lg font-bold section-title mb-1">
               No Applications Received
             </h3>
-            <p class="text-sm">
-              Applications submitted through the website will appear here.
+            <p class="text-sm max-w-xs mx-auto">
+              Applications submitted via the careers page will appear here.
             </p>
           </div>
         </td>
       </template>
     </DataTable>
-    <ConfirmModal />
   </div>
 </template>

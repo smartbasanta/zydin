@@ -21,9 +21,9 @@ onMounted(fetchProducts);
 </script>
 
 <template>
-    <div class="bg-white dark:bg-primary-1200">
+    <div class="section-bg">
         <!-- Page Header -->
-        <header class="py-20 text-center text-white bg-primary-900 dark:bg-primary-1100">
+        <header class="py-20 text-center text-white header-bg">
             <div class="container px-4 mx-auto">
                 <h1 class="text-4xl font-bold md:text-5xl font-grotesk">Our Products</h1>
                 <p class="max-w-3xl mx-auto mt-4 text-lg text-primary-200">

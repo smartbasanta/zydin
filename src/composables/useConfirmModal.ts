@@ -31,7 +31,7 @@ export const useConfirmModal = () => {
         confirmMessage?: string;
         onDeleted?: () => void;
     }) => {
-        console.log('Showing modal with props:', props); // Debug log
+        // console.log('Showing modal with props:', props); // Debug log
         state.value = {
             ...state.value,
             ...props,
@@ -46,7 +46,7 @@ export const useConfirmModal = () => {
         }
 
         try {
-            console.log('Deleting item:', `${state.value.deleteUrl}${state.value.itemId}`); // Debug log
+            // console.log('Deleting item:', `${state.value.deleteUrl}${state.value.itemId}`); // Debug log
             await apiService.delete(`${state.value.deleteUrl}${state.value.itemId}`);
             notify({
                 notification: {
@@ -55,24 +55,24 @@ export const useConfirmModal = () => {
                 },
             });
             if (refreshData) {
-                console.log('Calling refreshData'); // Debug log
+                // console.log('Calling refreshData'); // Debug log
                 refreshData();
             }
             if (state.value.onDeleted) {
-                console.log('Calling onDeleted'); // Debug log
+                // console.log('Calling onDeleted'); // Debug log
                 state.value.onDeleted();
             }
         } catch (err: any) {
             console.error('Delete error:', err); // Debug log
             notifyError(err, `Failed to delete ${state.value.itemName || 'item'}`);
         } finally {
-            console.log('Closing modal'); // Debug log
+            // console.log('Closing modal'); // Debug log
             state.value.isVisible = false;
         }
     };
 
     const cancel = () => {
-        console.log('Canceling modal'); // Debug log
+        // console.log('Canceling modal'); // Debug log
         state.value.isVisible = false;
     };
 

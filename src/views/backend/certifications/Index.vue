@@ -6,10 +6,10 @@ import type { Certification } from '@/types';
 import { useNotifier } from '@/composables/useNotifier';
 import CertificationCard from './partials/CertificationCard.vue';
 import { RouterLink } from 'vue-router';
-import { PlusIcon, FileTextIcon } from 'lucide-vue-next';
+import { PlusIcon, FileCheckIcon } from 'lucide-vue-next'; // Switched to FileCheck for better semantics
 import LoadingState from '@/components/loading/LoadingState.vue';
 
-const { notify, error: notifyError } = useNotifier();
+const { error: notifyError } = useNotifier();
 
 const certifications = ref<Certification[]>([]);
 const canCreate = ref(false);
@@ -30,56 +30,64 @@ const fetchCertifications = async () => {
 
 onMounted(fetchCertifications);
 
-// Function to remove a card from the grid after it's been deleted
-const handleDelete = async (deletedId: number) => {
-    try {
-        const response: ApiResponse = await apiService.delete(`/dashboard/certifications/${deletedId}`);
-        notify(response);
-        // Remove the card from the local state for a smooth UI update
-        certifications.value = certifications.value.filter(cert => cert.id !== deletedId);
-    } catch (err) {
-        notifyError(err as any, 'Failed to delete certification');
-    }
+// Optimized: Update local state instead of re-fetching everything
+const handleDeleted = (deletedId: number) => {
+    certifications.value = certifications.value.filter(c => c.id !== deletedId);
 };
 </script>
 
 <template>
-    <div class="p-4 sm:p-6 lg:p-8">
-        <!-- Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div class="p-6 md:p-8 space-y-8">
+        <!-- Page Header -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Certifications</h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Manage company and product certifications.</p>
+                <h1 class="text-2xl font-bold section-title">Certifications</h1>
+                <p class="text-muted mt-1">Manage official compliance documents and quality standards.</p>
             </div>
-            <RouterLink v-if="canCreate" :to="{ name: 'dashboard.certifications.create' }" class="btn btn-primary">
-                <PlusIcon class="size-4" />
+            <RouterLink 
+                v-if="canCreate" 
+                :to="{ name: 'dashboard.certifications.create' }" 
+                class="btn btn-primary"
+            >
+                <PlusIcon class="w-4 h-4 mr-2" />
                 Add Certification
             </RouterLink>
-        </div>
+        </header>
 
         <!-- Loading State -->
-        <LoadingState v-if="isLoading" message="Loading certifications..." />
+        <div v-if="isLoading" class="h-64 flex items-center justify-center">
+            <LoadingState message="Loading Certifications..." />
+        </div>
 
-        <!-- Grid Layout -->
-        <div v-else-if="certifications.length > 0"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <CertificationCard v-for="cert in certifications" :key="cert.id" :certification="cert"
-                @deleted="fetchCertifications" />
+        <!-- Certifications Grid -->
+        <div v-else-if="certifications.length > 0" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <CertificationCard 
+                v-for="cert in certifications" 
+                :key="cert.id" 
+                :certification="cert"
+                @deleted="handleDeleted" 
+            />
         </div>
 
         <!-- Empty State -->
-        <div v-else class="text-center py-16 border-2 border-dashed dark:border-gray-700 rounded-lg">
-            <div class="flex flex-col items-center text-gray-500 dark:text-gray-400">
-                <FileTextIcon class="size-16 mb-4" />
-                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-1">
-                    No Certifications Found
-                </h3>
-                <p class="text-sm mb-4">Get started by adding your first certification.</p>
-                <RouterLink v-if="canCreate" :to="{ name: 'dashboard.certifications.create' }" class="btn btn-primary">
-                    <PlusIcon class="size-4" />
-                    Add Certification
-                </RouterLink>
+        <div v-else class="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-muted rounded-xl bg-gray-50/50 dark:bg-gray-900/20">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 text-muted">
+                <FileCheckIcon class="w-8 h-8" />
             </div>
+            <h3 class="text-lg font-semibold section-title">No Certifications Found</h3>
+            <p class="text-muted max-w-sm mt-1 mb-6">Your repository is empty. Upload your ISO, GMP, or other compliance certificates here.</p>
+            <RouterLink 
+                v-if="canCreate" 
+                :to="{ name: 'dashboard.certifications.create' }" 
+                class="btn btn-primary"
+            >
+                <PlusIcon class="w-4 h-4 mr-2" />
+                Add First Certification
+            </RouterLink>
         </div>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+</style>

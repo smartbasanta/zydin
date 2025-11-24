@@ -130,7 +130,7 @@ export const useAuthStore = defineStore('auth', {
 
             try {
                 const response = await apiService.post<AuthResponse & { notification: NotificationQType }>('/login', credentials);
-            //    console.log(response);
+                // console.log(response);
                 this._handleAuthSuccess(response);
                 notify(response);
 

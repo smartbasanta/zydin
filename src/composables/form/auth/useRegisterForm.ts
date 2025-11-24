@@ -25,7 +25,7 @@ export function useRegisterForm() {
 
         try {
             const response = await apiService.post<AuthResponse & { notification: NotificationQType }>('/dashboard/register-user', credentials);
-            console.log(response);
+            // console.log(response);
             // authStore._handleAuthSuccess(response);
             // await router.push({ path: '/dashboard/register' });
 

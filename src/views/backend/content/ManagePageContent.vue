@@ -15,7 +15,7 @@ const pageSlug = computed(() => route.params.pageSlug as string);
 
 const { form, errors, isLoading, submit, isDirty, pageDetails } = usePageContentFormAPI(pageSlug.value);
 watch(isLoading, (newValue)=>{
-    console.log(form.content_blocks);
+    // console.log(form.content_blocks);
     form.content_blocks.forEach((block, index )=> {
         if(block.type === 'repeater'){
             // console.log(form.content_blocks[index]);

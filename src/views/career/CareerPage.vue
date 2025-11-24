@@ -6,6 +6,7 @@ import LoadingState from '@/components/loading/LoadingState.vue';
 import { LightbulbIcon, TrendingUpIcon, HeartIcon, UsersIcon } from 'lucide-vue-next';
 import { useCareerAPI } from '@/composables/fetch-public-apis/useCareerAPI';
 import type { JobOpening } from '@/types';
+import SelectInput from '@/components/form/SelectInput.vue'; // Import the component
 
 const benefits = [
     { icon: LightbulbIcon, title: 'Innovate with Purpose', text: 'Work on challenging problems that directly impact patient lives and advance the field of oncology.' },
@@ -21,6 +22,7 @@ onMounted(fetchJobs);
 const selectedDept = ref('');
 const selectedType = ref('');
 
+// Departments and Types are simple string arrays, which SelectInput handles perfectly (Case 1)
 const departments = computed(() => [...new Set(jobs.value.map(j => j.department))].sort());
 const types = computed(() => [...new Set(jobs.value.map(j => j.type))].sort());
 
@@ -78,7 +80,7 @@ const closeApplicationModal = () => {
         </section>
 
         <!-- Job Listings -->
-        <main id="openings" class="py-20 md:py-28 bg-white dark:bg-gray-1200 border-y border-muted">
+        <main id="openings" class="py-20 md:py-28 section-bg border-y border-muted">
             <div class="container px-6 mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold section-title">Current Openings</h2>
@@ -89,28 +91,33 @@ const closeApplicationModal = () => {
                 </div>
                 
                 <div v-else-if="jobs.length > 0">
-                    <!-- Modern Filters -->
-                    <div class="grid sm:grid-cols-2 gap-4 mx-auto mb-10 max-w-3xl p-4 rounded-xl border border-muted bg-gray-50 dark:bg-gray-1100">
-                        <select v-model="selectedDept" aria-label="Filter by Department" class="input">
-                            <option value="">All Departments</option>
-                            <option v-for="dept in departments" :key="dept" :value="dept">{{ dept }}</option>
-                        </select>
-                        <select v-model="selectedType" aria-label="Filter by Job Type" class="input">
-                            <option value="">All Types</option>
-                            <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
-                        </select>
+                    
+                    <!-- Modern Filters using SelectInput -->
+                    <div class="grid sm:grid-cols-2 gap-6 mx-auto mb-10 max-w-3xl p-6 rounded-2xl border border-muted card-backdrop">
+                        <SelectInput
+                            v-model="selectedDept"
+                            :options="departments"
+                            placeholder="All Departments"
+                            label="Department"
+                        />
+                        <SelectInput
+                            v-model="selectedType"
+                            :options="types"
+                            placeholder="All Types"
+                            label="Job Type"
+                        />
                     </div>
 
                     <div class="max-w-4xl mx-auto space-y-4">
                         <JobListingItem v-for="job in filteredJobs" :key="job.id" :job="job" @apply-now="openApplicationModal" />
                         <div v-if="filteredJobs.length === 0" class="text-center p-12 rounded-lg bg-gray-100 dark:bg-gray-1000">
-                            <p class="text-muted">No open positions match your criteria. Please check back later or adjust your filters.</p>
+                            <p class="section-title">No open positions match your criteria. Please check back later or adjust your filters.</p>
                         </div>
                     </div>
                 </div>
                 
                 <div v-else class="text-center p-12 card-backdrop max-w-4xl mx-auto">
-                    <p class="text-lg text-muted">There are currently no open positions. We encourage you to check back soon for new opportunities.</p>
+                    <p class="text-lg section-title">There are currently no open positions. We encourage you to check back soon for new opportunities.</p>
                 </div>
             </div>
         </main>

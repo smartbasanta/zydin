@@ -18,14 +18,14 @@
     const refreshData = inject<() => void>('refreshData');
 
     const triggerDelete = () => {
-        console.log('Delete button clicked', { itemId: props.itemId, deleteUrl: props.deleteUrl, itemName: props.itemName });
+        // console.log('Delete button clicked', { itemId: props.itemId, deleteUrl: props.deleteUrl, itemName: props.itemName });
         show({
             itemId: props.itemId,
             deleteUrl: props.deleteUrl,
             itemName: props.itemName,
             confirmMessage: props.confirmMessage,
             onDeleted: () => {
-                console.log('Emitting deleted event');
+                // console.log('Emitting deleted event');
                 emit('deleted');
             },
         });
