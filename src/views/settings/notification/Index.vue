@@ -2,26 +2,25 @@
 import { provide } from 'vue';
 import useDataTable from '@/composables/useDatatable';
 import DataTable from '@/components/table/DataTable.vue';
-import type { ColumnDefinition } from '@/types/datatable';
 
 import {
   BellIcon,
   CheckCircleIcon,
-  XCircleIcon
+  XCircleIcon,
+  PlusIcon,
+  LinkIcon,
+  RouteIcon,
+  CalendarIcon
 } from 'lucide-vue-next';
 
-import {
-  TableAddButton,
-  TableDeleteButton,
-  TableEditButton,
-  TableViewButton
-} from '@/components/table/button';
+// Use universal buttons
+import { EditButton } from '@/components/button';
+import ViewButton from '@/components/button/ViewButton.vue';
+import DeleteModel from '@/components/button/DeleteModel.vue';
 
 import type { SystemNotification } from '@/types/notification';
 
-import ConfirmModal from '@/components/modal/ConfirmModal.vue';
-
-const { can, visibleColumns, refreshData, currentColumns:notificationColumns } = useDataTable<SystemNotification>({
+const { can, visibleColumns, refreshData, currentColumns: notificationColumns } = useDataTable<SystemNotification>({
   apiEndpoint: 'settings.system-notifications.index',
   columns: [],
   tableName: 'system_notifications',
@@ -32,107 +31,151 @@ const { can, visibleColumns, refreshData, currentColumns:notificationColumns } =
 
 provide('refreshData', refreshData);
 
+const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Never Expires';
+    return new Date(dateString).toLocaleDateString(undefined, { 
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
+};
 </script>
 
 <template>
   <div>
-    <DataTable data-table-class="!border-none !rounded-none">
+    <DataTable>
       <template #title>
-        System Notification Management
+        System Notifications
       </template>
 
       <template #add-new-button v-if="can.create">
-        <TableAddButton :to="{ name: 'settings.system-notifications.create' }" title="Create New Notification" />
+        <RouterLink :to="{ name: 'settings.system-notifications.create' }" class="btn btn-primary">
+            <PlusIcon class="size-4 mr-2" />
+            Create Notification
+        </RouterLink>
       </template>
 
-      <template #row="{ row, columns }">
-        <td v-if="visibleColumns.id" class="px-4 py-2.5 text-muted">
-          {{ row.id }}
+      <template #row="{ row }">
+        <!-- ID -->
+        <td v-if="visibleColumns.id" class="table-cell text-muted font-mono text-xs">
+          #{{ row.id }}
         </td>
 
-        <td v-if="visibleColumns.text" class="px-4 py-2.5">
-          <div class="group">
-            <div>
-              <RouterLink v-if="row.can_view" :to="{ name: 'settings.system-notifications.show', params: { id: row.id } }"
-                class="link">
+        <!-- Text/Message -->
+        <td v-if="visibleColumns.text" class="table-cell font-medium max-w-xs">
+            <RouterLink 
+                v-if="row.can_view" 
+                :to="{ name: 'settings.system-notifications.show', params: { id: row.id } }" 
+                class="block truncate text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400"
+                :title="row.text"
+            >
                 {{ row.text }}
-              </RouterLink>
-              <span v-else class="font-medium">{{ row.text }}</span>
-            </div>
-          </div>
+            </RouterLink>
+            <span v-else class="block truncate" :title="row.text">{{ row.text }}</span>
         </td>
-        <td v-if="visibleColumns.type" class="px-4 py-2.5">
-          <span :class="{
-            'bg-blue-100 text-blue-800': row.type === 'info',
-            'bg-green-100 text-green-800': row.type === 'success',
-            'bg-yellow-100 text-yellow-800': row.type === 'warning',
-            'bg-red-100 text-red-800': row.type === 'error'
-          }"
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full">
-            <!-- {{ row.type.charAt(0).toUpperCase() + row.type.slice(1) }} -->
+
+        <!-- Type Badge -->
+        <td v-if="visibleColumns.type" class="table-cell">
+          <span 
+            class="inline-flex px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded-md border"
+            :class="{
+                'text-sky-700 border-sky-200 dark:text-sky-400 dark:border-sky-800': row.type === 'info',
+                'text-emerald-700 border-emerald-200 dark:text-emerald-400 dark:border-emerald-800': row.type === 'success',
+                'text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-800': row.type === 'warning',
+                'text-rose-700 border-rose-200 dark:text-rose-400 dark:border-rose-800': row.type === 'error',
+            }"
+          >
               {{ row.type }}
           </span>
         </td>
-        <td v-if="visibleColumns.route" class="px-4 py-2.5">
-          <div>
-            <div>
-              {{ row.route || 'No route provided.' }}
+
+        <!-- Route -->
+        <td v-if="visibleColumns.route" class="table-cell text-sm text-muted">
+            <div v-if="row.route" class="flex items-center gap-1.5 max-w-[150px]" :title="row.route">
+                <RouteIcon class="size-3.5 opacity-70 shrink-0" />
+                <span class="truncate font-mono text-xs">{{ row.route }}</span>
             </div>
-          </div>
-
+            <span v-else class="text-xs text-muted/50">-</span>
         </td>
-        <td v-if="visibleColumns.link" class="px-4 py-2.5">
-          <div>
-            <div>
-              {{ row.link || 'No Associated Links.' }}
+
+        <!-- Link -->
+        <td v-if="visibleColumns.link" class="table-cell text-sm text-muted">
+            <div v-if="row.link" class="flex items-center gap-1.5 max-w-[150px]" :title="row.link">
+                <LinkIcon class="size-3.5 opacity-70 shrink-0" />
+                <span class="truncate font-mono text-xs">{{ row.link }}</span>
             </div>
-          </div>
-
+            <span v-else class="text-xs text-muted/50">-</span>
         </td>
 
-        <td v-if="visibleColumns.expires_at" class="px-4 py-2.5">
-          {{ row.expires_at || 'Never Expires' }}
+        <!-- Expires At -->
+        <td v-if="visibleColumns.expires_at" class="table-cell text-sm text-muted">
+             <div class="flex items-center gap-1.5 whitespace-nowrap">
+                <CalendarIcon class="size-3.5 opacity-70" />
+                <span>{{ formatDate(row.expires_at) }}</span>
+            </div>
         </td>
 
-        <td v-if="visibleColumns.is_visible" class="px-4 py-2.5 text-center">
+        <!-- Visibility -->
+        <td v-if="visibleColumns.is_visible" class="table-cell text-center">
           <span v-if="row.is_visible"
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-850 dark:bg-green-700/30 dark:text-green-700">
-            <CheckCircleIcon class="size-3.5" /> Yes
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold uppercase tracking-wide rounded-full 
+                   bg-emerald-50 text-emerald-700 border border-emerald-200 
+                   dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
+            <CheckCircleIcon class="size-3.5" /> Visible
           </span>
           <span v-else
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-400">
-            <XCircleIcon class="size-3.5" /> No
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-slate-500 bg-white border border-slate-200 rounded-full 
+                   dark:bg-transparent dark:text-slate-400 dark:border-slate-700">
+            <XCircleIcon class="size-3.5" /> Hidden
           </span>
         </td>
 
-        <td class="px-4 py-3 whitespace-nowrap text-right">
-          <div class="flex items-center justify-end gap-1">
-            <TableViewButton v-if="row.can.view"
-              :to="{ name: 'settings.system-notifications.show', params: { id: row.id } }" />
-            <TableEditButton v-if="row.can.update"
-              :to="{ name: 'settings.system-notifications.edit', params: { id: row.id } }" />
-            <TableDeleteButton v-if="row.can.delete" :item-id="row.id" :item-name="row.text"
-              delete-url="/settings/system-notifications/" @deleted="refreshData" />
+        <!-- Actions -->
+        <td class="table-cell text-right">
+          <div class="flex items-center justify-end gap-2">
+            <ViewButton 
+                v-if="row.can?.view" 
+                :to="{ name: 'settings.system-notifications.show', params: { id: row.id } }" 
+                icon-only 
+                size="sm" 
+            />
+            <EditButton 
+                v-if="row.can?.update" 
+                :to="{ name: 'settings.system-notifications.edit', params: { id: row.id } }" 
+                icon-only 
+                size="sm" 
+            />
+            <DeleteModel 
+                v-if="row.can?.delete" 
+                :item-id="row.id" 
+                :item-name="row.text"
+                delete-url="/settings/system-notifications/" 
+                icon-only 
+                size="sm" 
+                @deleted="refreshData" 
+            />
           </div>
         </td>
       </template>
 
+      <!-- Empty State -->
       <template #empty-state>
-        <td :colspan="notificationColumns.filter(c => c.visible !== false).length + 1" class="text-center py-10 text-muted-foreground">
-          <div class="flex flex-col items-center">
-            <BellIcon class="size-16 text-slate-400 mb-4" />
-            <h3 class="text-xl font-semibold mb-1">
+        <td :colspan="notificationColumns.filter(c => c.visible !== false).length + 1" class="text-center py-12">
+          <div class="flex flex-col items-center justify-center text-muted">
+            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                <BellIcon class="size-8 text-gray-400" />
+            </div>
+            <h3 class="text-lg font-bold section-title mb-1">
               No Notifications Found
             </h3>
-            <p class="text-sm">
+            <p class="text-sm mb-6 max-w-xs mx-auto">
               There are no notifications matching your current filters, or no notifications have been created yet.
             </p>
-            <TableAddButton v-if="can.create" :to="{ name: 'settings.system-notifications.create' }"
-              title="Create New Notification" class="mt-4" />
+            <RouterLink v-if="can.create" :to="{ name: 'settings.system-notifications.create' }" class="btn btn-primary">
+                <PlusIcon class="size-4 mr-2" />
+                Create Notification
+            </RouterLink>
           </div>
         </td>
       </template>
     </DataTable>
-    <ConfirmModal />
   </div>
 </template>

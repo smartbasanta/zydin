@@ -101,7 +101,7 @@ const combinedSections = computed<UnifiedSection[]>(() => {
         icon: getIconForSlug(page.slug),
         theme: getThemeForSlug(page.slug),
         route: { 
-            name: 'dashboard.content.manage', 
+            name: 'dashboard.page.content.manage', 
             params: { pageSlug: page.slug } 
         }
     }));

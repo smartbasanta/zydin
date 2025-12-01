@@ -72,8 +72,7 @@ const formatGroup = (group: string) => {
           <RouterLink 
             v-if="row.can?.view" 
             :to="{ name: 'dashboard.gallery.show', params: { id: row.id } }" 
-            class="text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400"
-          >
+            class="hover:underline"          >
             {{ row.caption || '(No Caption)' }}
           </RouterLink>
           <span v-else>{{ row.caption || '(No Caption)' }}</span>

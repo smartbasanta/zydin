@@ -73,7 +73,7 @@ defineOptions({ inheritAttrs: false });
         <div
             class="relative flex flex-col items-center justify-center w-full min-h-[8rem] p-4 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200"
             :class="{
-                'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700': !error,
+                'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 ': !error,
                 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/10': !!error,
                 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20': isDirty && !error
             }"
@@ -82,9 +82,9 @@ defineOptions({ inheritAttrs: false });
             @drop.prevent="handleFileChange"
         >
             <div v-if="!model" class="text-center">
-                <UploadCloudIcon class="w-8 h-8 mx-auto mb-2 text-gray-500 dark:text-gray-400" />
-                <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                    Click to upload <span class="font-normal text-gray-500">or drag and drop</span>
+                <UploadCloudIcon class="w-8 h-8 mx-auto mb-2 text-primary" />
+                <p class="text-sm font-semibold section-title">
+                    Click to upload <span class="font-normal section-title">or drag and drop</span>
                 </p>
                 <p class="text-xs mt-1 text-muted">{{ hint }}</p>
             </div>

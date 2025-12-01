@@ -8,7 +8,7 @@
   Updated to take full available space and make tbody scrollable.
 */
 .data-table-shell {
-    @apply relative border overflow-scroll flex flex-col h-full;
+    @apply relative border flex flex-col h-full;
     background-color: var(--card-bg);
     border-color: var(--card-border);
     box-shadow: var(--shadow-lg);
@@ -42,6 +42,9 @@
     color: var(--section-title-color);
     border-bottom: 1px solid var(--border-muted);
 }
+/* .data-table-shell tbody {
+    @apply overflow-auto;
+} */
 /*
   Table body rows (<tr>).
   Uses `border-muted` for separation and a theme-aware hover effect.

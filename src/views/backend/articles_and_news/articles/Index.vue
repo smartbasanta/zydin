@@ -75,8 +75,7 @@ const formatDate = (dateString: string | null) => {
           <RouterLink 
             v-if="row.can?.view" 
             :to="{ name: 'dashboard.articles.show', params: { id: row.id } }" 
-            class="text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400"
-          >
+            class="hover:underline"          >
             {{ row.title }}
           </RouterLink>
           <span v-else>{{ row.title }}</span>

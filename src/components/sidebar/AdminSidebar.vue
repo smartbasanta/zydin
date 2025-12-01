@@ -18,7 +18,7 @@ const mainNav = computed(() => [
     { title: 'Dashboard', to: { name: 'dashboard.index' }, icon: LayoutGrid, activeGroup: 'dashboard.index', permission: PERMISSIONS.DASHBOARD },
 ]);
 const pageNav = computed(() => [
-    { title: 'Page Sections', to: { name: 'dashboard.content.index' }, icon: ScreenShareIcon, activeGroup: ['dashboard.manage-page', 'dashboard.hero', 'dashboard.about-us', "dashboard.gallery", "dashboard.content"], permission: PERMISSIONS.CONTENT.PAGE_CONTENT },
+    { title: 'Page Sections', to: { name: 'dashboard.page.content.index' }, icon: ScreenShareIcon, activeGroup: ['dashboard.manage-page', 'dashboard.hero', 'dashboard.about-us', "dashboard.gallery", "dashboard.page"], permission: PERMISSIONS.CONTENT.PAGE_CONTENT },
     { title: 'Leaders', to: { name: 'dashboard.leaders.index' }, icon: User, activeGroup: 'dashboard.leader', permission: PERMISSIONS.CMS.LEADERS },
     { title: 'Certifications', to: { name: 'dashboard.certifications.index' }, icon: FileCheck, activeGroup: 'dashboard.certification', permission: PERMISSIONS.CMS.CERTIFICATIONS },
     { title: 'Products', to: { name: 'dashboard.products.index' }, icon: ShoppingBag, activeGroup: 'dashboard.product', permission: PERMISSIONS.PRODUCTS.PRODUCTS },

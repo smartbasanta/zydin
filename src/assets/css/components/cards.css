@@ -25,7 +25,7 @@
     border-radius: 1.5rem;
     border: 1px solid color-mix(in srgb, var(--card-border) 70%, transparent);
     background: color-mix(in srgb, var(--card-bg) 92%, transparent);
-    box-shadow: 0 25px 55px -40px color-mix(in srgb, var(--header-link-hover) 60%, transparent);
+    /* box-shadow: 0 25px 55px -40px color-mix(in srgb, var(--header-link-hover) 60%, transparent); */
     padding: 1rem;
     transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }

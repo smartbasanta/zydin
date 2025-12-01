@@ -94,7 +94,7 @@ watch(() => route.fullPath, () => {
                         <div class="hidden lg:flex" data-slot="actions"></div>
 
                         <!-- Welcome message now uses semantic theme text colors -->
-                        <span class="hidden sm:inline text-sm">
+                        <span class="hidden xl:inline text-sm">
                             <span class="text-muted">Welcome,</span>
                             <strong class="font-semibold section-title">{{ authStore.currentUser?.username }}</strong>
                         </span>

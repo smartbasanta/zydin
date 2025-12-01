@@ -64,16 +64,16 @@ watch(() => props.modelValue, (newVal) => {
 </script>
 
 <template>
-    <div class="w-full space-y-3">
+    <div class="w-full rounded-xl border border-muted my-4 transition-all duration-200 hover:shadow-md">
         <!-- Header: Label + Add Button -->
-        <div class="flex items-center justify-between">
+        <div class="flex p-4 items-center justify-between">
             <label class="block text-sm font-semibold section-title">
                 {{ label }}
             </label>
             <button 
                 @click="addItem" 
                 type="button" 
-                class="btn btn-sm btn-secondary"
+                class="btn btn-sm btn-primary"
             >
                 <PlusIcon class="size-4 mr-1.5"/>
                 Add New Item
@@ -81,18 +81,18 @@ watch(() => props.modelValue, (newVal) => {
         </div>
 
         <!-- Container -->
-        <div class="space-y-4">
+        <div class="">
             
             <!-- List of Items -->
-            <TransitionGroup name="list" tag="div" class="space-y-4">
+            <TransitionGroup name="list" tag="div" class="grid grid-cols-1 md:grid-cols-2">
                 <div 
                     v-for="(item, index) in items" 
                     :key="index" 
-                    class="relative p-4 md:p-6 rounded-xl border border-muted bg-card transition-all duration-200 hover:shadow-md group"
+                    class="relative py-6 m-4 group border px-4 rounded-3xl"
                 >
                     <!-- Item Actions (Top Right) -->
                     <div class="absolute top-4 right-4 flex items-center gap-2">
-                        <span class="text-xs font-mono text-muted bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                        <span class="text-xs border px-2 py-1 rounded-md">
                             #{{ index + 1 }}
                         </span>
                         <button 
@@ -106,7 +106,7 @@ watch(() => props.modelValue, (newVal) => {
                     </div>
 
                     <!-- Dynamic Form Fields Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-8 md:pr-0">
+                    <div class="pr-8 md:pr-0">
                         <!-- Loop through the 'fields' definition to render inputs -->
                         <div 
                             v-for="(fieldConfig, fieldKey) in fields" 

@@ -11,7 +11,7 @@ const { defaultSlideImage } = useDefaultImages();
 const slides = ref<HeroSlide[]>([]);
 const isLoading = ref(true);
 const currentSlide = ref(0);
-let intervalId: number;
+let intervalId: number | undefined;
 
 const fetchSlides = async () => {
   try {
@@ -24,28 +24,42 @@ const fetchSlides = async () => {
   }
 };
 
-const nextSlide = () => {
+const startSlideTimer = () => {
+    // Clear any existing timer first to prevent duplicates
+    if (intervalId) clearInterval(intervalId);
+    intervalId = window.setInterval(() => {
+        nextSlide(false); // Pass false to indicate auto-slide
+    }, 5000);
+};
+
+const nextSlide = (manual = true) => {
   if (slides.value.length === 0) return;
   currentSlide.value = (currentSlide.value + 1) % slides.value.length;
+  
+  // If manually triggered, restart the timer
+  if (manual) startSlideTimer();
 };
 
 const prevSlide = () => {
   if (slides.value.length === 0) return;
   currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length;
+  
+  // Always restart timer on manual interaction
+  startSlideTimer();
 };
 
-onMounted(() => {
-  fetchSlides();
-  intervalId = window.setInterval(nextSlide, 5000);
+onMounted(async () => {
+  await fetchSlides();
+  startSlideTimer();
 });
 
 onUnmounted(() => {
-  clearInterval(intervalId);
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
 <template>
-  <section class="relative w-full h-[75vh] min-h-[500px] md:h-[85vh] overflow-hidden">
+  <section class="relative w-full h-[75vh] min-h-[500px] md:h-[91.6vh] overflow-hidden">
     <!-- Theme-aware background with clipping effect -->
     <div class="absolute inset-0 bg-gradient-hero clip-path-hero"></div>
     <div class="absolute inset-0 hero-grid-overlay" aria-hidden="true"></div>
@@ -68,13 +82,6 @@ onUnmounted(() => {
           <div class="absolute inset-0 bg-gradient-hero opacity-20"></div>
         </div>
       </transition-group>
-
-      <!-- Floating particles effect -->
-      <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-pulse"></div>
-        <div class="absolute top-1/3 right-1/3 w-1 h-1 bg-white/30 rounded-full animate-pulse delay-1000"></div>
-        <div class="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 bg-white/25 rounded-full animate-pulse delay-500"></div>
-      </div>
 
       <!-- Text Content with Modern Card Design -->
       <div class="relative z-20 flex items-center w-full h-full">
@@ -111,7 +118,7 @@ onUnmounted(() => {
         class="hero-control hero-control--left storytelling-slide-in-left">
         <ChevronLeftIcon class="w-8 h-8" />
       </button>
-      <button @click="nextSlide" aria-label="Next Slide"
+      <button @click="nextSlide()" aria-label="Next Slide"
         class="hero-control hero-control--right storytelling-slide-in-right">
         <ChevronRightIcon class="w-8 h-8" />
       </button>

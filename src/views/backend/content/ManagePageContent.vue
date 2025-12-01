@@ -31,11 +31,12 @@ watch(isLoading, (newValue)=>{
     >
         <div v-if="isLoading && form.content_blocks.length === 0" class="text-center p-8">Loading content...</div>
         <form v-else @submit.prevent="submit" class="space-y-8" id="pageContentForm">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-wrap space-x-4">
 
-                <div v-for="(block, index) in form.content_blocks" :key="block.key">
-                    <!-- <div class=""> -->
+                <div class="grow inline-flex" v-for="(block, index) in form.content_blocks" :key="block.key">
+                    <div class="grow inline-flex w-full" v-if="block.type === 'text' || block.type === 'textarea'">
                         <TextInput
+                            container-class="grow"
                             v-if="block.type === 'text'"
                             :label="block.label"
                             v-model="form.content_blocks[index].value"
@@ -43,15 +44,16 @@ watch(isLoading, (newValue)=>{
                             :placeholder="block.placeholder"
                         />
                         <TextareaInput
+                            container-class="grow"
                             v-if="block.type === 'textarea'"
                             :label="block.label"
                             v-model="form.content_blocks[index].value"
                             :error="errors[`content_blocks.${index}.value`]?.[0]"
                             :placeholder="block.placeholder"
-                            :rows="4"
+                            :rows="10"
                         />
-                    <!-- </div> -->
-                    <div>
+                    </div>
+                    <div class="grow" v-if="block.type === 'richtext' || block.type === 'repeater'">
                         <RichTextEditor
                             v-if="block.type === 'richtext'"
                             :label="block.label"

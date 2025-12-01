@@ -49,11 +49,11 @@ const getSortOrderIndicator = (columnKey: string): string => {
 </script>
 
 <template>
-    <div class="overflow-x-auto overflow-y-auto flex-1 relative">
+    <div class="overflow-x-auto overflow-y-auto flex-1 relative ">
         <table class="w-full min-w-[600px] text-sm">
-            <thead class="bg-section-bg top-0 relative">
+            <thead class="section-bg top-0 relative">
                 <tr class="text-muted">
-                    <th class="w-12 px-4 py-3 text-left font-medium">
+                    <th class="w-12 text-left font-medium">
                         <input
                             class="checkbox"
                             type="checkbox"

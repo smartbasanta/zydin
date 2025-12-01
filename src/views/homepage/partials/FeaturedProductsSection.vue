@@ -140,30 +140,94 @@ const onMouseMove = (e: MouseEvent) => {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* No changes to decorative styles */
-.featured-section__pattern, .featured-section__glow, .cta-pill { /* existing styles */ }
+.featured-section {
+  position: relative;
+  /* Ensure z-index context */
+  isolation: isolate; 
+}
 
-.grabbing { cursor: grabbing; }
+/* Subtle background pattern overlay */
+.featured-section__pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--color-primary-500) 10%, transparent) 0%, transparent 25%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--color-secondary-500) 10%, transparent) 0%, transparent 25%);
+  mix-blend-mode: soft-light;
+}
 
-/* The scrollbar-hide utility should be in your global CSS */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Glowing orbs for depth */
+.featured-section__glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: -1;
+}
 
-/* Simplified and improved slider controls */
+.featured-section__glow--primary {
+  top: -100px;
+  left: -100px;
+  background: var(--gradient-primary);
+}
+
+.featured-section__glow--secondary {
+  bottom: -100px;
+  right: -50px;
+  background: var(--gradient-secondary);
+}
+
+/* The "View Full Catalog" Button */
+.cta-pill {
+  @apply inline-flex items-center justify-center px-8 py-3 text-sm font-bold uppercase tracking-widest rounded-full transition-all duration-300;
+  background-image: var(--gradient-secondary); /* Uses the teal/blue pharma gradient */
+  color: white;
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--color-secondary-500) 30%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cta-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--color-secondary-500) 50%, transparent);
+  filter: brightness(1.05);
+}
+
+/* Utilities */
+.grabbing { 
+  cursor: grabbing; 
+}
+
+.no-scrollbar::-webkit-scrollbar { 
+  display: none; 
+}
+.no-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+/* Slider Navigation Buttons */
 .slider-control {
   @apply grid place-content-center size-12 rounded-full border transition-all duration-300;
   background-color: var(--card-bg);
   border-color: var(--card-border);
   color: var(--section-title-color);
   box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
 }
+
 .slider-control:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
   border-color: var(--color-primary-500);
   color: var(--color-primary-500);
+  background-color: color-mix(in srgb, var(--color-primary-500) 5%, var(--card-bg));
 }
-.slider-control:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+
+.slider-control:active {
+    transform: scale(0.95);
 }
 </style>

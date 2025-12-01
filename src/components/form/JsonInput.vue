@@ -182,7 +182,7 @@ syncStateFromModelValue(model.value);
         </div>
 
         <div
-            class="flex flex-col gap-4 border border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800/50">
+            class="flex flex-col gap-4 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
             <!-- IMPROVEMENT: Added a clear button for explicit null control -->
             <div class="flex items-center justify-between gap-2">
                 <SelectInput label="Input Mode" v-model="editorMode" :options="modeOptions" :disabled="isRestrictedMode"
@@ -211,7 +211,7 @@ syncStateFromModelValue(model.value);
                     </button>
                 </div>
                 <button v-if="!isRestrictedMode" type="button" @click="addPair" :disabled="isAddButtonDisabled"
-                    class="flex items-center gap-1.5 text-sm btn btn-info font-medium mt-2 self-start">
+                    class="flex items-center gap-1.5 text-sm btn btn-primary font-medium mt-2 self-start">
                     <PlusCircleIcon class="w-4 h-4" /> Add Property
                 </button>
                 <p v-if="isRestrictedMode && keyValuePairs.length === 0" class="text-xs text-muted">No properties

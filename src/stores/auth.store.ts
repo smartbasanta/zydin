@@ -4,7 +4,11 @@ import type { User, AuthStoreState, AuthResponse, LoginCredentials } from '@/typ
 import type { NotificationQType } from '@/types/notification';
 import type { ApiError } from '@/types/api';
 import { useNotifier } from '@/composables/useNotifier';
-
+type PermissionInput = 
+    | string 
+    | string[] 
+    | Record<string, string> 
+    | (string | Record<string, string>)[];
 export const useAuthStore = defineStore('auth', {
     
     // STATE: The reactive data
@@ -30,31 +34,36 @@ export const useAuthStore = defineStore('auth', {
 		 * @param permissionKey The key of the permission to check (e.g., 'edit_user').
 		 * @returns True if the user has the permission, false otherwise.
 		 */
-		hasPermission:
-			(state) => (permissionKey: string | { [key: string]: string }) => {
-				let actualKey: string;
+		hasPermission: (state) => (input: PermissionInput): boolean => {
+            const userPermissions = state.user?.effective_permissions ?? [];
+            const isSuperUser = state.user?.is_super_user || userPermissions.includes("system.super_user");
 
-				if (
-					typeof permissionKey === "object" &&
-					permissionKey !== null
-				) {
-					actualKey = Object.values(permissionKey)[0];
-				} else {
-					actualKey = permissionKey;
-				}
+            // 1. Super User Bypass
+            if (isSuperUser) return true;
 
-				const permissions = state.user?.effective_permissions ?? [];
+            // 2. Normalize the input into a flat array of strings
+            let permissionsToCheck: string[] = [];
 
-				// console.log(
-				// 	"Checking permission:",
-				// 	actualKey,
-				// 	permissions.includes(actualKey)
-				// );
+            if (Array.isArray(input)) {
+                // Handle Array (mixed strings and objects)
+                input.forEach((item) => {
+                    if (typeof item === "string") {
+                        permissionsToCheck.push(item);
+                    } else if (typeof item === "object" && item !== null) {
+                        permissionsToCheck.push(...(Object.values(item) as string[]));
+                    }
+                });
+            } else if (typeof input === "object" && input !== null) {
+                // Handle Single Object (e.g., PERMISSIONS.SYSTEM.NOTIFICATIONS)
+                permissionsToCheck = Object.values(input) as string[];
+            } else {
+                // Handle Single String
+                permissionsToCheck = [input as string];
+            }
 
-				if (permissions.includes("system.super_user")) return true;
-
-				return permissions.includes(actualKey);
-			},
+            // 3. Check if user has ANY of the required permissions
+            return permissionsToCheck.some((perm) => userPermissions.includes(perm));
+        },
 
 		hasRole: (state) => (roleKey: string) => {
 			if (

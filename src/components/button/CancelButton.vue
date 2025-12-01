@@ -23,7 +23,7 @@
 	<button
         type="button"
 		@click="goBack"
-		class="btn btn-secondary py-3 hover:scale-[1.03] group relative !bg-white/40 dark:!bg-white/10 border !border-white/20 dark:!border-white/10 !text-gray-800 dark:!text-gray-200 "
+		class="btn btn-secondary py-3 hover:scale-[1.03] group relative border"
 	>
 		<span class="absolute inset-0 rounded bg-gradient-to-br from-blue-200/10 via-purple-200/10 to-pink-200/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm z-0"></span>
 		<span class="absolute inset-0 rounded border border-white/30 dark:border-white/10 group-hover:border-blue-400/40 transition-colors duration-300 z-10"></span>

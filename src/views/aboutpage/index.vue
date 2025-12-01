@@ -27,13 +27,13 @@ onMounted(fetchAboutPageData);
             :mission="aboutPageData.content.mission_statement.content.value"
             :vision="aboutPageData.content.company_vision.content.value"
         />
-        <SectionDivider variant="diagonal" accent="secondary" />
+        <SectionDivider variant="curve-glow" accent="secondary" />
         <CoreValuesSection :values="aboutPageData.content.core_values.content" />
-        <SectionDivider variant="dots" accent="accent" />
+        <SectionDivider variant="tilt-grid" accent="accent" />
         <CompanyTimeline :events="aboutPageData.content.timeline.content" />
         <SectionDivider variant="wave" accent="secondary" flip />
         <LeadershipPreview :leaders="aboutPageData.leaders" />
-        <SectionDivider variant="diagonal" accent="primary" />
+        <SectionDivider variant="curve-glow" accent="primary" />
         <EmployeeLifeSection :testimonials="aboutPageData.employeeTestimonials" />
     </div>
 

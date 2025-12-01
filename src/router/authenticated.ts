@@ -54,26 +54,26 @@ const authenticatedRoutes: RouteRecordRaw =
 				// },
 
 				{
-					path: "content", // The base path for your content management hub
-					name: "dashboard.content.index", // The route for the hub/index page
+					path: "page/content", // The base path for your Pages hub
+					name: "dashboard.page.content.index", // The route for the hub/index page
 					meta: {
 						title: "Page Management",
 						permission: PERMISSIONS.CONTENT.PAGE_CONTENT.VIEW_ANY, // Use viewAny permission
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } }
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } }
 						],
 					},
 					// This component is your hub page
 					component: () => import("@/views/backend/content/Index.vue"), // Rename home_page -> content
 				},
 				{
-					path: "content/:pageSlug", // The dynamic route for editing ANY page
-					name: "dashboard.content.manage", // The route for the editor component
+					path: "page/content/:pageSlug", // The dynamic route for editing ANY page
+					name: "dashboard.page.content.manage", // The route for the editor component
 					meta: {
 						title: "Manage Page Content", // We can make this dynamic later if needed
 						permission: PERMISSIONS.CONTENT.PAGE_CONTENT.VIEW,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							// The final breadcrumb item will be dynamic based on the pageSlug
 							{ label: "Edit" }
 						],
@@ -89,7 +89,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Hero Slide Management",
 						permission: PERMISSIONS.CMS.HERO_SLIDES,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Hero", to: { name: "dashboard.hero-slides.index" } }
 						],
 					},
@@ -102,7 +102,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Create new Hero Slide",
 						permission: PERMISSIONS.CMS.HERO_SLIDES.MANAGE,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Hero", to: { name: "dashboard.hero-slides.index" } },
 							{ label: "create", to: { name: "dashboard.hero-slides.create" } }
 						],
@@ -116,7 +116,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Hero Slide details",
 						permission: PERMISSIONS.CMS.HERO_SLIDES.VIEW,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Hero", to: { name: "dashboard.hero-slides.index" } },
 							{ label: "Show", to: { name: "dashboard.hero-slides.show" } }
 						],
@@ -130,7 +130,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Edit Hero Slide",
 						permission: PERMISSIONS.CMS.HERO_SLIDES.MANAGE,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Hero", to: { name: "dashboard.hero-slides.index" } },
 							{ label: "Edit", to: { name: "dashboard.hero-slides.edit" } }
 						],
@@ -159,7 +159,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Gallery Management",
 						permission: PERMISSIONS.CMS.GALLERY_IMAGES,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Gallery", to: { name: "dashboard.gallery.index" } }
 						],
 					},
@@ -172,7 +172,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Create new Gallery Item",
 						permission: PERMISSIONS.CMS.GALLERY_IMAGES.MANAGE,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Gallery", to: { name: "dashboard.gallery.index" } },
 							{ label: "create", to: { name: "dashboard.gallery.create" } }
 						],
@@ -186,7 +186,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Gallery Item details",
 						permission: PERMISSIONS.CMS.GALLERY_IMAGES.VIEW,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Gallery", to: { name: "dashboard.gallery.index" } },
 							{ label: "Show", to: { name: "dashboard.gallery.show" } }
 						],
@@ -200,7 +200,7 @@ const authenticatedRoutes: RouteRecordRaw =
 						title: "Edit Gallery Item",
 						permission: PERMISSIONS.CMS.GALLERY_IMAGES.MANAGE,
 						breadcrumb: [
-							{ label: "Content Management", to: { name: "dashboard.content.index" } },
+							{ label: "Pages", to: { name: "dashboard.page.content.index" } },
 							{ label: "Gallery", to: { name: "dashboard.gallery.index" } },
 							{ label: "Edit", to: { name: "dashboard.gallery.edit" } }
 						],

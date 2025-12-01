@@ -32,6 +32,13 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0, behavior: 'smooth' };
+    }
+  }
 });
 
 // Navigation Guard
@@ -55,19 +62,46 @@ router.beforeEach(async (to, from, next) => {
     } else if (isGuest && authStore.isAuthenticated) {
         return next({ name: 'dashboard.index' });
     } else if (to.meta.permission) {
-		const permissionKey = to.meta.permission as string;
-		const userHasPermission = authStore.hasPermission(permissionKey);
-		const isSuperUser = authStore.currentUser?.is_super_user;
+		const rawPermissions = to.meta.permission;
+        const isSuperUser = authStore.currentUser?.is_super_user;
 
-		if (!userHasPermission && !isSuperUser) {
-			return next({ name: "unauthorized" }); // Show custom 403 page
-		} else {
-			next();
-		}
-	} else {
-		// The user is authorized for this route.
-		next();
-	}
+        if (isSuperUser) return next();
+
+        // --- Helper to extract strings from whatever is passed ---
+        let permissionsToCheck: string[] = [];
+
+        if (Array.isArray(rawPermissions)) {
+            // Handle Array: can contain strings or objects
+            rawPermissions.forEach(p => {
+                if (typeof p === 'object' && p !== null) {
+                    const values = Object.values(p) as string[];
+                    permissionsToCheck.push(...values);
+                } else {
+                    permissionsToCheck.push(p as string);
+                }
+            });
+        } else if (typeof rawPermissions === 'object' && rawPermissions !== null) {
+            // Handle Single Object (e.g., PERMISSIONS.SYSTEM.NOTIFICATIONS)
+            permissionsToCheck = Object.values(rawPermissions);
+        } else {
+            // Handle Single String
+            permissionsToCheck = [rawPermissions as string];
+        }
+        // -------------------------------------------------------
+
+        // Check if user has AT LEAST ONE of the permissions in the list
+        const userHasPermission = permissionsToCheck.some(perm => 
+            authStore.hasPermission(perm)
+        );
+
+        if (!userHasPermission) {
+            return next({ name: "unauthorized" });
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
 });
 router.afterEach(() => {
 	const store = useGlobalStateStore();

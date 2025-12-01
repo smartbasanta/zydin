@@ -6,7 +6,7 @@ import AnimatedText from '@/components/logo/AnimatedText.vue';
 </script>
 
 <template>
-  <AnimatedText
+  <!-- <AnimatedText
     text="Zydin Biotech"
     :repeat="true"
     animation-type="scatter"
@@ -16,7 +16,7 @@ import AnimatedText from '@/components/logo/AnimatedText.vue';
     dark-text-color="var(--color-gray-50)"
     :char-animation-delay="50"
     :word-animation-delay="300"
-  />
+  /> -->
   <div class="min-h-screen">
       <AppHeader />
 

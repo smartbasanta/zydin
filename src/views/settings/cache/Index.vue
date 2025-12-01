@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { apiService } from '@/services/api.service';
 import { useNotifier } from '@/composables/useNotifier';
 import type { ApiResponse } from '@/types/api';
 
 // Icons
-import { LoaderCircleIcon, DatabaseZapIcon, RocketIcon, SparklesIcon, EraserIcon } from 'lucide-vue-next';
+import { 
+    LoaderCircleIcon, 
+    DatabaseZapIcon, 
+    RocketIcon, 
+    SparklesIcon, 
+    EraserIcon,
+    ServerIcon
+} from 'lucide-vue-next';
 
-// State Management
-const isLoading = ref(true);
-
+import LoadingState from '@/components/card/LoadingState.vue';
 
 interface Permissions {
     viewCache: boolean;
@@ -18,27 +23,23 @@ interface Permissions {
     optimizeApplication: boolean;
 };
 
-// --- Composables ---
 const { notify, error: notifyError } = useNotifier();
 
-// --- State Management ---
-const can = ref<Permissions>({ viewCache: true, clearDatabaseCache:false, manageApplicationOptimization: false, optimizeApplication: false }); // Default cache to true, will be confirmed by gate on backend
+const can = ref<Permissions>({ viewCache: true, clearDatabaseCache:false, manageApplicationOptimization: false, optimizeApplication: false });
+const isLoading = ref(true);
 
-// Action-specific loading states for better UX
+// Action states
 const isClearingDbCache = ref(false);
 const isOptimizing = ref(false);
 const isClearingOptimize = ref(false);
 
-
-// --- Data Fetching ---
 const fetchData = async () => {
     isLoading.value = true;
     try {
         const response = await apiService.get<ApiResponse>('/settings/cache');
-        // The 'can' for backups is nested, let's merge it
         Object.assign(can.value, response.data.can);
     } catch (err) {
-        notifyError(err as Error, 'Failed to load backup data.');
+        notifyError(err as Error, 'Failed to load settings.');
     } finally {
         isLoading.value = false;
     }
@@ -46,10 +47,7 @@ const fetchData = async () => {
 
 onMounted(fetchData);
 
-
-// --- Methods ---
-
-// Cache Actions
+// Actions
 const clearDbCache = async () => {
     isClearingDbCache.value = true;
     try {
@@ -88,85 +86,127 @@ const clearOptimize = async () => {
 </script>
 
 <template>
-
-    <div class="p-4 md:p-6 font-sans">
-        <title>Application Optimization and cache</title>
-        <header class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-3">
-                <DatabaseZapIcon class="text-primary" />
-                Application Optimization and cache Management
+    <div class="p-6 md:p-8 font-sans space-y-8">
+        
+        <!-- Header -->
+        <header>
+            <h1 class="text-2xl font-bold section-title flex items-center gap-3">
+                <ServerIcon class="text-emerald-500" />
+                Performance & Cache
             </h1>
-            <p class="text-muted mt-1">Optimize application and manage cache settings.</p>
+            <p class="text-muted mt-1 max-w-2xl">
+                Manage application caching layers and optimization routines to ensure peak performance.
+            </p>
         </header>
 
-        <!-- Tabs Navigation -->
-        <!-- <div class="border-b border-muted mb-6">
-            <nav class="flex -mb-px space-x-6">
-                <button @click="activeTab = 'database'" :class="['py-3 px-1 border-b-2 font-medium text-sm transition-colors', activeTab === 'database' ? 'border-primary text-primary' : 'border-transparent text-muted hover:text-gray-700 dark:hover:text-gray-300']">
-                    Database Backups
+        <LoadingState v-if="isLoading" message="Loading settings..." />
+
+        <!-- Main Content -->
+        <div v-else class="animate-fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card 1: Clear DB Cache (Maintenance - Amber) -->
+            <div class="action-card group border-amber-200 dark:border-amber-900/50">
+                <div class="flex-1">
+                    <div class="icon-box bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
+                        <DatabaseZapIcon class="size-6" />
+                    </div>
+                    <h3 class="card-title group-hover:text-amber-700 dark:group-hover:text-amber-400">
+                        Clear Database Cache
+                    </h3>
+                    <p class="card-desc">
+                        Flush the query cache. Use this if you notice stale data or inconsistencies in the application.
+                    </p>
+                </div>
+                
+                <button 
+                    @click="clearDbCache" 
+                    :disabled="!can.clearDatabaseCache || isClearingDbCache" 
+                    class="btn w-full btn-secondary"
+                >
+                    <LoaderCircleIcon v-if="isClearingDbCache" class="size-4 animate-spin mr-2"/>
+                    <EraserIcon v-else class="size-4 mr-2" />
+                    {{ isClearingDbCache ? 'Clearing...' : 'Clear Cache' }}
                 </button>
-                <button @click="activeTab = 'cache'" :class="['py-3 px-1 border-b-2 font-medium text-sm transition-colors', activeTab === 'cache' ? 'border-primary text-primary' : 'border-transparent text-muted hover:text-gray-700 dark:hover:text-gray-300']">
-                    Cache Management
-                </button>
-            </nav>
-        </div> -->
-
-        <!-- Tab Content -->
-        <div>
-            <!-- Cache Management Panel -->
-            <div class="animate-fade-in">
-                 <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Application Cache Actions</h2>
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Card 1: Clear DB Cache -->
-                    <div class="card p-5 flex flex-col items-start gap-4 group cursor-pointer rounded-xl bg-white text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-500/70 dark:hover:border-blue-600/70 dark:bg-gray-1050 border-2 border-gray-200 dark:border-gray-900">
-                        <div class="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-blue-600 dark:text-blue-400"><EraserIcon class="size-6"/></div>
-                        <h3 class="font-semibold text-gray-800 dark:text-gray-200">Clear Database Cache</h3>
-                        <p class="text-sm text-muted flex-grow">Removes all items from the database cache table. Useful if you are experiencing issues with cached data.</p>
-                        <button @click="clearDbCache" :disabled="!can.clearDatabaseCache || isClearingDbCache" class="btn btn-info mt-auto w-full">
-                            <LoaderCircleIcon v-if="isClearingDbCache" class="size-4 animate-spin mr-2"/>
-                            {{ isClearingDbCache ? 'Clearing...' : 'Clear DB Cache' }}
-                        </button>
-                    </div>
-
-                    <!-- Card 2: Optimize App -->
-                    <div class="card p-5 flex flex-col items-start gap-4 group cursor-pointer rounded-xl bg-white text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-green-500/70 dark:hover:border-green-600/70 dark:bg-gray-1050 border-2 border-gray-200 dark:border-gray-900">
-                        <div class="p-3 bg-green-100 dark:bg-green-900/50 rounded-lg text-green-600 dark:text-green-400"><RocketIcon class="size-6"/></div>
-                        <h3 class="font-semibold text-gray-800 dark:text-gray-200">Optimize Application</h3>
-                        <p class="text-sm text-muted flex-grow">Caches the configuration and route files for a significant performance boost in production environments.</p>
-                         <button @click="optimizeApp" :disabled="!can.optimizeApplication || isOptimizing" class="btn btn-success mt-auto w-full">
-                            <LoaderCircleIcon v-if="isOptimizing" class="size-4 animate-spin mr-2"/>
-                            {{ isOptimizing ? 'Optimizing...' : 'Optimize Now' }}
-                        </button>
-                    </div>
-
-                    <!-- Card 3: Clear Optimize Cache -->
-                    <div class="card p-5 flex flex-col items-start gap-4 group cursor-pointer rounded-xl bg-white text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-500/70 dark:hover:border-blue-600/70 dark:bg-gray-1050 border-2 border-gray-200 dark:border-gray-900">
-                        <div class="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-blue-600 dark:text-blue-400"><SparklesIcon class="size-6"/></div>
-                        <h3 class="font-semibold text-gray-800 dark:text-gray-200">Clear Optimization Cache</h3>
-                        <p class="text-sm text-muted flex-grow">Removes the cached configuration and route files. Use this during development if you make changes to config or route files.</p>
-                         <button @click="clearOptimize" :disabled="!can.manageApplicationOptimization || isClearingOptimize" class="btn btn-primary mt-auto w-full">
-                            <LoaderCircleIcon v-if="isClearingOptimize" class="size-4 animate-spin mr-2"/>
-                            {{ isClearingOptimize ? 'Clearing...' : 'Clear Optimize Cache' }}
-                        </button>
-                    </div>
-                 </div>
             </div>
+
+            <!-- Card 2: Optimize App (Performance - Emerald) -->
+            <div class="action-card group border-emerald-200 dark:border-emerald-900/50">
+                <div class="flex-1">
+                    <div class="icon-box bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                        <RocketIcon class="size-6" />
+                    </div>
+                    <h3 class="card-title group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
+                        Optimize Application
+                    </h3>
+                    <p class="card-desc">
+                        Cache configuration and routes. Recommended for production environments to significantly boost speed.
+                    </p>
+                </div>
+                
+                <button 
+                    @click="optimizeApp" 
+                    :disabled="!can.optimizeApplication || isOptimizing" 
+                    class="btn w-full btn-primary"
+                >
+                    <LoaderCircleIcon v-if="isOptimizing" class="size-4 animate-spin mr-2"/>
+                    <SparklesIcon v-else class="size-4 mr-2" />
+                    {{ isOptimizing ? 'Optimizing...' : 'Run Optimization' }}
+                </button>
+            </div>
+
+            <!-- Card 3: Clear Optimization (Reset - Sky) -->
+            <div class="action-card group border-sky-200 dark:border-sky-900/50">
+                <div class="flex-1">
+                    <div class="icon-box bg-gradient-secondary">
+                        <EraserIcon class="size-6" />
+                    </div>
+                    <h3 class="card-title">
+                        Clear Optimization
+                    </h3>
+                    <p class="card-desc">
+                        Remove cached config/routes. Necessary during development or after making configuration changes.
+                    </p>
+                </div>
+                
+                <button 
+                    @click="clearOptimize" 
+                    :disabled="!can.manageApplicationOptimization || isClearingOptimize" 
+                    class="btn w-full bg-gradient-secondary "
+                >
+                    <LoaderCircleIcon v-if="isClearingOptimize" class="size-4 animate-spin mr-2"/>
+                    <RotateCcwIcon v-else class="size-4 mr-2" />
+                    {{ isClearingOptimize ? 'Clearing...' : 'Reset Caches' }}
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
 
 <style scoped>
-/* A simple fade-in for tab content */
-@keyframes fade-in {
+@reference "@/assets/css/main.css";
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+@keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
+
+.action-card {
+    @apply flex flex-col p-6 rounded-2xl border section-bg section-title shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1;
 }
 
-/* Base card styling, adjust as per your theme */
-/* .card {
-    @apply bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm;
-} */
+.icon-box {
+    @apply p-3 w-fit rounded-xl mb-4 transition-transform duration-300 group-hover:scale-110;
+}
+
+.card-title {
+    @apply text-lg font-bold section-title mb-2 transition-colors;
+}
+
+.card-desc {
+    @apply text-sm section-title leading-relaxed mb-6;
+}
 </style>

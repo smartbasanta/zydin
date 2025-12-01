@@ -133,14 +133,14 @@
 
 <template>
     <div
-        class="group border border-white/20 dark:border-white/10 rounded-2xl bg-white/60 dark:bg-white/5 shadow-lg dark:shadow-black/40 backdrop-blur-md overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-black/60"
+        class="group border rounded-2xl shadow-lg dark:shadow-black/40 backdrop-blur-md overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-black/60"
     >
         <!-- Header -->
         <div
             class="flex items-center justify-between p-4 transition-all duration-200"
             :class="[
                 canExpand !== false ? 'cursor-pointer hover:bg-white/40 dark:hover:bg-white/5 active:bg-white/60 dark:active:bg-white/10' : '',
-                isExpanded ? 'border-b border-white/20 dark:border-white/10' : ''
+                isExpanded ? 'border-b' : ''
             ]"
             @click="toggleExpansion"
             :aria-expanded="isExpanded"
@@ -150,7 +150,7 @@
             @keydown.enter="toggleExpansion"
             @keydown.space.prevent="toggleExpansion"
         >
-            <div class="font-semibold text-gray-900 dark:text-white flex-1 transition-colors duration-200">
+            <div class="font-semibold flex-1 section-title transition-colors duration-200">
                 <slot name="header"></slot>
             </div>
             

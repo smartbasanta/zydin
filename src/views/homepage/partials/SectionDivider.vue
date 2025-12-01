@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
 const props = withDefaults(defineProps<{
-  variant?: 'wave' | 'diagonal' | 'dots';
-  accent?: 'primary' | 'secondary' | 'accent';
+  variant?: 'wave' | 'curve-glow' | 'tilt-grid';
+  position?: 'top' | 'bottom'; // Does this divider sit at the top or bottom of a block?
   flip?: boolean;
 }>(), {
   variant: 'wave',
-  accent: 'primary',
+  position: 'bottom',
   flip: false,
 });
 
@@ -15,168 +15,266 @@ const dividerRef = ref<HTMLElement | null>(null);
 const isVisible = ref(false);
 let observer: IntersectionObserver | null = null;
 
-onMounted(() => {
-  if (typeof window === 'undefined' || !dividerRef.value) return;
+// Generate random particles for the molecular effect
+const particles = Array.from({ length: 8 }).map((_, i) => ({
+  id: i,
+  left: `${Math.random() * 100}%`,
+  delay: `${Math.random() * 5}s`,
+  duration: `${10 + Math.random() * 10}s`,
+  size: `${4 + Math.random() * 8}px`
+}));
 
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          isVisible.value = true;
-          observer?.disconnect();
-        }
-      });
-    },
-    { threshold: 0.2 },
-  );
+onMounted(() => {
+  if (!dividerRef.value) return;
+  
+  observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      isVisible.value = true;
+      // Optional: disconnect if you only want it to animate once
+      // observer?.disconnect(); 
+    }
+  }, { threshold: 0.1 });
 
   observer.observe(dividerRef.value);
 });
 
-onUnmounted(() => {
-  observer?.disconnect();
-});
+onUnmounted(() => observer?.disconnect());
 </script>
 
 <template>
   <div
     ref="dividerRef"
-    class="section-divider"
+    class="divider-container"
     :class="[
-      `section-divider--${props.variant}`,
-      `section-divider--${props.accent}`,
-      { 'section-divider--visible': isVisible, 'section-divider--flip': props.flip },
+      `variant-${props.variant}`,
+      { 'is-flipped': props.flip, 'is-visible': isVisible }
     ]"
     aria-hidden="true"
   >
-    <svg
-      v-if="props.variant === 'wave'"
-      class="section-divider__wave"
-      viewBox="0 0 1440 120"
-      preserveAspectRatio="none"
-      role="presentation"
-    >
-      <path
-        d="M0,64L80,58.7C160,53,320,43,480,64C640,85,800,139,960,149.3C1120,160,1280,128,1360,112L1440,96L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-      />
-    </svg>
+    
+    <!-- VARIANT 1: BIOTECH WAVE (Liquid, Organic, Multi-layered) -->
+    <template v-if="props.variant === 'wave'">
+      <!-- Molecular Particles (Floating Bubbles) -->
+      <div class="particles-container">
+        <div 
+          v-for="p in particles" 
+          :key="p.id" 
+          class="molecule"
+          :style="{ 
+            left: p.left, 
+            animationDelay: p.delay, 
+            width: p.size, 
+            height: p.size,
+            animationDuration: p.duration
+          }"
+        ></div>
+      </div>
 
-    <div v-if="props.variant === 'diagonal'" class="section-divider__diagonal"></div>
-    <div v-if="props.variant === 'dots'" class="section-divider__dots"></div>
+      <!-- Wave Layer 1 (Back - Slow) -->
+      <svg class="wave-layer wave-back" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="currentColor" fill-opacity="0.3" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      </svg>
 
-    <div class="section-divider__shape section-divider__shape--one"></div>
-    <div class="section-divider__shape section-divider__shape--two"></div>
+      <!-- Wave Layer 2 (Middle - Medium Speed) -->
+      <svg class="wave-layer wave-mid" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="currentColor" fill-opacity="0.6" d="M0,256L48,229.3C96,203,192,149,288,154.7C384,160,480,224,576,218.7C672,213,768,139,864,128C960,117,1056,171,1152,197.3C1248,224,1344,224,1392,224L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      </svg>
+
+      <!-- Wave Layer 3 (Front - Fast - Solid Color) -->
+      <svg class="wave-layer wave-front" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="currentColor" d="M0,96L48,128C96,160,192,224,288,240C384,256,480,224,576,197.3C672,171,768,149,864,160C960,171,1056,213,1152,224C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      </svg>
+    </template>
+
+
+    <!-- VARIANT 2: CURVE GLOW (Modern, Clean, Gradient Accent) -->
+    <template v-if="props.variant === 'curve-glow'">
+      <div class="glow-spot"></div>
+      <svg class="curve-svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,0 C480,120 960,120 1440,0 L1440,120 L0,120 Z" fill="currentColor"></path>
+      </svg>
+    </template>
+
+
+    <!-- VARIANT 3: TILT GRID (Technical, Sharp, Data-driven) -->
+    <template v-if="props.variant === 'tilt-grid'">
+      <div class="grid-overlay"></div>
+      <svg class="tilt-svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+        <polygon points="0,100 1440,0 1440,100" fill="currentColor"></polygon>
+      </svg>
+    </template>
+
   </div>
-  <div class="section-divider__spacer" aria-hidden="true"></div>
 </template>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.section-divider {
+/* --- BASE CONTAINER --- */
+.divider-container {
   position: relative;
   width: 100%;
-  height: 140px;
+  line-height: 0;
   overflow: hidden;
+  /* Use the background color of the NEXT section to blend seamlessly */
+  color: var(--section-bg); 
+  /* background: var(--section-bg); */
+  /* Ensure it sits on top of content if using negative margins */
+  z-index: 10;
+  
+  /* Smooth entrance */
   opacity: 0;
-  transform: translateY(25px) scale(0.98);
-  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  --divider-color: color-mix(in srgb, var(--section-title-color) 35%, var(--section-bg));
-  color: var(--divider-color);
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
-.section-divider--visible {
+
+.divider-container.is-visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
-.section-divider--flip {
+
+.divider-container.is-flipped {
   transform: scaleX(-1);
 }
-
-.section-divider__wave path {
-  fill: currentColor;
-  transition: fill 0.4s ease;
-}
-.section-divider--primary {
-  --divider-color: color-mix(in srgb, var(--color-primary-600) 75%, var(--section-bg));
-}
-:global(.dark) .section-divider--primary {
-  --divider-color: color-mix(in srgb, var(--color-primary-400) 85%, var(--section-bg));
-}
-.section-divider--secondary {
-  --divider-color: color-mix(in srgb, var(--color-info) 75%, var(--section-bg));
-}
-:global(.dark) .section-divider--secondary {
-  --divider-color: color-mix(in srgb, var(--color-info) 65%, var(--section-bg));
-}
-.section-divider--accent {
-  --divider-color: color-mix(in srgb, var(--color-success) 75%, var(--section-bg));
-}
-:global(.dark) .section-divider--accent {
-  --divider-color: color-mix(in srgb, var(--color-success) 65%, var(--section-bg));
+.divider-container.is-flipped.is-visible {
+  transform: scaleX(-1) translateY(0);
 }
 
-.section-divider__diagonal {
+/* --- VARIANT: BIOTECH WAVE --- */
+.variant-wave {
+  height: 150px;
+}
+
+.wave-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Parallax Animation for Waves */
+.wave-back {
+  animation: waveMove 20s linear infinite alternate;
+  transform-origin: bottom;
+  /* color: var(--section-title-color); */
+  color: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+}
+
+.wave-mid {
+  animation: waveMove 15s linear infinite alternate-reverse;
+  transform-origin: bottom;
+  /* color: var(--section-title-color); */
+  color: color-mix(in srgb, var(--color-secondary-500) 40%, transparent);
+}
+
+.wave-front {
+  /* The front wave matches the section background exactly */
+  position: relative; /* Keeps container height */
+  color: var(--section-bg); 
+  /* color: var(--section-title-color); */
+  filter: drop-shadow(0px -5px 15px rgba(0,0,0,0.05)); /* Subtle depth */
+}
+
+@keyframes waveMove {
+  0% { transform: scaleY(1) translateX(0); }
+  100% { transform: scaleY(1.1) translateX(-20px); }
+}
+
+/* Molecular Particles */
+.particles-container {
   position: absolute;
   inset: 0;
-  transform: skewY(-6deg);
-  background-image: linear-gradient(
-    120deg,
-    color-mix(in srgb, currentColor 15%, transparent),
-    transparent 65%
-  );
-}
-
-.section-divider__dots {
-  position: absolute;
-  inset: 15px;
-  background-image:
-    radial-gradient(circle, color-mix(in srgb, currentColor 25%, transparent) 1px, transparent 1px);
-  background-size: 20px 20px;
-  opacity: 0.35;
-}
-
-.section-divider__shape {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(60px);
-  opacity: 0.35;
   pointer-events: none;
-}
-.section-divider__shape--one {
-  width: 180px;
-  height: 180px;
-  top: -40px;
-  left: 15%;
-  background: color-mix(in srgb, currentColor 60%, transparent);
-  animation: float 10s ease-in-out infinite;
-}
-.section-divider__shape--two {
-  width: 140px;
-  height: 140px;
-  bottom: 0;
-  right: 10%;
-  background: color-mix(in srgb, currentColor 45%, transparent);
-  animation: float 12s ease-in-out infinite reverse;
+  overflow: hidden;
 }
 
-.section-divider__spacer {
-  width: 100%;
-  height: 40px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    color-mix(in srgb, var(--section-bg) 80%, transparent)
-  );
+.molecule {
+  position: absolute;
+  bottom: -20px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
+  border-radius: 50%;
+  opacity: 0;
+  /* Blending particles into the scene */
+  box-shadow: 0 0 10px var(--color-primary-400);
+  animation: floatUp linear infinite;
 }
 
-@keyframes float {
-  0%,
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.4;
+  }
   100% {
-    transform: translateY(0);
+    transform: translateY(-200px) translateX(20px);
+    opacity: 0;
   }
-  50% {
-    transform: translateY(30px);
-  }
+}
+
+
+/* --- VARIANT: CURVE GLOW --- */
+.variant-curve-glow {
+  height: 100px;
+  margin-top: -50px; /* Overlap effect */
+}
+
+.curve-svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  color: var(--section-bg); /* Matches the bottom section */
+}
+
+.glow-spot {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 150%;
+  background: var(--gradient-hero);
+  /* background: radial-gradient(ellipse at bottom, var(--color-primary-500), transparent 70%); */
+  opacity: 0.15;
+  filter: blur(40px);
+  z-index: 1;
+  animation: pulseGlow 5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { opacity: 0.1; transform: translateX(-50%) scale(1); }
+  to { opacity: 0.2; transform: translateX(-50%) scale(1.1); }
+}
+
+
+/* --- VARIANT: TILT GRID --- */
+.variant-tilt-grid {
+  height: 80px;
+}
+
+.tilt-svg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  color: var(--section-bg);
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: 
+    linear-gradient(to right, color-mix(in srgb, var(--text-muted) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--text-muted) 10%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, transparent, black);
+  opacity: 0.5;
 }
 </style>
-

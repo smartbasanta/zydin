@@ -86,7 +86,7 @@ const can = computed(() => dashboardData.value?.can);
                         <div class="icon-box bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
                             <BellRingIcon class="size-6" />
                         </div>
-                        <ArrowRightIcon class="size-5 text-muted opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        <ArrowRightIcon class="size-5 text-blue-400 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
                     
                     <div class="mt-4">
@@ -109,7 +109,7 @@ const can = computed(() => dashboardData.value?.can);
                         <div class="icon-box bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400">
                             <HardDriveDownloadIcon class="size-6" />
                         </div>
-                        <ArrowRightIcon class="size-5 text-muted opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        <ArrowRightIcon class="size-5 text-indigo-400 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
                     
                     <div class="mt-4">
@@ -132,7 +132,7 @@ const can = computed(() => dashboardData.value?.can);
                         <div class="icon-box bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400">
                             <DatabaseZapIcon class="size-6" />
                         </div>
-                        <ArrowRightIcon class="size-5 text-muted opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        <ArrowRightIcon class="size-5 text-emerald-400 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
                     
                     <div class="mt-4">
@@ -181,9 +181,9 @@ const can = computed(() => dashboardData.value?.can);
 @reference "@/assets/css/main.css";
 
 .settings-card {
-    @apply block p-6 rounded-2xl border transition-all duration-300;
+    @apply block p-6 rounded-2xl border transition-all duration-300 section-title;
     background-color: var(--card-bg);
-    border-color: var(--card-border);
+    /* border-color: var(--card-border); */
     box-shadow: var(--shadow-sm);
 }
 
@@ -192,7 +192,6 @@ const can = computed(() => dashboardData.value?.can);
     box-shadow: var(--shadow-xl);
     /* Note: Border color on hover is handled via group-hover classes on the specific text for a cleaner look, 
        or you can add a generic border-primary-300 here if preferred. */
-    @apply border-gray-300 dark:border-gray-600;
 }
 
 .icon-box {

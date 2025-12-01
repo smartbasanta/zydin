@@ -27,7 +27,7 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                                 </div>
                             </div>
                             <!-- <img :src="zydinLogoImage" class="w-18" /> -->
-                            <div class="hidden sm:block">
+                            <div class="block">
                                 <div class="font-bold text-3xl text-white">
                                     Zydin Biotech
                                 </div>

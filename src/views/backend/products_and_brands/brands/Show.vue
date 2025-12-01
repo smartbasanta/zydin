@@ -1,28 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, RouterLink } from "vue-router";
 import { apiService } from "@/services/api.service";
 import type { ApiResponse } from "@/types/api";
 import { useNotifier } from "@/composables/useNotifier";
 import type { Brand } from "@/types";
+import { useDefaultImages } from '@/composables/useDefaultImages';
 import {
-    CheckCircleIcon, XCircleIcon, CalendarIcon, ClockIcon, BuildingIcon,
-    InfoIcon, PackageIcon, TagIcon, PillIcon, BeakerIcon
+    CheckCircleIcon, 
+    XCircleIcon, 
+    CalendarIcon, 
+    ClockIcon, 
+    BuildingIcon,
+    InfoIcon, 
+    PackageIcon, 
+    TagIcon, 
+    PillIcon, 
+    BeakerIcon,
+    ArrowLeftIcon,
+    ImageIcon
 } from "lucide-vue-next";
     
 import { 
-    BackButton, 
     EditButton, 
-    DeleteButton,
+    DeleteModel 
 } from "@/components/button";
+import LoadingState from '@/components/card/LoadingState.vue';
+import BackButton from "@/components/button/BackButton.vue";
 
+const { zydinLogoImage } = useDefaultImages(); // Ensure you have a default brand image
 const route = useRoute();
 const router = useRouter();
 const { error: notifyError } = useNotifier();
 
 const brand = ref<Brand | null>(null);
 const isLoading = ref(true);
-const isDeleting = ref(false);
 const brandId = route.params.id as string;
 
 const fetchBrandDetails = async () => {
@@ -43,156 +55,177 @@ onMounted(fetchBrandDetails);
 const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleString(undefined, {
-        year: "numeric", month: "long", day: "numeric",
+        year: "numeric", month: "short", day: "numeric"
     });
 };
 
-const handleDelete = async () => {
-    if (!brand.value?.can?.delete) return;
-    isDeleting.value = true;
-    try {
-        await apiService.delete(`/dashboard/brands/${brand.value.id}`);
-        router.push({ name: 'dashboard.brands.index' });
-    } catch (err) {
-        notifyError(err as any, `Failed to delete brand`);
-    } finally {
-        isDeleting.value = false;
-    }
+const handleDeleted = () => {
+    router.push({ name: 'dashboard.brands.index' });
 };
 </script>
 
 <template>
-    <div class="bg-gray-50 dark:bg-gray-1100 min-h-screen font-sans">
-        <div v-if="isLoading" class="flex justify-center items-center h-screen">
-            <p class="text-lg animate-pulse text-gray-600 dark:text-gray-400">Loading brand details...</p>
+    <div class="p-6 md:p-8 font-sans bg-section-bg min-h-screen">
+        
+        <LoadingState v-if="isLoading" message="Loading brand details..." />
+        
+        <div v-else-if="!brand" class="flex flex-col items-center justify-center h-64 text-center">
+            <BuildingIcon class="size-16 text-muted mb-4 opacity-50" />
+            <h3 class="text-xl font-bold section-title">Brand Not Found</h3>
+            <RouterLink :to="{ name: 'dashboard.brands.index' }" class="btn btn-secondary mt-6">
+                Back to List
+            </RouterLink>
         </div>
-        <div v-else-if="!brand" class="flex justify-center items-center h-screen">
-            <p class="text-lg text-gray-700 dark:text-gray-300">Brand not found.</p>
-        </div>
-        <div v-else class="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
 
-            <!-- =================================== -->
-            <!-- Header Section                      -->
-            <!-- =================================== -->
-            <header>
-                <BackButton :to="{ name: 'dashboard.brands.index' }" class="mb-4" />
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex-shrink-0 flex items-center justify-center size-14 rounded-lg bg-gray-100 dark:bg-gray-1000">
-                            <BuildingIcon class="size-8 text-gray-300" />
+        <div v-else class="max-w-6xl mx-auto space-y-8">
+            
+            <!-- Header Card -->
+            <div class="card-backdrop p-6 md:p-8 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start gap-6 relative z-10">
+                    <div class="flex items-start gap-5 w-full">
+                        <div class="flex-shrink-0 grid place-content-center size-16 rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-muted text-primary-600 dark:text-primary-400">
+                            <TagIcon class="size-8" />
                         </div>
-                        <div>
-                            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                                {{ brand.name }}
-                            </h1>
-                             <p class="text-sm text-gray-500 dark:text-gray-400 font-mono mt-1">
-                                ID: {{ brand.id }}
-                            </p>
+                        <div class="space-y-1 flex-1">
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <h1 class="text-2xl font-bold section-title leading-tight">{{ brand.name }}</h1>
+                                <span 
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider border"
+                                    :class="brand.is_featured 
+                                        ? 'text-emerald-700 border-emerald-200 dark:text-emerald-400 dark:border-emerald-800'
+                                        : 'text-slate-600 border-slate-200  dark:text-slate-400 dark:border-slate-700'"
+                                >
+                                    <component :is="brand.is_featured ? CheckCircleIcon : XCircleIcon" class="size-3.5" />
+                                    {{ brand.is_featured ? 'Featured' : 'Standard' }}
+                                </span>
+                            </div>
+                            <p class="text-sm font-mono text-muted">ID: #{{ brand.id }} <span class="mx-2">•</span> Slug: {{ brand.slug }}</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 self-end sm:self-center">
-                        <EditButton v-if="brand.can?.update" :to="{ name: 'dashboard.brands.edit', params: { id: brand.id } }" />
-                        <DeleteButton v-if="brand.can?.delete" :loading="isDeleting" @confirm="handleDelete" />
+                    
+                    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                        <!-- <RouterLink :to="{ name: 'dashboard.brands.index' }" class="btn btn-ghost">
+                            <ArrowLeftIcon class="size-4 mr-2" /> Back
+                        </RouterLink> -->
+                        <BackButton :to="{ name: 'dashboard.brands.index' }" />                        
+                        <EditButton 
+                            v-if="brand.can?.update"
+                            :to="{ name: 'dashboard.brands.edit', params: { id: brand.id } }"
+                            label="Edit"
+                        />
+                        
+                        <DeleteModel
+                            v-if="brand.can?.delete"
+                            :item-id="brand.id"
+                            :item-name="brand.name"
+                            delete-url="/dashboard/brands/"
+                            label="Delete"
+                            @deleted="handleDeleted"
+                        />
                     </div>
                 </div>
-            </header>
+            </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                <!-- =================================== -->
-                <!-- Main Content Section              -->
-                <!-- =================================== -->
-                <main class="lg:col-span-2 space-y-8">
-                    <!-- Description Card -->
-                    <div class="bg-white dark:bg-gray-1100 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
-                            <InfoIcon class="size-5" />
-                            Description
-                        </h2>
-                        <div v-if="brand.description" class="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed">
-                            {{ brand.description }}
-                        </div>
-                        <p v-else class="text-gray-500 dark:text-gray-400 italic">No description provided for this brand.</p>
-                    </div>
-
-                    <!-- Associated Products Card -->
-                    <div class="bg-white dark:bg-gray-1100 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                         <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                            <PackageIcon class="size-5" />
-                            Associated Products
-                        </h2>
-                        <ul v-if="brand.products && brand.products.length > 0" class="space-y-3">
-                            <li v-for="product in brand.products" :key="product.id">
-                                <RouterLink :to="{ name: 'dashboard.products.show', params: { id: product.id } }" class="flex items-center gap-3 p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
-                                    <PillIcon v-if="product.type === 'ff'" class="size-6 text-purple-500 flex-shrink-0" />
-                                    <BeakerIcon v-else class="size-6 text-blue-500 flex-shrink-0" />
-                                    <div>
-                                        <p class="font-semibold text-gray-800 dark:text-gray-100">{{ product.name }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ product.type }}</p>
-                                    </div>
-                                </RouterLink>
-                            </li>
-                        </ul>
-                         <p v-else class="text-gray-500 dark:text-gray-400 italic">No products are currently associated with this brand.</p>
-                    </div>
-                </main>
-
-                <!-- =================================== -->
-                <!-- Sidebar Section                   -->
-                <!-- =================================== -->
-                <aside class="space-y-6">
-                    <!-- Logo Card -->
-                    <div class="bg-white dark:bg-gray-1100 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-base font-bold text-gray-800 dark:text-white mb-4">
-                            Brand Logo
+                <!-- LEFT COLUMN: Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <!-- Description -->
+                    <div class="p-6 rounded-2xl bg-card-bg border border-muted shadow-sm">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-3 flex items-center gap-2">
+                            <InfoIcon class="size-4" /> Description
                         </h3>
-                        <div v-if="brand.image_url" class="aspect-video bg-gray-50 dark:bg-gray-1000 rounded-md flex items-center justify-center p-2">
-                            <img :src="brand.image_url" :alt="brand.name" class="max-h-full max-w-full object-contain">
+                        <p v-if="brand.description" class="section-title leading-relaxed whitespace-pre-wrap">
+                            {{ brand.description }}
+                        </p>
+                        <p v-else class="text-muted italic text-sm">No description provided for this brand.</p>
+                    </div>
+
+                    <!-- Associated Products -->
+                    <div class="rounded-2xl border border-muted bg-card-bg shadow-sm overflow-hidden">
+                        <header class="p-5 border-b border-muted bg-gray-50/50 dark:bg-gray-900/20 flex justify-between items-center">
+                            <h2 class="font-bold section-title flex items-center gap-2">
+                                <PackageIcon class="size-5 text-primary-500" />
+                                Associated Products
+                            </h2>
+                            <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                                {{ brand.products?.length || 0 }}
+                            </span>
+                        </header>
+                        
+                        <div class="p-2">
+                            <ul v-if="brand.products && brand.products.length > 0" class="space-y-1">
+                                <li v-for="product in brand.products" :key="product.id">
+                                    <RouterLink 
+                                        :to="{ name: 'dashboard.products.show', params: { id: product.id } }" 
+                                        class="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
+                                    >
+                                        <div class="flex-shrink-0 p-2 rounded-lg" :class="product.type === 'ff' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'">
+                                            <component :is="product.type === 'ff' ? PillIcon : BeakerIcon" class="size-5" />
+                                        </div>
+                                        
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-semibold text-section-title group-hover:text-primary-600 transition-colors">
+                                                {{ product.name }}
+                                            </p>
+                                            <p class="text-xs text-muted uppercase tracking-wide">
+                                                {{ product.type === 'api' ? 'Active Ingredient' : 'Finished Formulation' }}
+                                            </p>
+                                        </div>
+                                    </RouterLink>
+                                </li>
+                            </ul>
+                            <div v-else class="p-8 text-center text-muted italic">
+                                No products are currently associated with this brand.
+                            </div>
                         </div>
-                        <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">No logo uploaded.</p>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Sidebar -->
+                <div class="space-y-6">
+                    
+                    <!-- Logo Card -->
+                    <div class="rounded-2xl border border-muted bg-card-bg shadow-sm overflow-hidden">
+                        <div class="p-4 border-b border-muted bg-gray-50/50 dark:bg-gray-900/20">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-muted">Brand Logo</h3>
+                        </div>
+                        <div class="p-6 flex items-center justify-center min-h-[180px]">
+                            <img 
+                                :src="brand.image_url ?? brand.image_thumbnail_url ?? zydinLogoImage" 
+                                :alt="brand.name" 
+                                class="max-w-full max-h-32 object-contain drop-shadow-sm"
+                            >
+                            <!-- <div v-else class="flex flex-col items-center text-muted opacity-50">
+                                <ImageIcon class="size-12 mb-2" />
+                                <span class="text-xs">No Logo</span>
+                            </div> -->
+                        </div>
                     </div>
                     
-                    <!-- Key Info Card -->
-                    <div class="bg-white dark:bg-gray-1100 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-base font-bold text-gray-800 dark:text-white mb-4 border-b dark:border-gray-700 pb-3">
-                            Key Information
-                        </h3>
-                        <div class="space-y-4">
-                           <div class="flex items-start gap-3">
-                                <TagIcon class="size-5 text-gray-500 dark:text-gray-400 mt-0.5" />
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">URL Slug</p>
-                                    <p class="text-sm text-gray-900 dark:text-gray-50 font-mono">{{ brand.slug }}</p>
-                                </div>
-                           </div>
-                           <div class="flex items-start gap-3">
-                                <CheckCircleIcon class="size-5 text-gray-500 dark:text-gray-400 mt-0.5" />
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
-                                    <span :class="['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', brand.is_featured ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200']">
-                                        {{ brand.is_featured ? 'Featured' : 'Standard' }}
-                                    </span>
-                                </div>
-                           </div>
-                           <div class="flex items-start gap-3">
-                                <CalendarIcon class="size-5 text-gray-500 dark:text-gray-400 mt-0.5" />
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Date Created</p>
-                                    <p class="text-sm text-gray-900 dark:text-gray-50">{{ formatDate(brand.created_at) }}</p>
-                                </div>
-                           </div>
-                           <div class="flex items-start gap-3">
-                                <ClockIcon class="size-5 text-gray-500 dark:text-gray-400 mt-0.5" />
-                                <div>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</p>
-                                    <p class="text-sm text-gray-900 dark:text-gray-50">{{ formatDate(brand.updated_at) }}</p>
-                                </div>
-                           </div>
+                    <!-- Audit Info -->
+                    <div class="p-6 rounded-2xl bg-card-bg border border-muted shadow-sm space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-muted border-b border-muted pb-2">Audit Log</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-muted flex items-center gap-1.5"><CalendarIcon class="size-3.5" /> Created</span>
+                                <span class="font-medium section-title">{{ formatDate(brand.created_at) }}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-muted flex items-center gap-1.5"><ClockIcon class="size-3.5" /> Updated</span>
+                                <span class="font-medium section-title">{{ formatDate(brand.updated_at) }}</span>
+                            </div>
                         </div>
                     </div>
-                </aside>
 
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+</style>

@@ -54,7 +54,7 @@ const formatDate = (dateString: string | null | undefined) => {
 </script>
 
 <template>
-    <div class="bg-gray-50 dark:bg-gray-1100 font-sans">
+    <div class="section-bg section-title">
         <div v-if="isLoading" class="flex justify-center items-center h-screen">
             <p class="text-lg animate-pulse text-gray-600 dark:text-gray-400">Loading details...</p>
         </div>
@@ -67,8 +67,8 @@ const formatDate = (dateString: string | null | undefined) => {
             <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <BackButton :to="{ name: 'dashboard.leaders.index' }" class="mb-2" />
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ leader.name }}</h1>
-                    <p class="text-indigo-600 dark:text-indigo-400 font-semibold">{{ leader.position }}</p>
+                    <h1 class="text-3xl font-bold">{{ leader.name }}</h1>
+                    <p class="font-semibold">{{ leader.position }}</p>
                 </div>
                 <div class="flex items-center gap-2 self-start sm:self-center">
                     <EditButton v-if="leader.can?.update" :to="{ name: 'dashboard.leaders.edit', params: { id: leader.id } }" />
@@ -80,7 +80,7 @@ const formatDate = (dateString: string | null | undefined) => {
                 <!-- Sidebar Section -->
                 <aside class="lg:col-span-1 space-y-6">
                     <!-- Profile Image -->
-                    <div class="bg-white dark:bg-gray-1000 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="rounded-lg shadow-sm bg-gray-900 border border-gray-200 dark:border-gray-700 p-6">
                         <img v-if="leader.image_url" :src="leader.image_url" :alt="leader.name" class="w-full h-auto rounded-lg object-cover">
                         <div v-else class="w-full aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400">
                            <UserSquare class="size-24" />

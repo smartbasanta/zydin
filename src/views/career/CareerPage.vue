@@ -73,7 +73,7 @@ const closeApplicationModal = () => {
                             <component :is="item.icon" class="w-8 h-8 text-white" />
                         </div>
                         <h3 class="text-xl font-bold section-title mb-2">{{ item.title }}</h3>
-                        <p class="section-text leading-relaxed">{{ item.text }}</p>
+                        <p class="section-title leading-relaxed">{{ item.text }}</p>
                     </div>
                 </div>
             </div>

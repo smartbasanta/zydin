@@ -14,7 +14,7 @@ defineProps<{
 }>();
 </script>
 <template>
-	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 section-title">
         <div class="lg:col-span-2 space-y-6">
             <ExpandableCard :expanded="true">
                 <template #header>Slide Content</template>

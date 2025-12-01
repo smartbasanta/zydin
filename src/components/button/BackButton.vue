@@ -32,7 +32,7 @@
     <button
         type="button"
         @click="goBack"
-        class="group relative inline-flex items-center justify-center rounded-2xl bg-white/60 dark:bg-white/5 border border-gray-200/60 dark:border-gray-800/60 backdrop-blur-md shadow-xl text-gray-600 dark:text-gray-300 font-semibold text-sm font-poppins transition-all duration-300 hover:scale-[1.03] cursor-pointer"
+        class="group relative inline-flex items-center justify-center rounded-2xl section-bg border backdrop-blur-md shadow-xl section-title font-semibold text-sm font-poppins transition-all duration-300 hover:scale-[1.03] cursor-pointer"
         :class="[ 
             iconOnly ? 'p-3' : 'px-5 py-3 gap-2' 
         ]"

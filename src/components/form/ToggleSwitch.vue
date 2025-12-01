@@ -28,10 +28,10 @@ const id = `toggle-switch-${Math.random().toString(36).substring(2, 9)}`;
   <div class="flex items-center justify-between" :class="{ 'opacity-50': disabled }">
     <!-- Label and Description -->
     <span class="flex flex-col">
-      <label :for="id" class="font-medium text-gray-900 dark:text-white cursor-pointer">
+      <label :for="id" class="font-medium section-title cursor-pointer">
         {{ label }}
       </label>
-      <p v-if="description" class="text-sm text-gray-500 dark:text-gray-400">
+      <p v-if="description" class="text-sm section-text">
         {{ description }}
       </p>
     </span>

@@ -7,3 +7,4 @@ export * from './newsAndUpdates';
 export * from './page';
 export * from './product';
 export * from './testimonial';
+export * from './dashboard'

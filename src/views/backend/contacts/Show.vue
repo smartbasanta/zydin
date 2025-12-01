@@ -67,7 +67,7 @@ onMounted(()=>{
 </script>
 
 <template>
-	<div class="p-4 sm:p-6 lg:p-6 bg-gray-0 dark:bg-gray-1250 min-h-screen font-poppins">
+	<div class="p-4 sm:p-6 lg:p-6 section-bg section-title font-poppins">
 		<div v-if="isLoading" class="text-center py-12 text-lg animate-pulse">
 			Loading submission details...
 		</div>
@@ -75,18 +75,18 @@ onMounted(()=>{
 			Submission not found.
 		</div>
 		<div v-else class="container mx-auto space-y-6">
-			<div class="bg-white dark:bg-gray-1200 rounded-xl shadow-md p-6 border border-gray-150 dark:border-gray-1000">
+			<div class="rounded-xl shadow-md p-6 border">
                 <div class="flex justify-end gap-3 mb-4">
                     <BackButton :to="{ name: 'dashboard.contact-submissions.index' }" />
                     <button type="button" @click="markAsRead" class="btn btn-primary">Mark As {{ submission.is_read? 'Un-read':'Read' }}</button>
                     <DeleteButton v-if="submission.can?.delete" :loading="isDeleting" @confirm="handleDelete" />
                 </div>
 
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-50 mt-2">
+                <h1 class="text-3xl font-bold mt-2">
                     {{ submission.subject }}
                 </h1>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-gray-600 dark:text-gray-400 mt-4 border-t dark:border-gray-800 pt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm mt-4 border-t dark:border-gray-800 pt-4">
                     <div class="flex items-center gap-2">
                         <UserIcon class="size-4" />
                         <span>From: <strong>{{ submission.name }}</strong></span>
@@ -106,7 +106,7 @@ onMounted(()=>{
                 </div>
 			</div>
 
-            <div class="bg-white dark:bg-gray-1200 rounded-xl shadow-md p-6 border border-gray-150 dark:border-gray-1000">
+            <div class="rounded-xl shadow-md p-6 border">
                 <h2 class="font-bold text-xl mb-4 flex items-center gap-2"><MessageCircle class="size-5" /> Message</h2>
                 <div class="prose dark:prose-invert max-w-none whitespace-pre-wrap">{{ submission.message }}</div>
             </div>

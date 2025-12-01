@@ -1,34 +1,29 @@
 <script setup lang="ts">
 import type { AxiosResponse } from 'axios';
 import { ref, onMounted, computed } from 'vue';
-import { apiService, type CustomRequestConfig } from '@/services/api.service';
+import { apiService } from '@/services/api.service';
 import { useNotifier } from '@/composables/useNotifier';
 import type { ApiResponse } from '@/types/api';
 
 // Icons
-import { DownloadIcon, TrashIcon, LoaderCircleIcon, DatabaseZapIcon, DatabaseIcon } from 'lucide-vue-next';
+import { 
+    DownloadIcon, 
+    LoaderCircleIcon, 
+    DatabaseIcon, 
+    HardDriveDownloadIcon,
+    CalendarIcon,
+    FileCodeIcon
+} from 'lucide-vue-next';
 
-// Components
 import LoadingState from '@/components/card/LoadingState.vue';
+import DeleteModel from '@/components/button/DeleteModel.vue'; // 1. Import DeleteModel
 
-// --- Type Definitions ---
 interface Backup {
     name: string;
     path: string;
     size: number;
-    last_modified: number; // Unix timestamp
+    last_modified: number;
 };
-
-// interface ApiResponseDownload {
-//     data: Blob; // The response data is a Blob, not 'any'. This is more specific.
-//     headers: {
-//         'content-disposition': string;
-//         'content-type': string;
-//         // You can add other headers you expect, or use an index signature for flexibility:
-//         [key: string]: any; // Allows any other string key
-//     };
-//     status: number; // It's good practice to include status for debugging.
-// }
 
 interface Permissions {
     viewAnyBackup: boolean;
@@ -38,22 +33,16 @@ interface Permissions {
     restoreDatabase: boolean;
 };
 
-// --- Composables ---
 const { notify, error: notifyError } = useNotifier();
 
-// --- State Management ---
 const backups = ref<Backup[]>([]);
 const can = ref<Permissions>({ viewAnyBackup:false, createBackup: false, downloadBackup: false, deleteBackup: false, restoreDatabase:false });
 const isLoading = ref(true);
 
-// Action-specific loading states for better UX
 const isCreatingBackup = ref(false);
-const isDeletingBackupPath = ref<string | null>(null);
-// --- NEW ---: State to track which file is currently downloading
+// const isDeletingBackupPath = ref<string | null>(null); // Removed: Handled by DeleteModel
 const isDownloadingPath = ref<string | null>(null);
 
-
-// --- Data Fetching ---
 const fetchData = async () => {
     isLoading.value = true;
     try {
@@ -69,10 +58,6 @@ const fetchData = async () => {
 
 onMounted(fetchData);
 
-
-// --- Methods ---
-
-// Database Actions
 const createBackup = async () => {
     isCreatingBackup.value = true;
     try {
@@ -86,40 +71,27 @@ const createBackup = async () => {
     }
 };
 
-const deleteBackup = async (path: string) => {
-    if (!confirm('Are you sure you want to permanently delete this backup? This action cannot be undone.')) {
-        return;
-    }
-    isDeletingBackupPath.value = path;
-    try {
-        const response = await apiService.delete<ApiResponse>('/settings/database/backup', { data: { path } });
-        backups.value = backups.value.filter(b => b.path !== path);
-        notify(response);
-    } catch (err) {
-        notifyError(err as Error, 'Failed to delete backup.');
-    } finally {
-        isDeletingBackupPath.value = null;
-    }
+// 2. New Handler for DeleteModel event
+// DeleteModel emits the ID (path) we passed to it on success
+const onBackupDeleted = (deletedPathEncoded: string | number) => {
+    // Because we passed encoded URL, we might need to decode, 
+    // but filtering by the original path logic is safer if we just reload or filter carefully.
+    // Since the API usually returns the fresh list on delete, or we just filter:
+    const path = decodeURIComponent(String(deletedPathEncoded));
+    backups.value = backups.value.filter(b => b.path !== path);
 };
 
-// --- NEW METHOD ---: Handles the authenticated file download
 const downloadBackupFile = async (path: string) => {
     isDownloadingPath.value = path;
     try {
         const url = `/settings/database/backup/download?path=${encodeURIComponent(path)}`;
-
-        // --- THE FIX in action ---
-        // We tell our apiService to get the full response, and TypeScript understands the return type.
-        // We expect the data to be a Blob, so we type the response as AxiosResponse<Blob>.
         const response: AxiosResponse<Blob> = await apiService.get(url, {
             responseType: 'blob',
-            getFullResponse: true, // Our new custom flag!
+            getFullResponse: true,
         });
 
-        // SUCCESS! TypeScript now knows `response.headers` exists.
         const contentDisposition = response.headers['content-disposition'];
-        // console.log(contentDisposition);
-        let filename = 'download';
+        let filename = 'download.sql';
         if (contentDisposition) {
             const filenameMatch = contentDisposition.match(/filename\*?=['"]?([^'"]+)['"]?$/);
             if (filenameMatch && filenameMatch[1]) {
@@ -127,48 +99,17 @@ const downloadBackupFile = async (path: string) => {
             }
         }
 
-        if (filename === 'download' && path) {
-            // Extracts the last part of the path after the last slash.
-            // e.g., 'backups/db-2023-10-27.zip' -> 'db-2023-10-27.zip'
-            const pathParts = path.split('/');
-            const potentialFilename = pathParts[pathParts.length - 1];
-            if (potentialFilename) {
-                 filename = potentialFilename;
-            }
-        }
-
-        const contentType = response.headers['content-type'];
-        if (!filename.includes('.') && contentType) {
-            // Simple mapping for common backup types. You can expand this.
-            const extensionMap: { [key: string]: string } = {
-                'application/zip': '.zip',
-                'application/gzip': '.gz',
-                'application/x-sql': '.sql',
-                'text/plain': '.txt',
-                'application/octet-stream': '' // Generic binary, don't assume extension
-            };
-            const extension = extensionMap[contentType];
-            if (extension) {
-                filename += extension;
-            }
-        }
-        
-        // The file data is in `response.data`
         const blob = response.data;
         const blobUrl = window.URL.createObjectURL(blob);
-        
-        // Your logic for creating the link and clicking it is perfect.
         const tempLink = document.createElement('a');
         tempLink.href = blobUrl;
         tempLink.setAttribute('download', filename);
         document.body.appendChild(tempLink);
         tempLink.click();
-        
         document.body.removeChild(tempLink);
         window.URL.revokeObjectURL(blobUrl);
 
     } catch (err: any) {
-        // Your error handling for blobs is also great
         if (err.response && err.response.data instanceof Blob && err.response.data.type.includes('application/json')) {
             const errorBlob = err.response.data;
             const errorText = await errorBlob.text();
@@ -182,7 +123,6 @@ const downloadBackupFile = async (path: string) => {
     }
 };
 
-// --- Computed Properties & Helpers ---
 const formatBytes = (bytes: number, decimals = 2) => {
     if (!+bytes) return '0 Bytes';
     const k = 1024;
@@ -193,7 +133,9 @@ const formatBytes = (bytes: number, decimals = 2) => {
 };
 
 const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleString();
+    return new Date(timestamp * 1000).toLocaleString(undefined, { 
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
 };
 
 const sortedBackups = computed(() => {
@@ -202,69 +144,135 @@ const sortedBackups = computed(() => {
 </script>
 
 <template>
-    <div class="p-4 md:p-6 font-sans">
-        <title>Backup & Maintenance</title>
-        <header class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-3">
-                <DatabaseZapIcon class="text-primary" />
-                Backup & Maintenance
-            </h1>
-            <p class="text-muted mt-1">Manage database backups and application cache settings.</p>
+    <div class="p-6 md:p-8 space-y-8">
+        
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold section-title flex items-center gap-3">
+                    <HardDriveDownloadIcon class="text-primary-500" />
+                    Database Backups
+                </h1>
+                <p class="text-muted mt-1 max-w-2xl">
+                    Create snapshots of your database, manage archives, and restore data if needed.
+                </p>
+            </div>
+            
+            <button 
+                v-if="can.createBackup" 
+                @click="createBackup" 
+                :disabled="isCreatingBackup" 
+                class="btn btn-primary shadow-lg shadow-primary-500/20"
+            >
+                <LoaderCircleIcon v-if="isCreatingBackup" class="size-4 animate-spin mr-2" />
+                <DatabaseIcon v-else class="size-4 mr-2" />
+                {{ isCreatingBackup ? 'Creating...' : 'Create Backup' }}
+            </button>
         </header>
 
-        <!-- Tab Content -->
-        <div>
-            <!-- Database Backup Panel -->
-            <div class="animate-fade-in">
-                <div class="flex flex-col sm:flex-row py-2 items-center justify-between mb-4 gap-4">
-                    <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Available Backups</h2>
-                    <button v-if="can.createBackup" @click="createBackup" :disabled="isCreatingBackup" class="btn btn-primary w-full sm:w-auto">
-                        <LoaderCircleIcon v-if="isCreatingBackup" class="size-4 animate-spin mr-2" />
-                        <DatabaseIcon v-else class="size-4 mr-2" />
-                        {{ isCreatingBackup ? 'Creating Backup...' : 'Create New Backup' }}
-                    </button>
+        <!-- Main Content -->
+        <div class="animate-fade-in">
+            <div class="data-table-shell">
+                <div class="p-4 border-b border-muted bg-gray-50/50 dark:bg-gray-900/20 flex justify-between items-center">
+                    <h3 class="font-bold section-title text-sm uppercase tracking-wide">Backup History</h3>
+                    <span class="text-xs text-muted">{{ sortedBackups.length }} Archives</span>
                 </div>
-                <div class="data-table">
-                    <table>
-                        <thead>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-section-bg">
                             <tr>
-                                <th>Name</th>
-                                <th>Size</th>
-                                <th>Date Created</th>
-                                <th class="whitespace-nowrap text-right">Actions</th>
+                                <th class="px-6 py-3 font-semibold text-muted uppercase tracking-wider w-1/2">Filename</th>
+                                <th class="px-6 py-3 font-semibold text-muted uppercase tracking-wider">Size</th>
+                                <th class="px-6 py-3 font-semibold text-muted uppercase tracking-wider">Created At</th>
+                                <th class="px-6 py-3 font-semibold text-muted uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        
+                        <tbody class="divide-y divide-muted">
                             <tr v-if="isLoading">
-                                <td colspan="4">
-                                    <LoadingState message="Loading backups..." />
+                                <td colspan="4" class="py-12">
+                                    <LoadingState message="Loading backup archives..." />
                                 </td>
                             </tr>
+                            
                             <template v-else-if="sortedBackups.length > 0">
-                                <tr v-for="backup in sortedBackups" :key="backup.path">
-                                    <td class="font-mono text-sm">{{ backup.name }}</td>
-                                    <td>{{ formatBytes(backup.size) }}</td>
-                                    <td>{{ formatDate(backup.last_modified) }}</td>
-                                    <td class="whitespace-nowrap text-right">
-                                        <div class="flex gap-2 justify-end">
-                                            <!-- --- UPDATED ---: Changed from <a> tag to <button> -->
-                                            <button v-if="can.downloadBackup" 
-                                                    @click="downloadBackupFile(backup.path)" 
-                                                    :disabled="isDownloadingPath === backup.path"
-                                                    class="btn btn-success py-2 px-3">
+                                <tr 
+                                    v-for="backup in sortedBackups" 
+                                    :key="backup.path"
+                                    class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                                >
+                                    <!-- Name -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                                                <FileCodeIcon class="size-4" />
+                                            </div>
+                                            <span class="font-mono text-sm font-medium section-title truncate max-w-xs" :title="backup.name">
+                                                {{ backup.name }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Size -->
+                                    <td class="px-6 py-4 font-mono text-xs text-muted">
+                                        {{ formatBytes(backup.size) }}
+                                    </td>
+
+                                    <!-- Date -->
+                                    <td class="px-6 py-4 text-muted text-sm">
+                                        <div class="flex items-center gap-2">
+                                            <CalendarIcon class="size-3.5 opacity-70" />
+                                            {{ formatDate(backup.last_modified) }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button 
+                                                v-if="can.downloadBackup" 
+                                                @click="downloadBackupFile(backup.path)" 
+                                                :disabled="isDownloadingPath === backup.path"
+                                                class="group relative inline-flex items-center justify-center p-2 rounded-lg border transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 shadow-sm hover:border-indigo-500/50 dark:hover:border-indigo-400/50 hover:text-indigo-600 dark:hover:text-indigo-400 hover:shadow-md"
+                                                title="Download SQL File"
+                                            >
                                                 <LoaderCircleIcon v-if="isDownloadingPath === backup.path" class="size-4 animate-spin" />
                                                 <DownloadIcon v-else class="size-4" />
                                             </button>
-                                            <button v-if="can.deleteBackup" @click="deleteBackup(backup.path)" :disabled="isDeletingBackupPath === backup.path" class="btn btn-danger py-2 px-3">
-                                                <LoaderCircleIcon v-if="isDeletingBackupPath === backup.path" class="size-4 animate-spin" />
-                                                <TrashIcon v-else class="size-4" />
-                                            </button>
+                                            
+                                            <!-- 
+                                                3. Utilizing DeleteModel 
+                                                Note on delete-url: We pass '?path=' so the DeleteModel 
+                                                constructs '/settings/database/backup?path=/the/path'
+                                                which works for passing file paths via URL safely.
+                                            -->
+                                            <DeleteModel 
+                                                v-if="can.deleteBackup"
+                                                :item-id="encodeURIComponent(backup.path)"
+                                                :item-name="backup.name"
+                                                delete-url="/settings/database/backup?path="
+                                                icon-only
+                                                confirm-message="Are you sure you want to permanently delete this backup? This action cannot be undone."
+                                                @deleted="onBackupDeleted"
+                                            />
                                         </div>
                                     </td>
                                 </tr>
                             </template>
-                            <tr v-else class="bg-gray-100 dark:bg-gray-900">
-                                <td colspan="4" class="py-6 px-2 text-center text-muted">No backups found.</td>
+                            
+                            <tr v-else>
+                                <td colspan="4" class="py-16 text-center">
+                                    <div class="flex flex-col items-center justify-center text-muted">
+                                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                                            <DatabaseIcon class="size-8 text-gray-400" />
+                                        </div>
+                                        <h3 class="text-lg font-bold section-title mb-1">No Backups Found</h3>
+                                        <p class="text-sm max-w-xs mx-auto">
+                                            Create your first backup to ensure your data is safe.
+                                        </p>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -275,12 +283,14 @@ const sortedBackups = computed(() => {
 </template>
 
 <style scoped>
-/* A simple fade-in for tab content */
-@keyframes fade-in {
+@reference "@/assets/css/main.css";
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
 }
 </style>

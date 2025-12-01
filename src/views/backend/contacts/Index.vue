@@ -69,8 +69,7 @@ const toggleReadStatus = async (submission: ContactSubmission) => {
           <RouterLink 
             v-if="row.can?.view" 
             :to="{ name: 'dashboard.contact-submissions.show', params: { id: row.id } }" 
-            class="text-primary-600 hover:text-primary-500 hover:underline dark:text-primary-400"
-          >
+            class="hover:underline"          >
             {{ row.name }}
           </RouterLink>
           <span v-else>{{ row.name }}</span>
