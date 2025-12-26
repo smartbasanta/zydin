@@ -46,10 +46,10 @@ import SectionDivider from './partials/SectionDivider.vue';
             - Between Featured and Vertical Integration.
             - Gives a technical/scientific feel.
         -->
-        <SectionDivider 
+        <!-- <SectionDivider 
             variant="tilt-grid" 
             class="-mt-20 relative z-10 text-gray-50 dark:text-gray-1100 pointer-events-none" 
-        />
+        /> -->
 
         <!-- 4. VERTICAL INTEGRATION -->
         <VerticalIntegrationSection class="relative z-20" />

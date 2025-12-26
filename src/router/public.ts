@@ -68,6 +68,27 @@ const publicRoutes: RouteRecordRaw = {
                 },
             ],
         },
+        //new added routes for homepage vertical integration section...
+        {
+            path: 'drug-discovery',
+                name: 'drug.discovery',
+                component: () => import('@/views/homepage/drug-discovery/index.vue')
+        },
+        {
+            path: 'drug-substance-development-manufacturing',
+            component: () => import('@/views/homepage/drug-substance-development-manufacturing/index.vue'),
+            name: 'drug.dev.man',
+        },
+        {
+            path: 'oncology-drug-product',
+            component: () => import('@/views/homepage/oncology-drug-product-( complex-generics)/index.vue'),
+            name: 'oncology.drug.product',
+        },
+        {
+            path: 'crams-cdmo-facilities',
+            component: () => import('@/views/homepage/crams-cdmo-facilities/index.vue'),
+            name: 'crams.cdmo.facilities',
+        },
         {
             path: '/career',
             name: 'career',

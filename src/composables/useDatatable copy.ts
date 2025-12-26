@@ -1,9 +1,9 @@
-import { ref, computed, watch, provide, type Ref, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, provide, type Ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiService } from '@/services/api.service';
 import type { PaginatedResponse, PaginationLink } from '@/types/paginated-response';
 import type { UseDataTableConfig, ColumnDefinition, RowsPerPageOption, DataTableApiResponse } from '@/types/datatable';
-import type { ApiResponse } from '@/types/api';
+import type { ApiResponse } from '@/types/api'; // Your generic API response type
 import type { ModelCan } from '@/types/abilities';
 
 export default function useDataTable<T extends { id: number | string }>(config: UseDataTableConfig<T>) {
@@ -16,6 +16,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
         rowsPerPageOptions: configRppOptions,
         isSimplePagination = false,
         modelKeyInData = 'paginatedData',
+        configKeyInData = 'config',
         initialSort: configInitialSort,
     } = config;
 
@@ -26,13 +27,12 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     const can = ref<ModelCan>({});
     const isLoading = ref<boolean>(true);
     const apiError = ref<any>(null);
-    const paginatedModel = ref<PaginatedResponse<T> | null>(null);
     
-    // Flag to prevent double-fetching when we update the URL programmatically
-    const isUpdatingUrl = ref(false);
-
-    const localSearchTerm = ref<string>('');
-    const backendSearchTerm = ref<string>('');
+    // Holds the raw paginated data from API (e.g., response.data.paginatedData)
+    const paginatedModel = ref<PaginatedResponse<T> | null>(null); 
+    
+    const localSearchTerm = ref<string>(''); // For live local filtering input
+    const backendSearchTerm = ref<string>(''); // Term used for the last backend search
 
     const currentColumns = ref<ColumnDefinition<T>[]>(propColumns) as Ref<ColumnDefinition<T>[]>;
     const visibleColumns = ref<Record<string, boolean>>({});
@@ -48,7 +48,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     const currentSort = ref<string[]>([defaultSortKey]);
     const currentDirection = ref<string[]>([defaultSortDir]);
     
-    const filters = ref<Record<string, any>>({}); 
+    const filters = ref<Record<string, any>>({}); // For column-specific filters
 
     const defaultRppOptions: RowsPerPageOption[] = [
         { value: '5', text: '5' }, { value: '10', text: '10' }, { value: '15', text: '15' },
@@ -63,8 +63,15 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     // --- Computed Properties ---
     const dataToDisplay = computed<T[]>(() => {
         const sourceData = paginatedModel.value?.data;
-        if (!sourceData) return [] as T[];
+
+        if (!sourceData) {
+            return [] as T[];
+        }
+
+        // Direct assertion. This assumes that `sourceData` is structurally compatible with `T[]`
+        // even if its elements are reactive proxies.
         const data = sourceData as T[]; 
+
         if (!localSearchTerm.value || backendSearchTerm.value === localSearchTerm.value) {
             return data;
         }
@@ -73,9 +80,11 @@ export default function useDataTable<T extends { id: number | string }>(config: 
 
     const isPaginated = computed(() => {
         if (!paginatedModel.value) return false;
+        // Ensure per_page is treated as a number
         const perPageNumber = typeof paginatedModel.value.per_page === 'string' 
             ? parseInt(paginatedModel.value.per_page, 10) 
             : paginatedModel.value.per_page;
+        
         return paginatedModel.value.total > perPageNumber;
     });
 
@@ -86,6 +95,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     });
 
     const deepSearch = (item: any, searchTermToUse: string): boolean => {
+        // (Keep your existing deepSearch implementation)
         if (!searchTermToUse) return true;
         const term = searchTermToUse.toLowerCase();
         if (item === null || item === undefined) return false;
@@ -98,40 +108,19 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     };
 
     // --- Methods ---
-    const updateQueryInUrl = async (params: Record<string, any>) => {
-        // Set flag to true so the Watcher knows THIS code caused the change
-        isUpdatingUrl.value = true;
-        
-        try {
-            await router.replace({ query: { ...route.query, ...params } });
-        } catch (err: any) {
+    const updateQueryInUrl = (params: Record<string, any>) => {
+        router.replace({ query: { ...route.query, ...params } }).catch(err => {
             if (err.name !== 'NavigationDuplicated') console.error(err);
-        } finally {
-            // Reset flag after a tick to ensure watcher has fired (and been ignored)
-            await nextTick();
-            isUpdatingUrl.value = false;
-        }
+        });
     };
     
     const applyFilters = async (additionalParams: Record<string, any> = {}, syncUrl = true) => {
         isLoading.value = true;
         apiError.value = null;
-        selectedRows.value.clear(); 
-
-        // --- FIX 1: Prioritize explicit param -> then current local state -> then backend state ---
-        // If we are navigating, 'additionalParams.page' will be set.
-        // If we are refreshing/sorting, we want to stay on 'currentPage.value'.
-        // We only fallback to 'paginatedModel' if everything else is missing.
-        let pageToRequest = currentPage.value;
-        
-        if (additionalParams.page) {
-            pageToRequest = Number(additionalParams.page);
-            // Optimistically update current page so UI feels responsive
-            currentPage.value = pageToRequest; 
-        }
+        selectedRows.value.clear(); // Clear selection on data change
 
         const queryParamsToSend: Record<string, any> = {
-            page: pageToRequest,
+            page: paginatedModel.value?.current_page || 1,
             ...filters.value,
             ...additionalParams,
         };
@@ -147,9 +136,9 @@ export default function useDataTable<T extends { id: number | string }>(config: 
             delete queryParamsToSend.search;
         }
         
-        queryParamsToSend.per_page = currentRowsPerPage.value;
+        queryParamsToSend.per_page = currentRowsPerPage.value; // Use per_page for Laravel default
 
-        // Clean up
+        // Clean up empty params
         Object.keys(queryParamsToSend).forEach(key => {
             if (queryParamsToSend[key] === null || queryParamsToSend[key] === undefined || queryParamsToSend[key] === '') {
                 delete queryParamsToSend[key];
@@ -158,6 +147,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
 
         try {
             const response = await apiService.get<ApiResponse<DataTableApiResponse<T>>>(router.resolve({ name: apiEndpoint }).href, {params: queryParamsToSend} );
+            // const response = await apiService.get<ApiResponse<DataTableApiResponse<T>>>(apiEndpoint, { params: queryParamsToSend });
             
             if (response.data) {
                 const apiData = response.data;
@@ -165,11 +155,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
 
                 paginatedModel.value = apiData[modelKeyInData] as PaginatedResponse<T>;
 
-                // --- FIX 2: Explicitly sync from backend response to confirm ---
-                if (paginatedModel.value && paginatedModel.value.current_page) {
-                    currentPage.value = Number(paginatedModel.value.current_page);
-                }
-
+                // Optionally update columns, rppOptions from API if provided
                 if (apiData.columns) {
                     currentColumns.value = apiData.columns;
                     const newVisible: Record<string,boolean> = {};
@@ -178,23 +164,26 @@ export default function useDataTable<T extends { id: number | string }>(config: 
                 }
                 if (apiData.config) {
                     if(apiData.config.rowsPerPageOptions) rppOptions.value = apiData.config.rowsPerPageOptions;
-                    if(apiData.config.initialRowsPerPage) currentRowsPerPage.value = apiData.config.initialRowsPerPage;
+                    if(apiData.config.initialRowsPerPage) currentRowsPerPage.value = apiData.config.initialRowsPerPage; // Backend preference takes precedence
+                    // initialFilters from API response can be used to set filters.value if needed on first load
                 }
                 
+                // Sync local search input if backend search was performed
                 if (queryParamsToSend.search !== undefined) {
                     localSearchTerm.value = queryParamsToSend.search;
                 }
             } else {
-                 paginatedModel.value = null; 
+                 paginatedModel.value = null; // Or some default empty paginated structure
             }
 
             if (syncUrl) {
-                await updateQueryInUrl(queryParamsToSend);
+                updateQueryInUrl(queryParamsToSend);
             }
 
         } catch (error) {
             console.error(`Failed to fetch data for ${tableName}:`, error);
             apiError.value = error;
+            // Potentially show a notification to the user via a store or composable
         } finally {
             isLoading.value = false;
         }
@@ -211,6 +200,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
             else if (key === 'sort') currentSort.value = String(query.sort).split(',');
             else if (key === 'direction') currentDirection.value = String(query.direction).split(',');
             else {
+                // Check if it's a known filterable column before adding
                 if (propColumns.some(c => c.key === key && c.filterable)) {
                      filters.value[key] = query[key];
                 } else if (configInitialFilters.hasOwnProperty(key)) {
@@ -218,34 +208,42 @@ export default function useDataTable<T extends { id: number | string }>(config: 
                 }
             }
         });
+
+         // If configInitialFilters has items not in URL, they are already in filters.value
+         // If URL has items not in configInitialFilters, they are now in filters.value
     };
+
 
     const performBackendSearch = () => {
         backendSearchTerm.value = localSearchTerm.value;
-        applyFilters({ page: 1 }); 
+        applyFilters({ page: 1 }); // Reset to page 1 for new search
     };
 
     const performSort = (columnKey: string, directionInput?: 'asc' | 'desc' | '' | null) => {
         const index = currentSort.value.indexOf(columnKey);
         
-        if (directionInput === null || directionInput === '') { 
+        if (directionInput === null || directionInput === '') { // Remove sort for this column
             if (index !== -1) {
                 currentSort.value.splice(index, 1);
                 currentDirection.value.splice(index, 1);
             }
         } else {
-            const dir = directionInput || (currentDirection.value[index] === 'asc' ? 'desc' : 'asc'); 
-            if (index === -1) { 
+            const dir = directionInput || (currentDirection.value[index] === 'asc' ? 'desc' : 'asc'); // Toggle if no specific direction
+            if (index === -1) { // New sort column (becomes primary sort)
                 currentSort.value = [columnKey, ...currentSort.value];
                 currentDirection.value = [dir, ...currentDirection.value];
-            } else { 
+            } else { // Existing sort column, update direction or move to primary if multi-sort is advanced
                  currentSort.value.splice(index, 1);
                  currentDirection.value.splice(index, 1);
                  currentSort.value.unshift(columnKey);
                  currentDirection.value.unshift(dir);
             }
         }
-        applyFilters(); // Keep current page when sorting? Usually cleaner to go to page 1, but depends on preference.
+        // Trim multi-sort arrays if they become too long (e.g., max 3)
+        // currentSort.value = currentSort.value.slice(0, 3);
+        // currentDirection.value = currentDirection.value.slice(0, 3);
+
+        applyFilters({ page: 1 });
     };
 
     const updateColumnFilter = (key: string, value: any) => {
@@ -256,8 +254,8 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     const resetFiltersAndSearch = () => {
         localSearchTerm.value = '';
         backendSearchTerm.value = '';
-        filters.value = { ...configInitialFilters }; 
-        currentSort.value = [defaultSortKey]; 
+        filters.value = { ...configInitialFilters }; // Reset to initial config filters or empty
+        currentSort.value = [defaultSortKey]; // Reset to default sort
         currentDirection.value = [defaultSortDir];
         applyFilters({ page: 1 });
     };
@@ -270,9 +268,7 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     const goToPageByUrl = (url: string | null) => {
         if (!url) return;
         try {
-            // Handle full URL or relative path
-            const dummyBase = 'http://dummy.com';
-            const urlObject = new URL(url, dummyBase);
+            const urlObject = new URL(url);
             const page = urlObject.searchParams.get('page');
             if (page) {
                 applyFilters({ page: parseInt(page, 10) });
@@ -283,10 +279,11 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     };
     
     const refreshData = () => {
-        applyFilters({}, false); 
+        // Re-applies filters with current parameters, effectively refreshing
+        applyFilters({}, false); // false to not push same URL again if not needed
     };
 
-    // --- Row Selection (Unchanged) ---
+    // --- Row Selection ---
     const isAllSelected = computed(() => {
         const currentDisplayItems = dataToDisplay.value;
         if (!currentDisplayItems || currentDisplayItems.length === 0) return false;
@@ -314,21 +311,17 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     // --- Lifecycle and Watchers ---
     onMounted(() => {
         initializeFromUrlOrConfig();
-        applyFilters({}, false); 
+        applyFilters({}, false); // Initial fetch, don't push URL again if initializedFromUrl
     });
 
-    watch(
+    watch( // Watch for external route changes (e.g., browser back/forward)
         () => route.query,
         (newQuery, oldQuery) => {
-            // --- FIX 3: Ignore updates caused by our own code ---
-            if (isUpdatingUrl.value) return;
-
+            // Basic check to avoid re-fetch if applyFilters already updated the URL
+            // This can be made more robust by comparing specific relevant query params
             if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
                  initializeFromUrlOrConfig();
-                 // When navigating via Browser Back/Forward buttons, 
-                 // `initializeFromUrlOrConfig` updates `currentPage`.
-                 // `applyFilters` will now use that updated `currentPage` correctly.
-                 applyFilters({}, false); 
+                 applyFilters({}, false); // Don't sync URL again, it's the source of truth
             }
         },
         { deep: true }
@@ -358,12 +351,13 @@ export default function useDataTable<T extends { id: number | string }>(config: 
     provide('isAllSelected', isAllSelected);
     provide('toggleRowSelection', toggleRowSelection);
     provide('apiEndpoint', apiEndpoint);
+    // provide('bulkDeleteRoute', bulkDeleteRoute); 
     provide('filters', filters);
     provide('updateColumnFilter', updateColumnFilter);
     provide('resetFiltersAndSearch', resetFiltersAndSearch);
-    provide('goToPageByUrl', goToPageByUrl); 
-    provide('refreshData', refreshData); 
-    provide('applyFilters', applyFilters); 
+    provide('goToPageByUrl', goToPageByUrl); // For TablePagination
+    provide('refreshData', refreshData); // For reload button
+    provide('applyFilters', applyFilters); // For reload button
 
     return {
         can,
@@ -390,8 +384,8 @@ export default function useDataTable<T extends { id: number | string }>(config: 
         goToPageByUrl,
         refreshData,
         currentPage,
-        paginationInfo, 
-        currentColumns, 
-        applyFilters 
+        paginationInfo, // Expose computed pagination details
+        currentColumns, // Expose current columns
+        applyFilters // Expose for direct use if needed
     };
 }

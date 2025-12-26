@@ -139,11 +139,11 @@ const navLinks: DropdownParent[] = [
                                 <SparklesIcon class="w-4 h-4 header-logo-text drop-shadow" />
                             </div>
                         </div>
-                        <!-- <div class="header-brand__meta">
-                            <span class="header-meta-chip">From Farm to Formulation</span>
+                        <div class="header-brand__meta">
+                            <span class="header-meta-chip">Hope for Life</span>
                             <span class="header-meta-separator" aria-hidden="true"></span>
-                            <span class="header-meta-chip header-meta-chip--accent">Life Sciences AI</span>
-                        </div> -->
+                            <!-- <span class="header-meta-chip header-meta-chip--accent">Life Sciences AI</span> -->
+                        </div>
                     </div>
                 </RouterLink>
                 <!-- <div class="header-signal hidden xl:flex items-center gap-2">

@@ -23,31 +23,36 @@ onMounted(async () => {
         <div class="about-section__glow about-section__glow--secondary" aria-hidden="true"></div>
         <div class="about-section__grid" aria-hidden="true"></div>
         <div class="container items-center mx-auto px-6 relative z-10">
-            <div class="flex flex-col items-center mb-16">
-                <h1 class="text-3xl md:text-4xl font-bold text-center section-title mb-4">
-                    About Zydin Biotech
-                </h1>
-                <div class="w-16 h-1 bg-current section-title rounded-full"></div>
+          <div class="flex flex-col items-center mb-16">
+            <h1 class="text-3xl md:text-4xl font-bold text-center section-title mb-4">
+                About Zydin Biotech
+            </h1>
+            <div class="w-16 h-1 bg-current section-title rounded-full"></div>
+          </div>
+
+          <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
+            <div class="flex-1 max-w-2xl">
+              <div class="card-backdrop about-section__card p-8 md:p-10">
+                <p class="text-lg md:text-xl leading-relaxed about-section__summary font-medium">
+                  {{ summary }}
+                </p>
+              </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
-                <div class="flex-1 max-w-2xl">
-                    <div class="card-backdrop about-section__card p-8 md:p-10">
-                        <p class="text-lg md:text-xl leading-relaxed about-section__summary font-medium">
-                            {{ summary }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex-1 max-w-md mx-auto lg:mx-0">
-                    <div class="relative">
-                        <div class="relative card-backdrop about-section__logo-card p-8">
-                            <div class="aspect-square relative">
-                                <AppLogoAnimation :glow="true" :animation="true" />
-                            </div>
+            <div class="flex-1 max-w-md mx-auto lg:mx-0">
+                <div class="relative">
+                    <div class="relative card-backdrop about-section__logo-card p-8">
+                        <div class="aspect-square relative">
+                            <AppLogoAnimation :glow="true" :animation="true" />
                         </div>
                     </div>
                 </div>
+            </div>
+          </div>
+          <div class="px-4 mt-16 text-center">
+                <RouterLink :to="{ name: 'products' }" class="cta-pill">
+                    View Our Full Catalog
+                </RouterLink>
             </div>
         </div>
     </section>
@@ -109,5 +114,19 @@ onMounted(async () => {
   border: 1px dashed color-mix(in srgb, var(--section-title-color) 20%, transparent);
   pointer-events: none;
   opacity: 0.5;
+}
+/* The "View Full Catalog" Button */
+.cta-pill {
+  @apply inline-flex items-center justify-center px-8 py-3 text-sm font-bold uppercase tracking-widest rounded-full transition-all duration-300;
+  background-image: var(--gradient-secondary); /* Uses the teal/blue pharma gradient */
+  color: white;
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--color-secondary-500) 30%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cta-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--color-secondary-500) 50%, transparent);
+  filter: brightness(1.05);
 }
 </style>

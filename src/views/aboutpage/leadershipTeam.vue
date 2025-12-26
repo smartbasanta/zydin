@@ -11,7 +11,7 @@ const { leaders, isLoading, fetchLeaders } = useLeadersAPI();
 
 onMounted(fetchLeaders);
 
-const ceo = computed(() => leaders.value.find(l => l.position.includes('CEO')));
+const ceo = computed(() => leaders.value.find(l => l.position.includes('Chairman')));
 const teamMembers = computed(() => leaders.value.filter(l => !l.position.includes('CEO')));
 
 // --- Slider Logic ---
@@ -89,7 +89,7 @@ const onMouseMove = (e: MouseEvent) => {
             />
           </div>
           <div>
-            <h2 class="text-2xl font-semibold section-title mb-4">A Message from our Founder & CEO</h2>
+            <h2 class="text-2xl font-semibold section-title mb-4">A Message from our Founder & Chairman</h2>
             <blockquote class="border-l-4 border-primary-500 pl-6 mb-6">
               <p class="text-lg section-title italic">"{{ ceo.message }}"</p>
             </blockquote>

@@ -37,15 +37,13 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                                     </div>
                                     <div
                                         class="text-xs font-bold tracking-wider text-primary-400">
-                                        From Farm to Formulation</div>
+                                        Hope for Life</div>
                                 </div>
                             </div>
                         </div>
                     </a>
                     <p class="text-sm leading-relaxed max-w-sm footer-text">
-                        We transform complex digital challenges into simple, effective solutions through rigorous
-                        research, innovative design, and proven methodologies. Experience the power of research-driven
-                        technology partnerships.
+                        Zydin Biotech is a dedicated oncology company, established with the vision of advancing from synthetic to biopharmaceutical medicines to address affordable and unmet medical needs through targeted delivery. The company’s current focus is to drive innovation across each onco-therapeutic segment by developing dosage forms designed to enhance efficacy, safety, and cost-effectiveness
                     </p>
                     <div class="mt-6 flex items-center gap-4">
                         <a href="#" class="footer-social-link" aria-label="Facebook">
@@ -80,13 +78,15 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                 <div class="hidden lg:block lg:col-span-1"></div>
 
                 <!-- Link Columns -->
-                <div class="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="lg:col-span-7 grid grid-cols-3 md:grid-cols-4 gap-8">
                     <div>
-                        <h3 class="footer-heading">Resources</h3>
+                        <h3 class="footer-heading">Company</h3>
                         <ul class="mt-4 space-y-3">
                             <li><a href="#" class="footer-link">Home</a></li>
+                            <li><a href="#" class="footer-link">service</a></li>
                             <li><a href="#" class="footer-link">About Us</a></li>
                             <li><a href="#" class="footer-link">Leaderships</a></li>
+                            <li><a href="#" class="footer-link">Programs</a></li>
                             <li><a href="#" class="footer-link">Products</a></li>
                             <li><a href="#" class="footer-link">News & Articles</a></li>
                         </ul>
@@ -97,6 +97,12 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                             <li><a href="#" class="footer-link">Contact Us</a></li>
                             <li><a href="#" class="footer-link">FAQs</a></li>
                             <li><a href="#" class="footer-link">Report a Bug</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="footer-heading">Invester Relationship</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="footer-link">Overview</a></li>
                         </ul>
                     </div>
                     <div>
