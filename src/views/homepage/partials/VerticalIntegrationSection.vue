@@ -40,7 +40,7 @@ import { FlaskConical, Pilcrow, ShieldCheck } from 'lucide-vue-next';
                     <div class="flex items-center justify-center w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-accent shadow-lg">
                         <ShieldCheck :size="48" class="text-white drop-shadow-lg" />
                     </div>
-                    <h3 class="mb-4 text-xl md:text-2xl font-bold section-title tracking-tight">Oncology Drug Product (Complex Generics)</h3>
+                    <h3 class="mb-4 text-xl md:text-2xl font-bold section-title tracking-tight">Oncology Drug Product Development and Manufactoring</h3>
                     <p class="text-base section-text leading-relaxed font-medium max-w-sm mx-auto">Advanced oral solid and sterile injectable manufacturing with dedicated isolator facilities for oncology applications.</p>
                   </router-link>
                 <router-link to="/crams-cdmo-facilities"  class="card-backdrop card-icon-feature p-8 md:p-10 text-center">

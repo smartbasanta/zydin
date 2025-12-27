@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
 import AppLogo from '@/components/logo/AppLogo.vue';
 import AppLogoAnimation from '@/components/logo/AppLogoAnimation.vue';
 import { useDefaultImages } from '@/composables/useDefaultImages';
@@ -75,41 +76,42 @@ const { zydinLogoImage } = useDefaultImages(); // 2. Get the images you need
                 </div>
 
                 <!-- Spacer Column -->
-                <div class="hidden lg:block lg:col-span-1"></div>
+                <!-- <div class="hidden lg:block lg:col-span-1"></div> -->
 
                 <!-- Link Columns -->
-                <div class="lg:col-span-7 grid grid-cols-3 md:grid-cols-4 gap-8">
+                <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-8">
                     <div>
                         <h3 class="footer-heading">Company</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#" class="footer-link">Home</a></li>
-                            <li><a href="#" class="footer-link">service</a></li>
-                            <li><a href="#" class="footer-link">About Us</a></li>
-                            <li><a href="#" class="footer-link">Leaderships</a></li>
-                            <li><a href="#" class="footer-link">Programs</a></li>
-                            <li><a href="#" class="footer-link">Products</a></li>
-                            <li><a href="#" class="footer-link">News & Articles</a></li>
+                            <li><RouterLink to="/" class="footer-link">Home</RouterLink></li>
+                            <li><RouterLink to="/about" class="footer-link">About Us</RouterLink></li>
+                            <li><RouterLink to="/about/leadership" class="footer-link">Leadership Team</RouterLink></li>
+                            <li><RouterLink to="/programs" class="footer-link">Programs</RouterLink></li>
+                            <li><RouterLink to="/products" class="footer-link">Products</RouterLink></li>
+                            <li><RouterLink to="/media/articles" class="footer-link">Articles & Insights</RouterLink></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 class="footer-heading">Support</h3>
+                        <h3 class="footer-heading">Investor Relations</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#" class="footer-link">Contact Us</a></li>
-                            <li><a href="#" class="footer-link">FAQs</a></li>
+                            <li><RouterLink to="/investor-relations" class="footer-link">Overview</RouterLink></li>
+                            <li><RouterLink to="/investor-relations/corporate-governance" class="footer-link">Corporate Governance</RouterLink></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="footer-heading">Support & Legal</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="footer-link">Terms of Service</a></li>
+                            <li><a href="#" class="footer-link">Privacy Policy</a></li>
                             <li><a href="#" class="footer-link">Report a Bug</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 class="footer-heading">Invester Relationship</h3>
+                        <h3 class="footer-heading">Contact Us</h3>
                         <ul class="mt-4 space-y-3">
-                            <li><a href="#" class="footer-link">Overview</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer-heading">Legal</h3>
-                        <ul class="mt-4 space-y-3">
-                            <li><a href="#" class="footer-link">Terms of Service</a></li>
-                            <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                            <li><a href="#" class="footer-link">Contact Us</a></li>
+                            <li><RouterLink to="/career" class="footer-link">Career</RouterLink></li>
+                            <li><a href="#" class="footer-link">FAQs</a></li>
                         </ul>
                     </div>
                 </div>

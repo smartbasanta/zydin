@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import AppLogoAnimation from '@/components/logo/AppLogoAnimation.vue';
+import LoadingState from '@/components/loading/LoadingState.vue';
 
-defineProps<{ summary: string }>();
+interface Props {
+  summary?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  summary: 'We are dedicated to advancing oncology through innovative research and development of cutting-edge therapeutic solutions that improve patient outcomes worldwide.'
+});
 
 const highlightStats = [
   { label: 'Years advancing oncology', value: '15+' },
   { label: 'Molecules in pipeline', value: '45' },
   { label: 'Global partners', value: '60+' },
 ];
+
+const hasValidContent = computed(() => props.summary && props.summary.trim().length > 0);
 </script>
 
 <template>
@@ -16,7 +26,11 @@ const highlightStats = [
     <div class="about-hero__glow about-hero__glow--primary"></div>
     <div class="about-hero__glow about-hero__glow--secondary"></div>
 
-    <div class="container mx-auto px-6 py-24">
+    <div v-if="!hasValidContent" class="flex items-center justify-center h-96">
+      <LoadingState message="Loading our story..." />
+    </div>
+
+    <div v-else class="container mx-auto px-6 py-24">
       <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
         <div class="about-hero__content">
           <p class="about-hero__eyebrow">Our Story</p>

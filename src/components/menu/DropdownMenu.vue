@@ -41,7 +41,7 @@ const handleMouseLeave = () => {
         </RouterLink>
 
         <button v-else ref="triggerRef" @click="toggle();" class="nav-link flex items-center gap-1"
-            :class="{ 'nav-link-active': route.path.startsWith(item.path) }" aria-haspopup="true"
+            :class="{ 'nav-link-active': item.children?.some(child => route.path === child.path) }" aria-haspopup="true"
             :aria-expanded="isOpen">
             <span>{{ item.name }}</span>
             <ChevronDownIcon class="w-4 h-4 transition-transform duration-200"
@@ -76,8 +76,54 @@ const handleMouseLeave = () => {
 
 .nav-link {
     @apply transition-all duration-300 hover:scale-105 active:scale-95;
-    @apply hover:text-[var(--color-primary-800)] dark:hover:text-[var(--color-primary-400)];
+    @apply px-3 py-2 rounded-lg;
+    @apply border border-transparent;
+    @apply font-medium;
+    
+    /* Theme-aware colors using CSS custom properties */
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-gray-700, #374151);
+    
+    /* Hover states */
+    &:hover {
+        background-color: color-mix(in srgb, var(--color-primary-50, #eff6ff) 60%, transparent);
+        border-color: color-mix(in srgb, var(--color-primary-200, #bfdbfe) 70%, transparent);
+        color: var(--color-primary-700, #1d4ed8);
+        box-shadow: 0 1px 3px 0 color-mix(in srgb, var(--color-primary-200, #bfdbfe) 30%, transparent);
+        transform: translateY(-1px);
+    }
+    
+    /* Dark theme overrides */
+    .dark & {
+        color: var(--color-gray-300, #d1d5db);
+        
+        &:hover {
+            background-color: color-mix(in srgb, var(--color-primary-900, #1e3a8a) 20%, transparent);
+            border-color: color-mix(in srgb, var(--color-primary-700, #1d4ed8) 60%, transparent);
+            color: var(--color-primary-400, #60a5fa);
+            box-shadow: 0 1px 3px 0 color-mix(in srgb, var(--color-primary-800, #1e40af) 40%, transparent);
+        }
+    }
 }
 
+.nav-link-active {
+    /* Theme-aware active state */
+    background-color: color-mix(in srgb, var(--color-primary-100, #dbeafe) 80%, transparent);
+    border-color: var(--color-primary-300, #93c5fd);
+    color: var(--color-primary-700, #1d4ed8);
+    box-shadow: 0 1px 3px 0 color-mix(in srgb, var(--color-primary-200, #bfdbfe) 50%, transparent);
+    
+    .dark & {
+        background-color: color-mix(in srgb, var(--color-primary-900, #1e3a8a) 40%, transparent);
+        border-color: var(--color-primary-700, #1d4ed8);
+        color: var(--color-primary-300, #93c5fd);
+        box-shadow: 0 1px 3px 0 color-mix(in srgb, var(--color-primary-800, #1e40af) 60%, transparent);
+    }
+}
+
+.nav-link:active {
+    transform: translateY(0);
+}
 
 </style>

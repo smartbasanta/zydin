@@ -21,11 +21,11 @@ onMounted(fetchAboutPageData);
     </div>
 
     <div v-else-if="aboutPageData" class="about-page-shell">
-        <AboutHero :summary="aboutPageData.content.summary.content.value" />
+        <AboutHero :summary="aboutPageData?.content?.summary?.content?.value || 'We are dedicated to advancing oncology through innovative research and development of cutting-edge therapeutic solutions that improve patient outcomes worldwide.'" />
         <SectionDivider variant="wave" accent="primary" />
         <MissionVisionSection
-            :mission="aboutPageData.content.mission_statement.content.value"
-            :vision="aboutPageData.content.company_vision.content.value"
+            :mission="aboutPageData?.content?.mission_statement?.content?.value || 'Our mission is to develop innovative oncology treatments that make a meaningful difference in the lives of patients and their families worldwide.'"
+            :vision="aboutPageData?.content?.company_vision?.content?.value || 'We envision a future where cancer is more manageable, where patients have access to cutting-edge therapies, and where our research contributes to longer, healthier lives for people around the globe.'"
         />
         <SectionDivider variant="curve-glow" accent="secondary" />
         <CoreValuesSection :values="aboutPageData.content.core_values.content" />

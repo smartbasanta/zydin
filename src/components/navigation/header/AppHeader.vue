@@ -4,11 +4,26 @@ import AppLogo from '@/components/logo/AppLogo.vue';
 import ThemeMenu from '@/components/menu/ThemeMenu.vue';
 import UserMenu from '@/components/menu/UserMenu.vue';
 import DropdownMenu from '@/components/menu/DropdownMenu.vue';
+import UtilityMenu from '@/components/menu/UtilityMenu.vue';
 import { BellIcon, MenuIcon, XIcon, ChevronDownIcon, CheckIcon, LogInIcon, UserIcon as UserPlusIcon, LayoutDashboardIcon, UserSquareIcon, LogOutIcon, SparklesIcon, ArrowUpRightIcon } from 'lucide-vue-next';
 import { useSystemNotificationStore } from '@/stores/systemNotification.store';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import type { DropdownParent } from '@/types/dropdownLinkRelated';
+
+interface SecondaryNavLink {
+  name: string;
+  path: string;
+}
+
+interface UtilityItem {
+  label: string;
+  icon: any;
+  action: () => void;
+  showBadge?: any;
+  badge?: any;
+  component?: any;
+}
 import { useDefaultImages } from '@/composables/useDefaultImages';
 import AppLogoAnimation from '@/components/logo/AppLogoAnimation.vue';
 import ThemeSwitcher from '@/components/appearance/ThemeSwitcher.vue';
@@ -32,7 +47,7 @@ watch(isMobileMenuOpen, (isOpen) => {
     if (isOpen) {
         document.body.style.overflow = 'hidden';
 
-        const activeParent = navLinks.find(link =>
+        const activeParent = mainNavLinks.find(link =>
             link.children?.some(child => child.path === route.path)
         );
 
@@ -71,28 +86,25 @@ const handleLogout = async () => {
     isMobileMenuOpen.value = false; // Close mobile menu on logout
 };
 
-const userMenuItems = computed(() => {
-    if (isAuthenticated.value) {
-        return [
-            { label: 'Dashboard', icon: LayoutDashboardIcon, action: () => navigateTo('/dashboard') },
-            { label: 'Profile', icon: UserSquareIcon, action: () => navigateTo('/me') },
-        ];
-    } else {
-        return [
-            { label: 'Login', icon: LogInIcon, action: () => navigateTo('/login') },
-            { label: 'Register', icon: UserPlusIcon, action: () => navigateTo('/register') },
-        ];
-    }
-});
-const navLinks: DropdownParent[] = [
-    { name: 'Home', path: '/' },
+// Consolidated main navigation - streamlined structure
+const mainNavLinks: DropdownParent[] = [
     {
-        name: 'About Us',
-        path: '/about',
+        name: 'Company',
+        path: '/',
         children: [
-            { name: 'Company Overview', path: '/about' },
+            { name: 'Home', path: '/' },
+            { name: 'Overview', path: '/about' },
             { name: 'Leadership Team', path: '/about/leadership' },
             { name: 'Certifications', path: '/about/certifications' },
+        ]
+    },
+    {
+        name: 'Programs & Media',
+        path: '/programs',
+        children: [
+            { name: 'Programs', path: '/programs' },
+            { name: 'Articles & Blogs', path: '/media/articles' },
+            { name: 'News & Updates', path: '/media/news' },
         ]
     },
     {
@@ -105,16 +117,16 @@ const navLinks: DropdownParent[] = [
         ]
     },
     {
-        name: 'Media',
-        path: '/media',
+        name: 'Investor Relations',
+        path: '/investor-relations',
         children: [
-            { name: 'Articles & Blogs', path: '/media/articles' },
-            { name: 'News & Updates', path: '/media/news' },
+            { name: 'Overview', path: '/investor-relations' },
+            { name: 'Corporate Governance', path: '/investor-relations/corporate-governance' },
         ]
-    },
-    { name: 'Career', path: '/career' },
-    { name: 'Contact', path: '/contact' },
+    }
 ]
+
+
 </script>
 <template>
     <header class="header-shell sticky top-0 z-50 w-full">
@@ -124,8 +136,8 @@ const navLinks: DropdownParent[] = [
             <span class="header-shell__glow header-shell__glow--accent"></span>
             <span class="header-shell__grid"></span>
         </div>
-        <div class="header-shell__content mx-auto px-6 md:px-8 min-h-20 flex items-center justify-between gap-4 flex-nowrap">
-            <div class="header-brand flex items-center gap-4 min-w-0">
+        <div class="header-shell__content mx-auto px-6 md:px-8 min-h-20 flex items-center justify-between gap-6">
+            <div class="header-brand flex items-center gap-4 flex-shrink-0">
                 <RouterLink to="/" class="flex items-center gap-3 group">
                     <div class="header-logo-shell">
                         <div class="relative aspect-square">
@@ -146,40 +158,18 @@ const navLinks: DropdownParent[] = [
                         </div>
                     </div>
                 </RouterLink>
-                <!-- <div class="header-signal hidden xl:flex items-center gap-2">
-                    <span class="header-signal__dot" :class="{ 'header-signal__dot--active': isAuthenticated }"></span>
-                    <span class="header-signal__text">{{ headerStatusMessage }}</span>
-                </div> -->
             </div>
 
-            <nav class="header-nav hidden lg:flex items-center gap-3 justify-center min-w-0">
-                <DropdownMenu v-for="link in navLinks" :key="link.name" :item="link" />
+            <nav class="header-nav hidden lg:flex items-center justify-center flex-1 px-4 bg-transparent">
+                <div class="flex items-center gap-6 bg-transparent">
+                    <DropdownMenu v-for="link in mainNavLinks" :key="link.name" :item="link" />
+                </div>
             </nav>
 
-            <div class="flex items-center gap-2 sm:gap-4 header-actions flex-none">
-                <div class="header-quick-actions hidden md:flex items-center gap-2">
-                    <button @click="notificationStore.togglePanel()" class="header-menu-trigger relative header-pill-button">
-                        <BellIcon class="w-5 h-5" />
-                        <span
-                            v-if="notificationStore.unreadCount > 0"
-                            class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold border-2"
-                            :style="{
-                                backgroundColor: 'var(--color-error)',
-                                color: 'var(--color-static-white)',
-                                borderColor: 'var(--color-gray-0)'
-                            }"
-                        >
-                            {{ notificationStore.unreadCount }}
-                        </span>
-                    </button>
-                    <div class="header-pill-button">
-                        <ThemeSwitcher variant="dropdown" />
-                    </div>
-                </div>
-                <RouterLink to="/contact" class="header-cta hidden 3xl:inline-flex items-center gap-2" @click="isMobileMenuOpen = false">
-                    <span>Contact Team</span>
-                    <ArrowUpRightIcon class="w-4 h-4" />
-                </RouterLink>
+            <div class="flex items-center gap-2 sm:gap-4 header-actions flex-shrink-0">
+                <!-- Utility Menu -->
+                <UtilityMenu />
+                <!-- User Menu -->
                 <UserMenu />
                 <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="header-menu-trigger mobile-toggle-button">
                     <MenuIcon v-if="!isMobileMenuOpen" class="w-6 h-6" />
@@ -246,7 +236,8 @@ const navLinks: DropdownParent[] = [
                                     }">
                                     <!-- <div class="flex flex-col justify-between flex-1  mobile-nav-panel"> -->
                                     <nav class="relative flex-1 p-4 sm:p-6 space-y-2">
-                                        <div v-for="link in navLinks" :key="link.name">
+                                        <!-- Main Navigation -->
+                                        <div v-for="link in mainNavLinks" :key="link.name">
                                             <button v-if="link.children" @click="toggleMobileSubmenu(link.name)"
                                                 class="mobile-nav-link w-full flex justify-between items-center text-left"
                                                 :class="{ 'mobile-nav-link-active': openMobileSubmenu === link.name }">
@@ -283,6 +274,33 @@ const navLinks: DropdownParent[] = [
                                                 </RouterLink>
                                             </div>
                                         </div>
+
+                                        <!-- Divider -->
+                                        <div class="border-t border-gray-200 dark:border-gray-700 my-4"></div>
+
+                                        <!-- Additional Utility Items (now in User Menu) -->
+                                        <RouterLink to="/career"
+                                            class="mobile-nav-link w-full flex justify-between items-center text-left"
+                                            exact-active-class="mobile-nav-link-exact-active" custom
+                                            v-slot="{ isActive, isExactActive, navigate }">
+                                            <a @click="navigate();" class="menu-dropdown-item rounded-lg"
+                                                :class="{ 'mobile-nav-link-exact-active': isExactActive }"
+                                                role="menuitem" data-dropdown-item="true">
+                                                <span class="flex-1">Career</span>
+                                                <CheckIcon v-if="isExactActive" class="w-4 h-4" />
+                                            </a>
+                                        </RouterLink>
+                                        <RouterLink to="/contact"
+                                            class="mobile-nav-link w-full flex justify-between items-center text-left"
+                                            exact-active-class="mobile-nav-link-exact-active" custom
+                                            v-slot="{ isActive, isExactActive, navigate }">
+                                            <a @click="navigate();" class="menu-dropdown-item rounded-lg"
+                                                :class="{ 'mobile-nav-link-exact-active': isExactActive }"
+                                                role="menuitem" data-dropdown-item="true">
+                                                <span class="flex-1">Contact</span>
+                                                <CheckIcon v-if="isExactActive" class="w-4 h-4" />
+                                            </a>
+                                        </RouterLink>
                                     </nav>
                                     <div class="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-800">
                                         <!-- User Info Header -->
@@ -301,26 +319,8 @@ const navLinks: DropdownParent[] = [
                                             </div>
                                         </div>
 
-                                        <!-- Main Menu Items -->
-                                        <div class="space-y-1" role="none">
-                                        <button v-for="item in userMenuItems" :key="item.label"
-                                            @click="item.action()"
-                                            class="mobile-nav-link w-full flex items-center gap-3 text-left hover:scale-105 active:scale-95"
-                                            role="menuitem">
-                                            <component :is="item.icon" class="h-5 w-5" />
-                                            <span>{{ item.label }}</span>
-                                        </button>
-                                        </div>
-
-                                        <!-- Logout -->
-                                        <div v-if="isAuthenticated" class="mt-2">
-                                            <button @click="handleLogout"
-                                                class="mobile-nav-link !text-red-600 dark:!text-red-400 hover:!bg-red-500/10 w-full flex items-center gap-3 text-left hover:scale-105 active:scale-95"
-                                                role="menuitem">
-                                                <LogOutIcon class="h-5 w-5" />
-                                                <span>Logout</span>
-                                            </button>
-                                        </div>
+                                        <!-- Note: User menu items are now handled by the UserMenu component -->
+                                        <!-- User actions are consolidated in the UserMenu dropdown above -->
                                     </div>
                                 </div>
                             </div>

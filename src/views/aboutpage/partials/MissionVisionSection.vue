@@ -1,10 +1,30 @@
 <script setup lang="ts">
-defineProps<{ mission: string; vision: string }>();
+import { computed } from 'vue';
+import LoadingState from '@/components/loading/LoadingState.vue';
+
+interface Props {
+  mission?: string;
+  vision?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mission: 'Our mission is to develop innovative oncology treatments that make a meaningful difference in the lives of patients and their families worldwide.',
+  vision: 'We envision a future where cancer is more manageable, where patients have access to cutting-edge therapies, and where our research contributes to longer, healthier lives for people around the globe.'
+});
+
+const hasValidMission = computed(() => props.mission && props.mission.trim().length > 0);
+const hasValidVision = computed(() => props.vision && props.vision.trim().length > 0);
+const hasValidContent = computed(() => hasValidMission.value && hasValidVision.value);
 </script>
 <template>
   <section class="mission-vision section-bg relative overflow-hidden">
     <div class="mission-vision__pattern" aria-hidden="true"></div>
-    <div class="container mx-auto px-6 py-20 grid gap-10 md:grid-cols-2 relative z-10">
+    
+    <div v-if="!hasValidContent" class="flex items-center justify-center h-96">
+      <LoadingState message="Loading mission and vision..." />
+    </div>
+    
+    <div v-else class="container mx-auto px-6 py-20 grid gap-10 md:grid-cols-2 relative z-10">
       <article class="mission-vision__card">
         <p class="mission-vision__eyebrow">Our Mission</p>
         <h2 class="mission-vision__title">Deliver meaningful impact for every patient journey.</h2>
@@ -12,7 +32,7 @@ defineProps<{ mission: string; vision: string }>();
       </article>
       <article class="mission-vision__card mission-vision__card--accent">
         <p class="mission-vision__eyebrow">Our Vision</p>
-        <h2 class="mission-vision__title">Build the world’s most trusted oncology partner.</h2>
+        <h2 class="mission-vision__title">Build the world's most trusted oncology partner.</h2>
         <p class="mission-vision__copy">{{ vision }}</p>
       </article>
     </div>

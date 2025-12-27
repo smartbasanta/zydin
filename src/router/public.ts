@@ -29,6 +29,20 @@ const publicRoutes: RouteRecordRaw = {
             ],
         },
         {
+            path: 'programs',
+            children: [
+                { path: '', name: 'programs', component: () => import('@/views/programs/index.vue') },
+                { path: ':id', name: 'programs.detail', component: () => import('@/views/programs/ProgramDetail.vue') },
+            ],
+        },
+        {
+            path: 'investor-relations',
+            children: [
+                { path: '', name: 'investor-relations', component: () => import('@/views/investor-relations/index.vue') },
+                { path: 'corporate-governance', name: 'investor-relations.corporate-governance', component: () => import('@/views/investor-relations/CorporateGovernanceDetail.vue') },
+            ],
+        },
+        {
             path: '/media',
             children: [
                 {

@@ -64,22 +64,22 @@ import { Pill, Syringe, Shield, Zap, Award, Heart, ShieldCheck, Factory } from '
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-primary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">Tablets & Capsules</h4>
-                  <p class="text-sm section-text">Advanced formulations for precise dosing and patient compliance</p>
+                  <h4 class="font-semibold section-title text-left">Tablets & Capsules</h4>
+                  <p class="text-sm section-text text-left">Advanced formulations for precise dosing and patient compliance</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-primary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">HPAPI Integration</h4>
-                  <p class="text-sm section-text">Dedicated isolator facilities for highly potent active ingredients</p>
+                  <h4 class="font-semibold section-title text-left">HPAPI Integration</h4>
+                  <p class="text-sm section-text text-left">Dedicated isolator facilities for highly potent active ingredients</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-primary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">Manufacturing Excellence</h4>
-                  <p class="text-sm section-text">Complete unit process control within dedicated facilities</p>
+                  <h4 class="font-semibold section-title text-left">Manufacturing Excellence</h4>
+                  <p class="text-sm section-text text-left">Complete unit process control within dedicated facilities</p>
                 </div>
               </div>
             </div>
@@ -99,22 +99,22 @@ import { Pill, Syringe, Shield, Zap, Award, Heart, ShieldCheck, Factory } from '
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-secondary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">Sterile Liquids & Suspensions</h4>
-                  <p class="text-sm section-text">Advanced parenteral formulations with precise control</p>
+                  <h4 class="font-semibold section-title text-left">Sterile Liquids & Suspensions</h4>
+                  <p class="text-sm section-text text-left">Advanced parenteral formulations with precise control</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-secondary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">Lyophilized Dosage Forms</h4>
-                  <p class="text-sm section-text">Freeze-dried products for enhanced stability and shelf life</p>
+                  <h4 class="font-semibold section-title text-left">Lyophilized Dosage Forms</h4>
+                  <p class="text-sm section-text text-left">Freeze-dried products for enhanced stability and shelf life</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
                 <div class="w-2 h-2 rounded-full bg-gradient-secondary mt-2 flex-shrink-0"></div>
                 <div>
-                  <h4 class="font-semibold section-title">Class A Isolator Facilities</h4>
-                  <p class="text-sm section-text">Complete skids ensuring highest sterility standards</p>
+                  <h4 class="font-semibold section-title text-left">Class A Isolator Facilities</h4>
+                  <p class="text-sm section-text text-left">Complete skids ensuring highest sterility standards</p>
                 </div>
               </div>
             </div>
